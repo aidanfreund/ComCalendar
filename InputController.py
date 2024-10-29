@@ -1,5 +1,12 @@
 import Profile
+from enum import Enum
+
 class InputController:
+    # Options to be defined
+    class Selection(Enum):
+        OPTION1 = 1
+        OPTION2 = 2
+        OPTION3 = 3
     def create_calendar(self,calName):
         pass
     # Create new calendars from two calendars
@@ -8,6 +15,7 @@ class InputController:
     # Needs to return calendar object
     def clone_calendar(self,calName):
         pass
+    # Deletes calendar
     def delete_calendar(self, calName):
         pass
     # Needs to return calendar object
@@ -19,5 +27,6 @@ class InputController:
     # Returns bool if successful
     def upload_calendar(self):
         pass
-    def select_option(self):
+    # Does action based on option
+    def select_option(self,OPTION):
         pass
