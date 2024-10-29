@@ -17,22 +17,43 @@ class Hapenning(Reminder):
         self._name = name
         self._reminder = reminder
         self._description = description
+
     #Returns the Happening Class ID
     def get_id(self):
         return self._hap_id
+    
     #Returns the Name
     def get_name(self):
         return self._name
+    
     #Returns The Description
     def get_description(self):
         return self._description
     
     #Edits The Specific Reminder Object
-    def edit_reminder():
+    def edit_reminder(self, reminder_id, date):
+        self._reminder_id = reminder_id
+        for id in self._reminder:
+            if self._reminder_id == self._reminder[id]:
+                self._reminder[id].date = date.date
+                self._reminder[id].time = date.time
         return
+    
     #Removes Reminder Object
-    def remove_reminder():
-        return
+    def remove_reminder(self, reminder_id):
+        
+        self._reminder_id = reminder_id
+
+        count = 0
+
+        for id in self._reminder:
+            if self.reminder_id == self._reminder[id]:
+                self._reminder.remove(id)
+                count += 1
+        return 
+    
     #Creates a new Reminder
-    def create_reminder():
+    def create_reminder(self, reminder_id):
+        self._reminder_id = reminder_id
+        self._reminder.append(self._reminder_id)
         return

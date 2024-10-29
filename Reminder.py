@@ -5,10 +5,11 @@ import datetime
 
 class Reminder:
 
-
-    def __init__(self, reminder_id, time):
+    #Constructor
+    def __init__(self, reminder_id, date):
         self._reminder_id = reminder_id
-        self._time = time
+        self._time = date.date
+        self._time = date.time
     
     #Returns the Unique ReminderID
     def get_reminder_id(self):
