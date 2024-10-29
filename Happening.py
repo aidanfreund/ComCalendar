@@ -5,7 +5,7 @@ from Reminder import Reminder
 
 class Hapenning(Reminder):
 
-    #Experimental - Not really required as Python doesn't need to initilize null variables
+    #Experimental - Not really required as Python doesn't need to initialize null variables.
     int(_hap_iD)
     str(_name)
     Reminder(_reminder = [])
@@ -44,12 +44,12 @@ class Hapenning(Reminder):
         
         self._reminder_id = reminder_id
 
-        count = 0
+        count = 0 #Currently not useful, but will be in the Future
 
         for id in self._reminder:
             if self.reminder_id == self._reminder[id]:
                 self._reminder.remove(id)
-                count += 1
+                count += 1 #Currently not useful but will be in the Future
         return 
     
     #Creates a new Reminder
