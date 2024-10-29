@@ -1,15 +1,18 @@
-# Entry point of program
-def main():
-    pass
-
-if __name__ == "__main__":
-    main()
-
-
-
+import Profile
 class LoginMenu:
-    def _login(self):
+    # Basic login func
+    def login(self,username,password):
+        if(_validate_login(self,username,password)):
+            return True
+        else:
+            return False
+    def create_profile(self, username, password):
         pass
-    def _create_profile(self):
+    # Validation to be discussed
+    def _validate_login(self,username,password):
         pass
+    
+        
+   
+    
 
