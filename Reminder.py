@@ -5,16 +5,19 @@ import datetime
 
 class Reminder:
 
-    int(__reminder_id)
 
-    datetime(__time)
-
+    def __init__(self, reminder_id, time):
+        self._reminder_id = reminder_id
+        self._time = time
+    
     #Returns the Unique ReminderID
-    def get_reminder_id():
-        return __reminder_id
+    def get_reminder_id(self):
+        return self._reminder_id
+    
     #Returns the Date and Time of the Reminder
-    def get_time():
-        return __time
+    def get_time(self):
+        return self._time
+    
     
     #Sets the Date and Time for the Reminder
     def set_time(self, date):
