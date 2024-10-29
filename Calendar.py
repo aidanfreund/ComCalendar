@@ -1,9 +1,9 @@
 class Calendar:
-    def __init__(self, CalendarID, CalendarName,Events,Tasks):
-        self.CalendarID = CalendarID
-        self.CalendarName = CalendarName
-        self.Events = Events if Events is not None else []
-        self.Tasks = Tasks if Tasks is not None else []
+    def __init__(self, _CalendarID, _CalendarName, _Events, _Tasks):
+        self.CalendarID = _CalendarID
+        self.CalendarName = _CalendarName
+        self.Events = _Events if _Events is not None else []
+        self.Tasks = _Tasks if _Tasks is not None else []
 
     def GetCalendarID(self):
         return self.CalendarID
