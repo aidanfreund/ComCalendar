@@ -6,8 +6,6 @@ from enum import Enum
 
 
 def main(username, pswd):
-
-
     pass
 
 class Selection(Enum):
@@ -39,7 +37,7 @@ class Profile():
                 isLoggedIn = False 
 
     def DeleteProfile():
-        
+
         pass
 
 
