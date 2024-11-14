@@ -5,40 +5,40 @@ class Calendar:
         self._Events = Events if Events is not None else []
         self._Tasks = Tasks if Tasks is not None else []
 
-    def GetCalendarID(self):
+    def get_calendarID(self):
         return self._CalendarID
     
-    def SetCalendar(self, CalendarID):
+    def set_calendar(self, CalendarID):
         self._CalendarId = CalendarID
 
-    def GetCalendarName(self):
+    def get_calendarname(self):
         return self._CalendarName
 
-    def SetCalendarName(self, CalendarName):
+    def set_calendarname(self, CalendarName):
         self._CalendarName = CalendarName
 
-    def RetrieveTasks(self):
+    def retrieve_tasks(self):
         return self._Tasks
     
-    def RetrieveEvents(self):
+    def retrieve_events(self):
         return self._Events
     
-    def AddTask(self, Task):
+    def add_task(self, Task):
         self._Tasks.append(Task)
     
-    def AddEvent(self, Event):
+    def add_event(self, Event):
         self._Events.append(Event)
 
-    def DeleteTask(self, hapID):
+    def delete_task(self, hap_id):
         try:
-            self._Tasks.remove(hapID)
+            self._Tasks.remove(hap_id)
         except ValueError:
-            print(f"Task ID '{hapID}' not found." )
+            print(f"Task ID '{hap_id}' not found." )
 
-    def DeleteEvent(self, hapID):
+    def delete_event(self, hap_id):
         try:
-            self._Tasks.remove(hapID)
+            self._Tasks.remove(hap_id)
         except ValueError:
-            print(f"Event Id '{hapID}' not found.")
+            print(f"Event Id '{hap_id}' not found.")
 
     
