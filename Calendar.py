@@ -39,7 +39,7 @@ class Calendar:
             print(f"Task ID '{hap_id}' not found." )
 
     def delete_event(self, hap_id):
-        hap = Hapenning()
+        hap = super()
         hap_id = hap.get_id()
         try:
             self._Tasks.remove(hap_id)
