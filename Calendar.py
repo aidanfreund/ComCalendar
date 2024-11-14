@@ -1,3 +1,4 @@
+from Happening import Hapenning
 class Calendar:
     def __init__(self, CalendarID, CalendarName, Events, Tasks):
         self._CalendarID = CalendarID
@@ -30,15 +31,18 @@ class Calendar:
         self._Events.append(Event)
 
     def delete_task(self, hap_id):
+        hap = super()
+        hap_id = hap.get_id()
         try:
             self._Tasks.remove(hap_id)
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
 
     def delete_event(self, hap_id):
+        hap = Hapenning()
+        hap_id = hap.get_id()
         try:
             self._Tasks.remove(hap_id)
         except ValueError:
             print(f"Event Id '{hap_id}' not found.")
 
-    
