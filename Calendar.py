@@ -24,14 +24,15 @@ class Calendar:
     def retrieve_events(self):
         return self._Events
     
-    def add_task(self, Task):
-        self._Tasks.append(Task)
+    def add_task(self, hap_id, name, Datetime):
+        self._Tasks.append(hap_id)
     
-    def add_event(self, Event):
-        self._Events.append(Event)
+    def add_event(self, hap_id, name, Starttime, EndTime ):
+        self._Events.append(hap_id)
+        
 
     def delete_task(self, hap_id):
-        hap = super()
+        hap = Hapenning()
         hap_id = hap.get_id()
         try:
             self._Tasks.remove(hap_id)
@@ -39,7 +40,7 @@ class Calendar:
             print(f"Task ID '{hap_id}' not found." )
 
     def delete_event(self, hap_id):
-        hap = super()
+        hap = Hapenning()
         hap_id = hap.get_id()
         try:
             self._Tasks.remove(hap_id)
