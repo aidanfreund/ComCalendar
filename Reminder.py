@@ -1,9 +1,10 @@
 #Reminder class for Calendar
 #Contributers: Edwin Chavez
 
+from Happening import Hapenning
 import datetime
 
-class Reminder:
+class Reminder(Happening):
 
     #Constructor
     def __init__(self, reminder_id, date):
@@ -22,9 +23,4 @@ class Reminder:
     
     #Sets the Date and Time for the Reminder
     def set_time(self, date):
-        self.date = date.date
-        self.time = date.time
-
-
-    
-
+        self.date = date.
