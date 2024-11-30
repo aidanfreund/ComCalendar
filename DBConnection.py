@@ -4,7 +4,7 @@ import pymysql
 
 #abstract database connection class
 class Database_Connection(ABC):
-    def Get_DB_connection(self):
+    def get_db_connection(self):
         pass
 
 #implementation of MySQL database connection
@@ -12,14 +12,14 @@ class MySQLConnection(Database_Connection):
     __SQL_connection = None
 
     #private init only called on first creation of a connection
-    def ___init__(self):
+    def ___init__():
         print("SQL connection created")
 
     #singleton pattern to get the singleton connection
-    def Get_DB_connection(self):
+    def get_db_connection():
         if(MySQLConnection.__SQL_connection == None):
-            MySQLConnection.__SQL_connection = MySQLConnection.__create_mySQL_connection("localhost","UserName","Password","MySQL")
-            self.___init__()
+            MySQLConnection.__SQL_connection = MySQLConnection.__create_mySQL_connection("localhost","Colton","IT326GroupProject","MySQL")
+            MySQLConnection.___init__()
             return MySQLConnection.__SQL_connection
         else:
             return MySQLConnection.__SQL_connection
