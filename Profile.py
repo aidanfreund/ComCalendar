@@ -1,7 +1,7 @@
 class Profile():
     calendar_ID = 0
 
-    def __init__(self, username:str, profile_ID: str, calendars:list):
+    def __init__(self, username:str, profile_ID: int, calendars:list):
         self.userName = username
         self.profile_ID = profile_ID
         self.calendars = calendars

@@ -4,16 +4,17 @@ import pymysql
 import pymysql.cursors
 from Calendar import Calendar
 from Profile import Profile
-from Happening import Happening
 from Task import Task
 from Event import Event
+from DBConnection import MySQLConnection,Database_Connection
+import datetime
 
 class DB_Profile(ABC):
     
     def add_calendar(self, calendar, profile, connection):
         pass
     
-    def read_calendar(self,calendar_id, connection):
+    def read_calendar(self,calendar, connection):
         pass
 
     def change_calendar(self, calendar, connection):
@@ -43,7 +44,7 @@ class DB_Profile(ABC):
     def change_event(self, event, connection):
         pass
 
-    def add_event(self, start_time,end_time,description,name, calendar, connection):
+    def add_event(self,description, start_time,end_time,name, calendar, connection):
         pass
 
     def change_profile_credentials(self, profile, connection):
@@ -52,7 +53,7 @@ class DB_Profile(ABC):
     def delete_profile(self, profile, connection):
         pass
 
-    def read_profile(self, connection):
+    def read_profile(self,profile, connection):
         pass
 
     def add_profile(self, username,password, connection):
@@ -75,9 +76,10 @@ class MySQLProfile(DB_Profile):
         if(MySQLProfile.my_sql_profile == None):
             MySQLProfile.___init__()
         return MySQLProfile.my_sql_profile
+    #working
     #function that takes a calendar name and profile that the new calendar will be connected to
-    #returns boolean based on success of adding the calendar to the database
-    def add_calendar(self, calendar_name, profile, connection):
+    #returns id of the calendar or -1 for error
+    def add_calendar(self, calendar_name:str, profile:Profile, connection:Database_Connection):
         if type(profile) is not Profile:
             print("passed profile object is not a Profile object")
             return -1
@@ -101,7 +103,7 @@ class MySQLProfile(DB_Profile):
             return -1
     #function that takes a Calendar object and DBConnection Object to obtain the Calendar from the database
     #returns Calendar object based on the attributes of the calendar in the database
-    def read_calendar(self,calender, connection):
+    def read_calendar(self,calender:Calendar, connection:Database_Connection):
         if type(calendar) is not Calendar:
             print("Passed calendar is not Calendar object")
             return None
@@ -125,7 +127,7 @@ class MySQLProfile(DB_Profile):
             return None
     #function that takes a calendar object and database connection that will change the name of the calendar if it differs from the database
     #returns boolena based on success of change if there was a change needed
-    def change_calendar(self, calendar, connection):
+    def change_calendar(self, calendar:Calendar, connection:Database_Connection):
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 
@@ -150,9 +152,10 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return False
-     #function that takes a calendar object and database connection that deletes the calendar passed from the database 
-     # returns a boolean indicating success of deletion  
-    def delete_calendar(self, calendar, connection):
+    #working
+    #function that takes a calendar object and database connection that deletes the calendar passed from the database 
+    # returns a boolean indicating success of deletion  
+    def delete_calendar(self, calendar:Calendar, connection:Database_Connection):
         if type(calendar) is not Calendar:
             print("Calendar passed is not of type Calendar")
             return False
@@ -176,10 +179,32 @@ class MySQLProfile(DB_Profile):
             return False
     #function that takes a task and db connection that reads the information of the task from the database
     #returns Task object
-    def read_task(self,task, connection):
-        pass
+    def read_task(self,task:Task, connection:Database_Connection):
+        if type(task) is not Task:
+            print("Task passed is not type Task")
+            return None
+        try:
+            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
 
-    def delete_task(self, task, connection):
+                sql_statement = "Select * from new_schema.tasks Where task_id = %s"
+
+                cursor.execute(sql_statement,(task.get_id(),))
+
+                result = cursor.fetchone()
+
+                if result:
+                    new_task = Task(result.get('task_id'),result.get('name'),None,result.get('description'),result.get('start_time'))
+                    return new_task
+                else:
+                    print("No matching task found")
+                    return None
+        except Exception as e:
+            print("Error: {e}")
+            return None
+    #working
+    #function that takes a Task object and DB connection object that deletes the passed task in the database
+    #returns Boolean based on success of deletion
+    def delete_task(self, task:Task, connection:Database_Connection):
         if type(task) is not Task:
             print("Task passed is not type Task")
             return False
@@ -202,11 +227,12 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return False
         
-
-    def change_task(self, task, connection):
+    #function that takes a Task object and DB Connection object that changes the task in the databse based on the passed object
+    #returns Boolean based on success of changes
+    def change_task(self, task:Task, connection:Database_Connection):
         if type(task) is not Task:
             print("Task passed is not a Task object")
-            return -1
+            return False
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
 
@@ -218,7 +244,7 @@ class MySQLProfile(DB_Profile):
 
                 if result is None:
                     print("No record found")
-                    return -1
+                    return False
                 
                 if result['start_time'] != task.get_first_time():
                     sql_time_statement = "Update new_schema.tasks Set start_time = %s Where task_id = %s"
@@ -242,8 +268,10 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return False
-    
-    def add_task(self, description,time,name, calendar, connection):
+    #working
+    #function that takes string,datetime,string,Calendar object, and DB connection that adds a task to the database tying it to the calendar
+    #returns the id of the newly added task or -1 for error
+    def add_task(self, description:str,time:datetime,name:str, calendar:Calendar, connection:Database_Connection):
         if type(calendar) is not Calendar:
             print("Passed calendar is not of type Calendar")
             return -1
@@ -264,11 +292,15 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return -1
-        
-    def read_event(self,event, connection):
-        pass
 
-    def delete_event(self, event, connection):
+    #function that takes an Event object and DB connection that reads the corresponding event in the database
+    #returns Event object
+    def read_event(self,event:Event, connection:Database_Connection):
+        pass
+    #working
+    #function that takes an Event object and DB connection Object that deletes the corresponding Event in the database
+    #returns Boolean based on success of deletion
+    def delete_event(self, event:Event, connection:Database_Connection):
         if type(event) is not Event:
             print("Event passed is not type Event")
             return False
@@ -292,7 +324,9 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return False
 
-    def change_event(self, event, connection):
+    #function that takes an Event object and DB Connection that changes the Event in the database based on the passed Event
+    #returns Boolean based on success of changing the Event
+    def change_event(self, event:Event, connection:Database_Connection):
         if type(event) is not Event:
             print("Passed event is not type Event")
             return False
@@ -326,9 +360,10 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return False
-    
-
-    def add_event(self, start_time,end_time,description,name, calendar, connection):
+    #working
+    #function that takes string,datetime,datetime,string,Calendar object, and DB Connection that adds and Event to the database tied to the calendar
+    #returns the id of the Event or -1 for error
+    def add_event(self,description:str, start_time:datetime,end_time:datetime,name:str, calendar:Calendar, connection:Database_Connection):
         if type(calendar) is not Calendar:
             print("Calendar passed is not type Calendar")
             return -1
@@ -349,7 +384,9 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return -1
         
-    def change_profile_credentials(self, profile, connection):
+    #function that takes a Profile object and Database Connection object that changes the profile in the database based on the passed profile
+    #returns Boolean based on success of changing the database
+    def change_profile_credentials(self, profile:Profile, connection:Database_Connection):
         if type(profile) is not Profile:
             print("Passed profile is not type Profile")
             return False
@@ -376,8 +413,10 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return False
-
-    def delete_profile(self, profile, connection):
+    #working
+    #function that takes a profile Object and DB connection and deletes the passed profile from the database
+    #returns Boolean based on success of deletion
+    def delete_profile(self, profile:Profile, connection:Database_Connection):
         if type(profile) is not Profile:
             print("Profile parameter is not type Profile")
             return False
@@ -401,11 +440,10 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return False
 
-
-
+    #working
     #function that takes a username and password and creates a profile in the database
     #returns int that is the id for that profile
-    def add_profile(self, username, password, connection):
+    def add_profile(self, username:str, password:str, connection:Database_Connection):
         try:
             with connection.cursor() as cursor:
                 #sql statment to be executed
