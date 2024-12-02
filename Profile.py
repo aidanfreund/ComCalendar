@@ -15,3 +15,6 @@ class Profile():
     
     def get_user_name(self):
         return self.userName
+    
+    def set_user_name(self,name_in):
+        self._userName = name_in

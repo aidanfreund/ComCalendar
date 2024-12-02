@@ -35,6 +35,34 @@ if result_event_ID > 0:
 test_event = Event(result_event_ID,"Test Event",None,"Test Description",datetime.datetime.now(),datetime.datetime.now())
 test_task = Task(result_task_ID,"Test Task",None,"Test Description",datetime.datetime.now())
 
+test_calendar.set_calendar_name("Test Change")
+result_calendar_change = db_profile.change_calendar(test_calendar,db_connection)
+if result_calendar_change is True:
+    print("Change Calendar Working")
+
+
+test_task.flip_completed()
+test_task.set_first_time(datetime.datetime.now())
+test_task.set_description("Test Description Change")
+test_task.set_name("Test Name Change")
+result_task_change = db_profile.change_task(test_task,db_connection)
+if result_task_change is True:
+    print("Change Task working")
+
+test_event.set_first_time(datetime.datetime.now())
+test_event.set_name("Test Event Change")
+test_event.set_description("Testing Event Description Change")
+test_event.set_second_time(datetime.datetime.now())
+result_event_change = db_profile.change_event(test_event,db_connection)
+if result_event_change is True:
+    print("Change Event Working")
+
+
+test_profile.set_user_name("Test Profile Change Name")
+result_profile_change = db_profile.change_profile_credentials(test_profile,db_connection)
+if result_profile_change is True:
+    print("Change Profile Working")
+
 result_event_bool = db_profile.delete_event(test_event,db_connection)
 if result_event_bool is True:
     print("Delete Event working")

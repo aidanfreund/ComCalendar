@@ -14,7 +14,7 @@ class Calendar:
     def get_calendar_name(self):
         return self._CalendarName
 
-    def SetCalendarName(self, CalendarName):
+    def set_calendar_name(self, CalendarName):
         self._CalendarName = CalendarName
 
     def RetrieveTasks(self):

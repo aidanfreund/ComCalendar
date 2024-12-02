@@ -6,7 +6,7 @@ from Calendar import Calendar
 from Profile import Profile
 from Task import Task
 from Event import Event
-from DBConnection import MySQLConnection,Database_Connection
+from DBConnection import Database_Connection
 import datetime
 
 class DB_Profile(ABC):
@@ -125,24 +125,25 @@ class MySQLProfile(DB_Profile):
         except pymysql.MySQLError as e:
             print("Error getting calendar")
             return None
+    #working
     #function that takes a calendar object and database connection that will change the name of the calendar if it differs from the database
-    #returns boolena based on success of change if there was a change needed
+    #returns boolean based on success of change if there was a change needed
     def change_calendar(self, calendar:Calendar, connection:Database_Connection):
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 
                 sql_statement = "Select * from new_schema.calendars where calendar_id = %s"
 
-                cursor.execute(sql_statement,(calendar.get_calendar_id(),))
+                cursor.execute(sql_statement,(calendar.get_calendar_ID(),))
 
                 result = cursor.fetchone()
 
                 if result is None:
                     print("No calendar found with ID: {calendar.id}")
-                    return None
-                if result['name'] != calendar.get_name():
+                    return False
+                if result['name'] != calendar.get_calendar_name():
                     sql_statement2 ="Update new_schema.calendars Set name = %s where calendar_id = %s"
-                    cursor.execute(sql_statement2,(calendar.get_name(),calendar.get_calendar_id()))
+                    cursor.execute(sql_statement2,(calendar.get_calendar_name(),calendar.get_calendar_ID()))
                     connection.commit()
                     return True
                 else:
@@ -226,7 +227,7 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return False
-        
+    #working
     #function that takes a Task object and DB Connection object that changes the task in the databse based on the passed object
     #returns Boolean based on success of changes
     def change_task(self, task:Task, connection:Database_Connection):
@@ -250,9 +251,9 @@ class MySQLProfile(DB_Profile):
                     sql_time_statement = "Update new_schema.tasks Set start_time = %s Where task_id = %s"
                     values = (task.get_first_time(),task.get_id())
                     cursor.execute(sql_time_statement,values)
-                if result['completion_status'] != task.get_completion():
+                if result['completion_status'] != task.get_completed():
                     sql_completion_statement = "Update new_schema.tasks Set completion_status = %s Where task_id = %s"
-                    values = (task.get_completion(), task.get_id())
+                    values = (task.get_completed(), task.get_id())
                     cursor.execute(sql_completion_statement,values)
                 if result['description'] != task.get_description():
                     sql_description_statement = "Update new_schema.tasks Set description = %s Where task_id = %s"
@@ -323,7 +324,7 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return False
-
+    #working
     #function that takes an Event object and DB Connection that changes the Event in the database based on the passed Event
     #returns Boolean based on success of changing the Event
     def change_event(self, event:Event, connection:Database_Connection):
@@ -344,15 +345,15 @@ class MySQLProfile(DB_Profile):
                     cursor.execute(sql_name_statement,values)
                 if result['start_time'] != event.get_first_time():
                     sql_first_time_statement = "Update new_schema.events Set start_time = %s Where event_id = %s"
-                    values = (event.get_name(),event.get_id())
+                    values = (event.get_first_time(),event.get_id())
                     cursor.execute(sql_first_time_statement,values)
                 if result['description'] != event.get_description():
                     sql_description_statement = "Update new_schema.events Set description = %s Where event_id = %s"
                     values = (event.get_description(),event.get_id())
                     cursor.execute(sql_description_statement,values)
-                if result['end_time'] != event.get_end_time():
-                    sql_end_time_statement = "Update new_schema.events Set description = %s where event_id = %s"
-                    values = (event.get_end_time(),event.get_id())
+                if result['end_time'] != event.get_second_time():
+                    sql_end_time_statement = "Update new_schema.events Set end_time = %s where event_id = %s"
+                    values = (event.get_second_time(),event.get_id())
                     cursor.execute(sql_end_time_statement,values)
                 connection.commit()
                 return True
@@ -383,7 +384,7 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return -1
-        
+    #working
     #function that takes a Profile object and Database Connection object that changes the profile in the database based on the passed profile
     #returns Boolean based on success of changing the database
     def change_profile_credentials(self, profile:Profile, connection:Database_Connection):

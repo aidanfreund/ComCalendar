@@ -24,6 +24,9 @@ class Event(Happening):
     
     def set_second_time(self, time:datetime):
         self._second_time = time 
+    
+    def set_name(self,name:str):
+        self._name = name
 
 if __name__ == "__main__":
     main()

@@ -28,9 +28,15 @@ class Happening():
     def get_name(self):
         return self._name
     
+    def set_name(self,name_in):
+        self._name = name_in
+    
     #Returns The Description
     def get_description(self):
         return self._description
+    
+    def set_description(self,description_in):
+        self._description = description_in
     
     #Returns the First Time associated
     def get_first_time(self):
