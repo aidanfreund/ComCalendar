@@ -6,7 +6,8 @@ from Calendar import Calendar
 import datetime
 from Task import Task
 from Event import Event
-
+from TerminalUI import Terminal_UI
+"""
 db_connection = MySQLConnection.get_db_connection()
 if(db_connection != None):
     print("Working")
@@ -78,3 +79,8 @@ if result_calendar_bool is True:
 result_profile_bool = db_profile.delete_profile(test_profile,db_connection)
 if result_profile_bool is True:
     print("Delete Profile working")
+"""
+def main():
+    Terminal_UI.run()
+
+main()

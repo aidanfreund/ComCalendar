@@ -11,7 +11,7 @@ import datetime
 
 class DB_Profile(ABC):
     
-    def add_calendar(self, calendar, profile, connection):
+    def add_calendar(self, calendar_name, profile, connection):
         pass
     
     def read_calendar(self,calendar, connection):
@@ -32,7 +32,7 @@ class DB_Profile(ABC):
     def change_task(self, task, connection):
         pass
 
-    def add_task(self, task, calendar, connection):
+    def add_task(self, description, time, name, calendar, connection):
         pass
     
     def read_event(self,event, connection):
@@ -384,36 +384,7 @@ class MySQLProfile(DB_Profile):
             print("Error: {e}")
             connection.rollback()
             return -1
-    #working
-    #function that takes a Profile object and Database Connection object that changes the profile in the database based on the passed profile
-    #returns Boolean based on success of changing the database
-    def change_profile_credentials(self, profile:Profile, connection:Database_Connection):
-        if type(profile) is not Profile:
-            print("Passed profile is not type Profile")
-            return False
-        try:
-            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
-
-                sql_statement= "Select * from new_schema.profiles where user_id = %s"
-
-                cursor.execute(sql_statement,(profile.get_profile_ID(),))
-
-                result = cursor.fetchone()
-
-                if not result:
-                    print("No profile exists with that ID")
-                    connection.rollback()
-                    return False
-                if result['username'] != profile.get_user_name():
-                    sql_username_statement = "Update new_schema.profiles Set username = %s where user_id = %s"
-                    values = (profile.get_user_name(),profile.get_profile_ID())
-                    cursor.execute(sql_username_statement,values)
-                connection.commit()
-                return True
-        except Exception as e:
-            print("Error: {e}")
-            connection.rollback()
-            return False
+    
     #working
     #function that takes a profile Object and DB connection and deletes the passed profile from the database
     #returns Boolean based on success of deletion
@@ -464,3 +435,20 @@ class MySQLProfile(DB_Profile):
             print(f"Error: {e}")
             #return -1 to indicate an error occured
             return -1
+    #function that takes a username and checks if it is already in the database in profiles
+    #returns True if unique or False if not unique or error
+    def check_username_unique(self,username:str,connection:Database_Connection):
+        try:
+            with connection.cursor() as cursor:
+
+                sql_statement = "Select * from new_schema.profiles Where username = %s"
+
+                cursor.execute(sql_statement,(username,))
+
+                result = cursor.fetchone()
+                if result is None:
+                    return True
+                return False
+        except Exception as e:
+            print("Error: {e}")
+            return False
