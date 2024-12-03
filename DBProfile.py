@@ -12,6 +12,7 @@ import datetime
 class DB_Profile(ABC):
     
     def add_calendar(self, calendar_name, profile, connection):
+    def add_calendar(self, calendar_name, profile, connection):
         pass
     
     def read_calendar(self,calendar, connection):
@@ -435,6 +436,7 @@ class MySQLProfile(DB_Profile):
             print(f"Error: {e}")
             #return -1 to indicate an error occured
             return -1
+
     #function that takes a username and checks if it is already in the database in profiles
     #returns True if unique or False if not unique or error
     def check_username_unique(self,username:str,connection:Database_Connection):
