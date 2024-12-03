@@ -3,15 +3,45 @@
 import datetime
 
 
-class Happening():
+from abc import ABC, abstractmethod
+from Reminder import Reminder
 
-    #Experimental - Not really required as Python doesn't need to initialize null variables.
-    """int(_hap_id)
-    str(_name)
-    Reminder(_reminder = [])
-    str(_description)
-    datetime(_first_time)"""
+class Happening(ABC):
+    
+    #Abstract Class of Happening
+        @abstractmethod
+        def get_id(self):
+            pass
+        
+        @abstractmethod
+        def get_name(self):
+            pass
 
+        @abstractmethod
+        def get_description(self):
+            pass
+
+        @abstractmethod
+        def get_first_time(self):
+            pass
+
+        @abstractmethod
+        def set_first_time(self, time:datetime):
+            pass
+
+        @abstractmethod
+        def edit_reminder(self, reminder_id, date):
+            pass
+        
+        @abstractmethod
+        def remove_reminder(self, reminder_id):
+            pass
+
+        @abstractmethod
+        def create_reminder(self, reminder_id):
+            pass
+
+class Happening(Happening):
     #Constructor
     def __init__(self, hap_id, name, reminder, description, first_time):
         self._hap_id = hap_id
@@ -35,14 +65,12 @@ class Happening():
     def get_description(self):
         return self._description
     
-    def set_description(self,description_in):
-        self._description = description_in
-    
-    #Returns the First Time associated
+
+    #Returns the First Time Associated
     def get_first_time(self):
         return self._first_time
-    
-    #sets the first time associated
+      
+    #Sets the First Time Associated
     def set_first_time(self, time:datetime):
         self._first_time = time
 
@@ -60,13 +88,12 @@ class Happening():
         
         self._reminder_id = reminder_id
 
-        count = 0 #Currently not useful, but will be in the Future
-
         for id in self._reminder:
             if self.reminder_id == self._reminder[id]:
                 self._reminder.remove(id)
-                count += 1 #Currently not useful but will be in the Future
-        return 
+                return True
+                
+        return False
     
     #Creates a new Reminder
     def create_reminder(self, reminder_id):
