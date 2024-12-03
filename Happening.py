@@ -2,6 +2,7 @@
 #Contributers: Edwin Chavez
 import datetime
 
+
 from abc import ABC, abstractmethod
 from Reminder import Reminder
 
@@ -41,8 +42,6 @@ class Happening(ABC):
             pass
 
 
-
-
 '''
 Not Sure if The bottom functions will just be implemented in the Task and Events Classes or If we will use
 Inheritance and keep these here and use .super() in Task and Events Classes. So i have kept it here.
@@ -50,6 +49,7 @@ Inheritance and keep these here and use .super() in Task and Events Classes. So 
 '''
 
 class Its_Happening(Happening):
+
     #Constructor
     def __init__(self, hap_id:int, name:str, reminder, description:str, first_time:datetime):
         self._hap_id = hap_id
@@ -66,13 +66,18 @@ class Its_Happening(Happening):
     def get_name(self):
         return self._name
     
+    def set_name(self,name_in):
+        self._name = name_in
+    
     #Returns The Description
     def get_description(self):
         return self._description
     
+
     #Returns the First Time Associated
     def get_first_time(self):
         return self._first_time
+      
     #Sets the First Time Associated
     def set_first_time(self, time:datetime):
         self._first_time = time
