@@ -1,5 +1,6 @@
 from Profile import Profile
-from FactoryProducer import FactoryProducer
+from DBFactory import FactoryProducer
+
 
 class Operator:
 

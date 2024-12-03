@@ -1,7 +1,6 @@
 #Implementing the Happening Class
 #Contributers: Edwin Chavez
 import datetime
-
 from abc import ABC, abstractmethod
 from Reminder import Reminder
 
@@ -58,14 +57,12 @@ class Happening(Happening):
     def get_name(self):
         return self._name
     
+
     #Returns The Description
     def get_description(self):
         return self._description
     
-    #Returns the First Time Associated
-    def get_first_time(self):
-        return self._first_time
-    #Sets the First Time Associated
+
     def set_first_time(self, time:datetime):
         self._first_time = time
 
@@ -83,12 +80,6 @@ class Happening(Happening):
         
         self._reminder_id = reminder_id
 
-        for id in self._reminder:
-            if self.reminder_id == self._reminder[id]:
-                self._reminder.remove(id)
-                return True
-                
-        return False
     
     #Creates a new Reminder
     def create_reminder(self, reminder_id):

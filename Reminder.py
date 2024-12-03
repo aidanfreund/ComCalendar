@@ -1,7 +1,6 @@
 #Reminder class for Calendar
 #Contributers: Edwin Chavez
 
-
 import datetime
 
 class Reminder():
@@ -24,10 +23,4 @@ class Reminder():
     def set_time(self, date):
         self.date = date.datetime
         return True
-
-
-
-
-
-    
 
