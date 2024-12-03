@@ -8,8 +8,7 @@ class Reminder:
     #Constructor
     def __init__(self, reminder_id, date):
         self._reminder_id = reminder_id
-        self._time = date.date
-        self._time = date.time
+        self._time = date
     
     #Returns the Unique ReminderID
     def get_reminder_id(self):

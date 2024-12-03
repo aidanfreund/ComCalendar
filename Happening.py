@@ -5,11 +5,11 @@ from Reminder import Reminder
 
 class Hapenning(Reminder):
 
-    #Experimental - Not really required as Python doesn't need to initialize null variables.
-    int(_hap_id)
-    str(_name)
-    Reminder(_reminder = [])
-    str(_description)
+   # Experimental - Not really required as Python doesn't need to initialize null variables.
+    # int(_hap_id)
+    # str(_name)
+    # Reminder(_reminder = [])
+    # str(_description)
 
     #Constructor
     def __init__(self, hap_id, name, reminder, description):
