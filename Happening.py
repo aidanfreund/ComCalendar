@@ -39,7 +39,9 @@ class Happening(ABC):
         @abstractmethod
         def create_reminder(self, reminder_id):
             pass
-'''
+
+
+class Happening(Happening):
     #Constructor
     def __init__(self, hap_id, name, reminder, description, first_time):
         self._hap_id = hap_id
@@ -93,4 +95,3 @@ class Happening(ABC):
         self._reminder_id = reminder_id
         self._reminder.append(self._reminder_id)
         return
-'''
