@@ -11,7 +11,7 @@ import datetime
 
 class DB_Profile(ABC):
     
-    def add_calendar(self, calendar, profile, connection):
+    def add_calendar(self, calendar_name, profile, connection):
         pass
     
     def read_calendar(self,calendar, connection):
