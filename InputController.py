@@ -38,15 +38,17 @@ class InputController:
         else:
             raise Exception("Validation error occured")
 
+    #upload ics content string
     @classmethod
-    def upload_calendar(cls, calendar):
-        if(RequestValidator.validate_upload_calendar(calendar)):
-            Operator.upload_calendar(calendar)
+    def upload_calendar(cls, ics_contents):
+        if(RequestValidator.validate_upload_calendar(ics_contents)):
+            Operator.upload_calendar(ics_contents)
         else:
             raise Exception("Validation error occured")
 
+    #download ics content string
     @classmethod
-    def download_calendar(cls):
+    def download_calendar(cls, ics_contents):
         if(RequestValidator.validate_download_calendar()):
             Operator.download_calendar()
         else:

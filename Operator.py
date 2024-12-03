@@ -1,8 +1,22 @@
 from Profile import Profile
-from FactoryProducer import FactoryProducer
+from DBFactory import FactoryProducer,SQL_factory
+from DBProfile import MySQLProfile
+from DBConnection import MySQLConnection
+
+
+
 
 class Operator:
 
+    sql_factory:SQL_factory = FactoryProducer("MySQL")
+    sql_connection:MySQLConnection = sql_factory.DB_connection
+    sql_profile:MySQLProfile = sql_factory.DB_profile
+
+    if sql_connection is None:
+        raise Exception('Failed to connect to database')
+
+
+    
     @classmethod
     def add_event(cls, event_id, name, start_time, end_time, calendar):
         pass
@@ -97,8 +111,9 @@ class Operator:
 
     @classmethod
     def validate_login(cls,username, password):
-        pass
+        
 
     @classmethod
     def create_profile(cls, username, password):
-        pass
+        ## check for unique login using db
+        cls.sql_profile.add_profile(username,password,cls.sql_connection)

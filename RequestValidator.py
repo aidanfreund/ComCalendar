@@ -5,75 +5,79 @@ from datetime import datetime
 
 class RequestValidator:
     
-    uppercase_letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-    lowercase_letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    special_characters = [
-    "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", "[", "]", "{", "}", "|", ";", ":", "'", "\"", 
-    ",", "<", ".", ">", "/", "?", "~", "`"
-    ]
-    spaces = [" "]
-
-    total_chars = uppercase_letters + lowercase_letters + numbers + special_characters + spaces
-
-    
-    
+   
+    #Check for invalid event id's, invalid return
 
 
-    # Checks for:
-    # username is within 3-30 characters
-    # password 8-30 characters
-    # no invalid chars
     @classmethod
     def validate_login(cls, username, password):
-        if (3 < len(username) > 30 and 8 < len(password) > 30):
-           return cls.__check_permitted_chars(username + password)
-        else:    
-            return False
+        return isinstance(username,str) and isinstance(password,str)
 
 
     @classmethod
     def validate_add_event(cls, event_id, name, start_time, end_time, calendar):
-        isValid = False
-        
-        if cls.__check_permitted_chars(name) is False:
+        if not (isinstance(event_id,int) and isinstance(name,str) and isinstance(start_time,datetime) and isinstance(end_time,datetime) and isinstance(calendar,Calendar)):
             return False
-        if calendar is None:
+        if calendar.get_calendar_ID() is -1:
             return False
-        
         
 
     @classmethod
     def validate_edit_event(cls, event_id, old_name, new_name, start_time, end_time, calendar):
-        pass
+        if not isinstance(event_id,int):
+            return False
+        if not isinstance(old_name,str):
+            return False
+        if not isinstance(new_name,str):
+            return False
+        if not isinstance(start_time,datetime):
+            return False
+        if not isinstance(end_time,datetime):
+            return False
+        if not isinstance(calendar,Calendar):
+            return False
+        if calendar.get_calendar_ID() or event_id is -1:
+            return False
+        return True
 
     @classmethod
     def validate_delete_event(cls, event_id, calendar):
-        pass
+        if not isinstance(event_id,int):
+            return False
+        if not isinstance(calendar,Calendar):
+            return False
+        if calendar.get_calendar_ID or event_id is -1:
+            return False
+        return True
 
     @classmethod
-    def validate_create_calendar(cls, user_id, calendar_name):
-        pass
+    def validate_create_calendar(cls,calendar_id, name):
+        if not isinstance(calendar_id,int):
+            return False
+        if not isinstance(calendar_name,str):
+            return False
+        if event_id is -1:
+            return False
+        return True
 
     @classmethod
     def validate_delete_calendar(cls, calendar_id):
-        pass
+        if calendar_id is -1:
+            return False
+        return True
 
     @classmethod
-    def validate_upload_calendar(cls, calendar):
-        pass
-
-    @classmethod
-    def validate_download_calendar(cls):
-        pass
-
+    def validate_upload_calendar(cls, ics_contents):
+        return type(ics_contents) is str
+            
     @classmethod
     def validate_aggregate_calendar(cls, calendar1, calendar2):
-        pass
+        return type(calendar1) and type(calendar2) is Calendar
 
     @classmethod
     def validate_create_reminder(cls, reminder_id, reminder_time):
-        pass
+        if reminder_id is -1:
+            return False
 
     @classmethod
     def validate_retrieve_calendar(cls, calendar_id):
