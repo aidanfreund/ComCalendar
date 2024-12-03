@@ -12,6 +12,7 @@ class Calendar:
     
     def set_calendar(self, calendar_id):
         self._calendar_id = calendar_id
+        return True
 
     def get_calendar_name(self):
 
@@ -28,23 +29,28 @@ class Calendar:
     
     def add_task(self, hap_id, name, datetime):
         self._tasks.append(hap_id)
+        return True
     
     def add_event(self, hap_id, name, start_time, end_time ):
         self._events.append(hap_id)
-        
+        return True        
 
     def delete_task(self, hap_id):
         try:
             for task in self._tasks:
                 if task.get_id() == hap_id:
                     self._tasks.remove(hap_id)
+            return True
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
+            return False
 
     def delete_event(self, hap_id):
         try:
             for event in self._events:
                 if event.get_id() == hap_id:
                     self._tasks.remove(hap_id)
+            return True
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
+            return False
