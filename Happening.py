@@ -5,10 +5,9 @@ import datetime
 from abc import ABC, abstractmethod
 from Reminder import Reminder
 
-class Hapenning:
+class Happening(ABC):
     
     #Abstract Class of Happening
-    class Abstract(ABC):
         @abstractmethod
         def get_id(self):
             pass
@@ -40,7 +39,7 @@ class Hapenning:
         @abstractmethod
         def create_reminder(self, reminder_id):
             pass
-
+'''
     #Constructor
     def __init__(self, hap_id, name, reminder, description, first_time):
         self._hap_id = hap_id
@@ -69,4 +68,29 @@ class Hapenning:
         self._first_time = time
 
     #Edits The Specific Reminder Object
-    def edit_reminder(self, rem
+    def edit_reminder(self, reminder_id, date):
+        self._reminder_id = reminder_id
+        for id in self._reminder:
+            if self._reminder_id == self._reminder[id]:
+                self._reminder[id].date = date.date
+                self._reminder[id].time = date.time
+        return
+    
+    #Removes Reminder Object
+    def remove_reminder(self, reminder_id):
+        
+        self._reminder_id = reminder_id
+
+        for id in self._reminder:
+            if self.reminder_id == self._reminder[id]:
+                self._reminder.remove(id)
+                return True
+                
+        return False
+    
+    #Creates a new Reminder
+    def create_reminder(self, reminder_id):
+        self._reminder_id = reminder_id
+        self._reminder.append(self._reminder_id)
+        return
+'''
