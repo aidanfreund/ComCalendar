@@ -1,8 +1,7 @@
-from Profile import Profile
-from DBFactory import FactoryProducer
+from Operator import Operator
+from RequestValidator import RequestValidator
 
-
-class Operator:
+class InputController:
 
     @classmethod
     def add_event(cls, event_id, name, start_time, end_time, calendar):
@@ -94,12 +93,4 @@ class Operator:
 
     @classmethod
     def filter_by_dates(cls, calendar, start_date, end_date):
-        pass
-
-    @classmethod
-    def validate_login(cls,username, password):
-        pass
-
-    @classmethod
-    def create_profile(cls, username, password):
         pass

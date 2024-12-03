@@ -3,25 +3,24 @@
 
 import datetime
 
-class Reminder:
+class Reminder():
 
     #Constructor
-    def __init__(self, reminder_id:int, notice_time:datetime):
+    def __init__(self, reminder_id, date):
         self._reminder_id = reminder_id
-        self._time = notice_time
+        self._time = date.datetime
     
     #Returns the Unique ReminderID
-    def get_reminder_id(self):
+    def get_id(self):
         return self._reminder_id
     
     #Returns the Date and Time of the Reminder
     def get_time(self):
         return self._time
     
-    #Sets the Date and Time for the Reminder
-    def set_time(self, date:datetime):
-        self.date = date.date
-        self.time = date.time
-
-
     
+    #Sets the Date and Time for the Reminder
+    def set_time(self, date):
+        self.date = date.datetime
+        return True
+
