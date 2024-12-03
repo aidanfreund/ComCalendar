@@ -74,8 +74,7 @@ class Happening(Happening):
         self._reminder_id = reminder_id
         for id in self._reminder:
             if self._reminder_id == self._reminder[id]:
-                self._reminder[id].date = date.date
-                self._reminder[id].time = date.time
+                self._reminder[id].datetime = date.datetime
         return
     
     #Removes Reminder Object
