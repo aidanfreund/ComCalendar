@@ -1,38 +1,20 @@
-#Commit
-# import LoginMenu
-# import InputController
-# import FactoryProducer
 from Calendar import Calendar
 
-def main():
-    test_profile = Profile("Aidan", 22, [2, 3, 4, 7, 6])
-
-    cont = input("Create a calendar: ")
-    while(cont == 'y'):
-        name = input("Enter calendar name: ")
-        test_profile.createCalendar(6, name)
-        cont = input("Create another? ")
-        
-    pass
-
-
-
 class Profile():
-    calendar_ID = 0
 
-    def __init__(self, username:str, profile_ID: str, calendars:list):
-        self.userName = username
-        self.profile_ID = profile_ID
+    def __init__(self, username:str, calendars:list):
+        self.user_name = username
+        #self.profile_ID = profile_ID
         self.calendars = calendars
 
-    def getCalendars(self):
+    def get_calendars(self):
         print(self.calendars)
         print("getting calendar list")
 
-    def getProfileID(self):
+    def get_profileID(self):
         return self.profile_ID
     
-    def getUserName(self):
+    def get_username(self):
         return self.userName
     
     def createCalendar(self, ID:int, name:str):
@@ -43,32 +25,3 @@ class Profile():
         Profile.calendar_ID += 1
         print("New Calendar Created")
         return True
-
-
-
-#move to other classes
-# class Selection(Enum):
-#     CREATE = 1
-#     AGGREGTE = 2
-#     CLONE = 3
-#     DELETE = 4
-#     COMPARE = 5
-#     LOGOUT = 6
-#     UPLOAD = 7
-    # def Run():
-    #     FactoryProducer.CreateFactory("MySQL")
-    #     isLoggedIn = LoginMenu.Login("username", "password")
-    #     if isLoggedIn:
-    #         print("logged in")
-    #     while(isLoggedIn):
-    #         choice = input("Enter Your Choice:")
-    #         InputController.selectOption(choice)
-    #         if choice == "LOGOUT":
-    #             isLoggedIn = False 
-    # def DeleteProfile():
-    #     pass
-
-
-
-if __name__ == "__main__":
-    main()
