@@ -29,7 +29,7 @@ class Happening(ABC):
             pass
 
         @abstractmethod
-        def edit_reminder(self, reminder_id, date):
+        def edit_reminder(self, reminder_id, date:datetime):
             pass
         
         @abstractmethod
@@ -41,9 +41,17 @@ class Happening(ABC):
             pass
 
 
-class Happening(Happening):
+
+
+'''
+Not Sure if The bottom functions will just be implemented in the Task and Events Classes or If we will use
+Inheritance and keep these here and use .super() in Task and Events Classes. So i have kept it here.
+
+'''
+
+class Its_Happening(Happening):
     #Constructor
-    def __init__(self, hap_id, name, reminder, description, first_time):
+    def __init__(self, hap_id:int, name:str, reminder, description:str, first_time:datetime):
         self._hap_id = hap_id
         self._name = name
         self._reminder = reminder
@@ -70,24 +78,21 @@ class Happening(Happening):
         self._first_time = time
 
     #Edits The Specific Reminder Object
-    def edit_reminder(self, reminder_id, date):
+    def edit_reminder(self, reminder_id:int, date:datetime):
         self._reminder_id = reminder_id
-        for id in self._reminder:
-            if self._reminder_id == self._reminder[id]:
-                self._reminder[id].datetime = date.datetime
+        self._reminder[reminder_id].set_time(date.datetime)
         return
     
     #Removes Reminder Object
     def remove_reminder(self, reminder_id):
         
         self._reminder_id = reminder_id
-
-        for id in self._reminder:
-            if self.reminder_id == self._reminder[id]:
-                self._reminder.remove(id)
-                return True
+        if self._reminder_id in self._reminder:
+            self._reminder.remove(self._reminder_id)
+            return True
+        else:
+            return False
                 
-        return False
     
     #Creates a new Reminder
     def create_reminder(self, reminder_id):
