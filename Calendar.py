@@ -6,6 +6,7 @@ class Calendar:
         self._events = events if events is not None else []
         self._tasks = tasks if tasks is not None else []
 
+
     def get_calendar_id(self):
         return self._calendar_id
     
@@ -13,6 +14,7 @@ class Calendar:
         self._calendar_id = calendar_id
 
     def get_calendar_name(self):
+
         return self._calendar_name
 
     def set_calendar_name(self, calendar_name):

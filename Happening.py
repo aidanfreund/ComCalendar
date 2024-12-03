@@ -2,6 +2,7 @@
 #Contributers: Edwin Chavez
 import datetime
 
+
 from abc import ABC, abstractmethod
 from Reminder import Reminder
 
@@ -40,7 +41,6 @@ class Happening(ABC):
         def create_reminder(self, reminder_id):
             pass
 
-
 class Happening(Happening):
     #Constructor
     def __init__(self, hap_id, name, reminder, description, first_time):
@@ -58,13 +58,18 @@ class Happening(Happening):
     def get_name(self):
         return self._name
     
+    def set_name(self,name_in):
+        self._name = name_in
+    
     #Returns The Description
     def get_description(self):
         return self._description
     
+
     #Returns the First Time Associated
     def get_first_time(self):
         return self._first_time
+      
     #Sets the First Time Associated
     def set_first_time(self, time:datetime):
         self._first_time = time

@@ -1,7 +1,3 @@
-#Commit
-# import LoginMenu
-# import InputController
-# import FactoryProducer
 from Calendar import Calendar
 
 def main():
@@ -14,7 +10,6 @@ def main():
         cont = input("Create another? ")
         
     pass
-
 
 
 class Profile():
@@ -45,30 +40,3 @@ class Profile():
         return True
 
 
-
-#move to other classes
-# class Selection(Enum):
-#     CREATE = 1
-#     AGGREGTE = 2
-#     CLONE = 3
-#     DELETE = 4
-#     COMPARE = 5
-#     LOGOUT = 6
-#     UPLOAD = 7
-    # def Run():
-    #     FactoryProducer.CreateFactory("MySQL")
-    #     isLoggedIn = LoginMenu.Login("username", "password")
-    #     if isLoggedIn:
-    #         print("logged in")
-    #     while(isLoggedIn):
-    #         choice = input("Enter Your Choice:")
-    #         InputController.selectOption(choice)
-    #         if choice == "LOGOUT":
-    #             isLoggedIn = False 
-    # def DeleteProfile():
-    #     pass
-
-
-
-if __name__ == "__main__":
-    main()
