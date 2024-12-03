@@ -1,49 +1,48 @@
 from Happening import Hapenning
 class Calendar:
-    def __init__(self, CalendarID, CalendarName, Events, Tasks):
-        self._CalendarID = CalendarID
-        self._CalendarName = CalendarName
-        self._Events = Events if Events is not None else []
-        self._Tasks = Tasks if Tasks is not None else []
+    def __init__(self, calendar_id, calendar_name, events, tasks):
+        self._calendar_id = calendar_id
+        self._calendar_name = calendar_name
+        self._events = events if events is not None else []
+        self._tasks = tasks if tasks is not None else []
 
-    def get_calendarID(self):
-        return self._CalendarID
+    def get_calendar_id(self):
+        return self._calendar_id
     
-    def set_calendar(self, CalendarID):
-        self._CalendarId = CalendarID
+    def set_calendar(self, calendar_id):
+        self._calendar_id = calendar_id
 
-    def get_calendarname(self):
-        return self._CalendarName
+    def get_calendar_name(self):
+        return self._calendar_name
 
-    def set_calendarname(self, CalendarName):
-        self._CalendarName = CalendarName
+    def set_calendar_name(self, calendar_name):
+        self._calendar_name = calendar_name
 
     def retrieve_tasks(self):
-        return self._Tasks
+        return self._tasks
     
     def retrieve_events(self):
-        return self._Events
+        return self._events
     
-    def add_task(self, hap_id, name, Datetime):
-        self._Tasks.append(hap_id)
+    def add_task(self, hap_id, name, datetime):
+        self._tasks.append(hap_id)
     
-    def add_event(self, hap_id, name, Starttime, EndTime ):
-        self._Events.append(hap_id)
+    def add_event(self, hap_id, name, start_time, end_time ):
+        self._events.append(hap_id)
         
 
     def delete_task(self, hap_id):
-        hap = Hapenning()
-        hap_id = hap.get_id()
         try:
-            self._Tasks.remove(hap_id)
+            for task in self._tasks:
+                if task.get_id() == hap_id:
+                    self._tasks.remove(hap_id)
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
 
     def delete_event(self, hap_id):
-        hap = Hapenning()
-        hap_id = hap.get_id()
         try:
-            self._Tasks.remove(hap_id)
+            for event in self._events:
+                if event.get_id() == hap_id:
+                    self._tasks.remove(hap_id)
         except ValueError:
-            print(f"Event Id '{hap_id}' not found.")
-
+            print(f"Task ID '{hap_id}' not found." )
