@@ -1,22 +1,24 @@
 #Implementing the Happening Class
 #Contributers: Edwin Chavez
+import datetime
 
-from Reminder import Reminder
 
-class Hapenning(Reminder):
+class Happening():
 
-   # Experimental - Not really required as Python doesn't need to initialize null variables.
-    # int(_hap_id)
-    # str(_name)
-    # Reminder(_reminder = [])
-    # str(_description)
+    #Experimental - Not really required as Python doesn't need to initialize null variables.
+    """int(_hap_id)
+    str(_name)
+    Reminder(_reminder = [])
+    str(_description)
+    datetime(_first_time)"""
 
     #Constructor
-    def __init__(self, hap_id, name, reminder, description):
+    def __init__(self, hap_id, name, reminder, description, first_time):
         self._hap_id = hap_id
         self._name = name
         self._reminder = reminder
         self._description = description
+        self._first_time = first_time
 
     #Returns the Happening Class ID
     def get_id(self):
@@ -26,10 +28,24 @@ class Hapenning(Reminder):
     def get_name(self):
         return self._name
     
+    def set_name(self,name_in):
+        self._name = name_in
+    
     #Returns The Description
     def get_description(self):
         return self._description
     
+    def set_description(self,description_in):
+        self._description = description_in
+    
+    #Returns the First Time associated
+    def get_first_time(self):
+        return self._first_time
+    
+    #sets the first time associated
+    def set_first_time(self, time:datetime):
+        self._first_time = time
+
     #Edits The Specific Reminder Object
     def edit_reminder(self, reminder_id, date):
         self._reminder_id = reminder_id

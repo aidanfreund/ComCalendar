@@ -5,16 +5,16 @@ class Calendar:
         self._Events = Events if Events is not None else []
         self._Tasks = Tasks if Tasks is not None else []
 
-    def GetCalendarID(self):
+    def get_calendar_ID(self):
         return self._CalendarID
     
     def SetCalendar(self, CalendarID):
         self._CalendarId = CalendarID
 
-    def GetCalendarName(self):
+    def get_calendar_name(self):
         return self._CalendarName
 
-    def SetCalendarName(self, CalendarName):
+    def set_calendar_name(self, CalendarName):
         self._CalendarName = CalendarName
 
     def RetrieveTasks(self):
@@ -40,7 +40,5 @@ class Calendar:
             self._Tasks.remove(hapID)
         except ValueError:
             print(f"Event Id '{hapID}' not found.")
-
-    
 
     

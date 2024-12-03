@@ -6,9 +6,9 @@ import datetime
 class Reminder:
 
     #Constructor
-    def __init__(self, reminder_id, date):
+    def __init__(self, reminder_id:int, notice_time:datetime):
         self._reminder_id = reminder_id
-        self._time = date
+        self._time = notice_time
     
     #Returns the Unique ReminderID
     def get_reminder_id(self):
@@ -18,12 +18,10 @@ class Reminder:
     def get_time(self):
         return self._time
     
-    
     #Sets the Date and Time for the Reminder
-    def set_time(self, date):
+    def set_time(self, date:datetime):
         self.date = date.date
         self.time = date.time
 
 
     
-
