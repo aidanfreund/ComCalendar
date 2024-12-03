@@ -28,6 +28,7 @@ class Profile():
         return self.profile_ID
     
     def getUserName(self):
+
         return self.userName
     
     def createCalendar(self, ID:int, name:str):
@@ -38,5 +39,4 @@ class Profile():
         Profile.calendar_ID += 1
         print("New Calendar Created")
         return True
-
 
