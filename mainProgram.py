@@ -4,8 +4,10 @@ from DBProfile import MySQLProfile
 from Profile import Profile
 from Calendar import Calendar
 import datetime
+import time
 from Task import Task
 from Event import Event
+from Reminder import Reminder
 
 db_connection = MySQLConnection.get_db_connection()
 if(db_connection != None):
@@ -32,8 +34,18 @@ result_event_ID = db_profile.add_event("Test Description", datetime.datetime.now
 if result_event_ID > 0:
     print("Add Event working")
 
+
 test_event = Event(result_event_ID,"Test Event",None,"Test Description",datetime.datetime.now(),datetime.datetime.now())
-test_task = Task(result_task_ID,"Test Task",None,"Test Description",datetime.datetime.now())
+test_task = Task(result_task_ID,"Test Task",datetime.datetime.now(),"Test Description")
+
+reminder_int = db_profile.add_reminder(datetime.datetime.now(),test_event,db_connection)
+if reminder_int > 0:
+    print("Add reminder working")
+
+test_reminder = Reminder(reminder_int,datetime.datetime.now())
+reminder_bool = db_profile.change_reminder(test_reminder,db_connection)
+if reminder_bool:
+    print("Change reminder working")
 
 test_calendar.set_calendar_name("Test Change")
 result_calendar_change = db_profile.change_calendar(test_calendar,db_connection)
@@ -57,11 +69,9 @@ result_event_change = db_profile.change_event(test_event,db_connection)
 if result_event_change is True:
     print("Change Event Working")
 
-
-test_profile.set_user_name("Test Profile Change Name")
-result_profile_change = db_profile.change_profile_credentials(test_profile,db_connection)
-if result_profile_change is True:
-    print("Change Profile Working")
+result_reminder_bool = db_profile.delete_reminder(test_reminder,db_connection)
+if result_reminder_bool is True:
+    print("Delete Reminder working")
 
 result_event_bool = db_profile.delete_event(test_event,db_connection)
 if result_event_bool is True:

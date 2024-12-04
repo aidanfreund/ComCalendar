@@ -1,4 +1,4 @@
-from Happening import Hapenning
+from Happening import Happening
 class Calendar:
     def __init__(self, calendar_id, calendar_name, events, tasks):
         self._calendar_id = calendar_id

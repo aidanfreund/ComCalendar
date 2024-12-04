@@ -20,18 +20,18 @@ class Profile():
         self.profile_ID = profile_ID
         self.calendars = calendars
 
-    def getCalendars(self):
+    def get_calendars(self):
         print(self.calendars)
         print("getting calendar list")
 
-    def getProfileID(self):
+    def get_profile_ID(self):
         return self.profile_ID
     
-    def getUserName(self):
+    def get_username(self):
 
         return self.userName
     
-    def createCalendar(self, ID:int, name:str):
+    def create_calendar(self, ID:int, name:str):
         if len(self.calendars)>5:
             print("Profile has too many calendars, must have less than 6 in order to make a new calendar")
             return False
@@ -40,3 +40,5 @@ class Profile():
         print("New Calendar Created")
         return True
 
+    def set_username(self,username):
+        self.userName = username

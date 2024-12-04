@@ -10,7 +10,7 @@ class Reminder():
     def __init__(self, reminder_id:int, notice_time:datetime):
         self._reminder_id = reminder_id
 
-        self._time = date.datetime
+        self._time = notice_time
 
     
     #Returns the Unique ReminderID
