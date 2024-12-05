@@ -71,21 +71,6 @@ class Operator:
     def create_reminder(cls, start_time, happ_obj):
         pass
 
-    # To be discussed
-    @classmethod
-    def retrieve_calendar(cls, calendar_id):
-        pass
-
-    # To be discussed
-    @classmethod
-    def retrieve_event_information(cls, event_id, calendar_obj):
-        pass
-
-    # To be discussed
-    @classmethod
-    def retrieve_task_information(cls, task_id, calendar_obj):
-        pass
-
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_events(cls, calendar_obj, start_date, end_date):

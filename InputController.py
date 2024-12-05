@@ -3,13 +3,16 @@ from RequestValidator import RequestValidator
 
 class InputController:
 
-    #profile
+    active_profile = None
+    active_calendar = None
+    active_happening = None
+    active_reminder = None
     #calendar
 
     # Creates new event with attributes, returns true if successful
     @classmethod
     def add_event(cls, name, start_time, end_time, calendar_obj):
-        if RequestValidator.validate_add_event(name, start_time, end_time, calendar_obj):
+        if RequestValidator.validate_add_event(name, start_time, end_time):
             Operator.add_event(name, start_time, end_time, calendar_obj)
         else:
             raise Exception("Validation error occurred")
@@ -17,7 +20,7 @@ class InputController:
     # Edits event, returns true if successful
     @classmethod
     def edit_event(cls, name, start_time, end_time, event_obj):
-        if RequestValidator.validate_edit_event(name, start_time, end_time, event_obj):
+        if RequestValidator.validate_edit_event(name, start_time, end_time):
             Operator.edit_event(name, start_time, end_time, event_obj)
         else:
             raise Exception("Validation error occurred")
@@ -25,15 +28,12 @@ class InputController:
     # Deletes event from calendar, returns true if successful
     @classmethod
     def delete_event(cls, event_obj, profile_obj):
-        if RequestValidator.validate_delete_event(event_obj, profile_obj):
-            Operator.delete_event(event_obj, profile_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.delete_event(event_obj, profile_obj)
     
     # Creates new calendar with name, returns true if successful
     @classmethod
     def create_calendar(cls, name, profile_obj):
-        if RequestValidator.validate_create_calendar(name, profile_obj):
+        if RequestValidator.validate_create_calendar(name):
             Operator.create_calendar(name, profile_obj)
         else:
             raise Exception("Validation error occurred")
@@ -41,18 +41,12 @@ class InputController:
     # Deletes calendar 
     @classmethod
     def delete_calendar(cls, calendar_obj, profile_obj):
-        if RequestValidator.validate_delete_calendar(calendar_obj, profile_obj):
-            Operator.create_calendar(calendar_obj, profile_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.create_calendar(calendar_obj, profile_obj)
 
     # Processes .ics file string and returns calendar object
     @classmethod
     def upload_calendar(cls, calendar_obj, profile_obj):
-        if RequestValidator.validate_upload_calendar(calendar_obj, profile_obj):
-            Operator.upload_calendar(calendar_obj, profile_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.upload_calendar(calendar_obj, profile_obj)
     
     # Returns .ics file string 
     @classmethod
@@ -62,10 +56,8 @@ class InputController:
      # Copies a calendar and adds it to profile, returns true if successful
     @classmethod
     def copy_calendar(cls, calendar_obj, profile_obj):
-        if RequestValidator.validate_copy_calendar(calendar_obj, profile_obj):
-            Operator.copy_calendar(calendar_obj, profile_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.copy_calendar(calendar_obj, profile_obj)
+       
 
     # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
@@ -78,15 +70,13 @@ class InputController:
     # Combines calendars, returns a new calendar with combined objects
     @classmethod
     def aggregate_calendar(cls, calendar_obj1, calendar_obj2):
-        if RequestValidator.validate_aggregate_calendar(calendar_obj1, calendar_obj2):
-            Operator.aggregate_calendar(calendar_obj1, calendar_obj2)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.aggregate_calendar(calendar_obj1, calendar_obj2)
+      
 
     # Adds reminder to happening obj, returns true if successful
     @classmethod
     def create_reminder(cls, start_time, happ_obj):
-        if RequestValidator.validate_create_reminder(start_time, happ_obj):
+        if RequestValidator.validate_create_reminder(start_time):
             Operator.create_reminder(start_time, happ_obj)
         else:
             raise Exception("Validation error occurred")
@@ -133,7 +123,7 @@ class InputController:
     # Adds task to a calendar, returns true if successful
     @classmethod
     def add_task(cls, description, due_date, calendar_obj):
-        if RequestValidator.validate_add_task(description, due_date, calendar_obj):
+        if RequestValidator.validate_add_task(description, due_date):
             Operator.add_task(description, due_date, calendar_obj)
         else:
             raise Exception("Validation error occurred")
@@ -141,15 +131,13 @@ class InputController:
     # Removes an task from calendar, returns true if successful
     @classmethod
     def remove_task(cls, task_obj, calendar_obj):
-        if RequestValidator.validate_remove_task(task_obj, calendar_obj):
-            Operator.remove_task(task_obj, calendar_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.remove_task(task_obj, calendar_obj)
+
 
     # Edits a task, returns true if successful
     @classmethod
     def edit_task(cls, description, due_date, task_obj):
-        if RequestValidator.validate_edit_task(description, due_date, task_obj):
+        if RequestValidator.validate_edit_task(description, due_date):
             Operator.edit_task(description, due_date, task_obj)
         else:
             raise Exception("Validation error occurred")
@@ -157,10 +145,7 @@ class InputController:
     # Removes reminder, returns true if successful
     @classmethod
     def remove_reminder(cls, reminder_obj, happ_obj):
-        if RequestValidator.validate_remove_reminder(reminder_obj, happ_obj):
-            Operator.remove_reminder(reminder_obj, happ_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.remove_reminder(reminder_obj, happ_obj)
 
     # Edits a reminder object, returns true if successful
     @classmethod
