@@ -6,8 +6,8 @@ import datetime
 
 
 class Task(Happening):
-    def __init__(self, name, time, desc = ""):
-        super().__init__(name, time, desc)
+    def __init__(self, id:int, name:str, time:datetime, desc = ""):
+        super().__init__(id, name, time, desc)
         self._completed = False
 
     def get_completed(self):
@@ -15,3 +15,4 @@ class Task(Happening):
     
     def flip_completed(self):
         self._completed = not(self._completed)
+        return True

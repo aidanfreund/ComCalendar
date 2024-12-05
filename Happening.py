@@ -49,19 +49,16 @@ class Happening(Happening):
         self._description = description
         self._first_time = first_time
 
-    #Returns the Happening Class ID
     def get_id(self):
         return self._hap_id
     
-    #Returns the Name
     def get_name(self):
         return self._name
     
     def set_name(self,name_in):
         self._name = name_in
         return True
-    
-    #Returns The Description
+   
     def get_description(self):
         return self._description
     
@@ -69,17 +66,15 @@ class Happening(Happening):
         self._description = desc
         return True
 
-    #Returns the First Time Associated
     def get_first_time(self):
         return self._first_time
       
-    #Sets the First Time Associated
     def set_first_time(self, time:datetime):
         self._first_time = time
         return True
 
     #Edits The Specific Reminder Object
-    def edit_reminder(self, reminder_id, date):
+    def edit_reminder(self, reminder_id:int, date:datetime):
         self._reminder_id = reminder_id
         for id in self._reminder:
             if self._reminder_id == self._reminder[id]:
@@ -89,7 +84,7 @@ class Happening(Happening):
     
     #Removes Reminder Object
     def remove_reminder(self, reminder_id):
-        
+      
         self._reminder_id = reminder_id
 
         for id in self._reminder:

@@ -1,4 +1,5 @@
 from Happening import Happening
+
 class Calendar:
     def __init__(self, calendar_id, calendar_name, events, tasks):
         self._calendar_id = calendar_id
@@ -15,6 +16,7 @@ class Calendar:
         return True
 
     def get_calendar_name(self):
+
         return self._calendar_name
 
     def set_calendar_name(self, calendar_name):
@@ -34,8 +36,8 @@ class Calendar:
     def add_event(self, event):
         self._events.append(event)
         return True
-
-
+  
+    #removes task from task array. using the id associated with task
     def delete_task(self, hap_id):
         try:
             for task in self._tasks:
@@ -45,7 +47,8 @@ class Calendar:
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
             return False
-
+          
+    #removes event from event array. using the id associated with event
     def delete_event(self, hap_id):
         try:
             for event in self._events:

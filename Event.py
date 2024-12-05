@@ -13,6 +13,8 @@ class Event(Happening):
     
     def set_second_time(self, time:datetime):
         self._second_time = time 
+        return True
     
     def set_name(self,name:str):
         self._name = name
+        return True
