@@ -15,11 +15,11 @@ class Operator:
 
     if db_connection is None:
         raise Exception('Failed to connect to database')
-
+    
     # Creates new event with attributes, returns true if successful
     @classmethod
     def add_event(cls, name, start_time, end_time, calendar_obj):
-        DB_Profile.add_event()
+        pass
 
     # Edits event, returns true if successful
     @classmethod
@@ -43,7 +43,7 @@ class Operator:
 
     # Processes .ics file string and returns calendar object
     @classmethod
-    def upload_calendar(cls, calendar, profile):
+    def upload_calendar(cls, calendar_obj, profile_obj):
         pass
     
     # Returns .ics file string 
@@ -51,6 +51,15 @@ class Operator:
     def download_calendar(cls):
         pass
 
+     # Copies a calendar and adds it to profile, returns true if successful
+    @classmethod
+    def copy_calendar(cls, calendar_obj, profile_obj):
+        pass
+
+    # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
+    @classmethod
+    def compare_calendars(cls, calendar_id1, calendar_id2, start_time, end_time):
+        pass
     
     # Combines calendars, returns a new calendar with combined objects
     @classmethod
@@ -62,7 +71,7 @@ class Operator:
     def create_reminder(cls, start_time, happ_obj):
         pass
 
-    # Returns calendar obj from db using calendar_id
+    # To be discussed
     @classmethod
     def retrieve_calendar(cls, calendar_id):
         pass
@@ -80,17 +89,17 @@ class Operator:
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_events(cls, calendar_obj, start_date, end_date):
-        return CalendarFilter.FilterByDates(calendar_obj,start_date,end_date)
+        pass
 
 
     # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_tasks(cls, calendar_obj, start_date, end_date):
-        return CalendarFilter.FilterByDates(calendar_obj,start_date,end_date)
+        pass
     
      # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
-    def filter_by_dates(cls, calendar, start_date, end_date):
+    def filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):
         pass
 
     # Adds task to a calendar, returns true if successful
@@ -107,16 +116,6 @@ class Operator:
     @classmethod
     def edit_task(cls, description, due_date, task_obj):
         pass
-
-    # Copies a calendar and adds it to profile, returns true if successful
-    @classmethod
-    def copy_calendar(cls, calendar_obj, profile_obj):
-        pass
-
-    # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
-    @classmethod
-    def compare_calendars(cls, calendar_id1, calendar_id2, start_time, end_time):
-        pass
     
     # Removes reminder, returns true if successful
     @classmethod
@@ -125,7 +124,7 @@ class Operator:
 
     # Edits a reminder object, returns true if successful
     @classmethod
-    def edit_reminder(cls, reminder_id, new_time):
+    def edit_reminder(cls, reminder_obj, new_time):
         pass
 
     # Deletes profile obj, returns true if successful
@@ -138,11 +137,11 @@ class Operator:
     #Returns profile obj if a match exists
     @classmethod
     def login(cls,username, password):
-        return cls.db_profile.read_profile(username,password,cls.db_connection)
+        pass
 
 
     #Creates a profile obj and returns it 
     @classmethod
     def create_profile(cls, username, password):
-        return cls.db_profile.add_profile(username,password,cls.db_connection)
+        pass
         

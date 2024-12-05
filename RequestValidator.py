@@ -120,7 +120,7 @@ class RequestValidator:
         pass
 
     @classmethod
-    def validate_change_reminder(cls, reminder_id, new_time):
+    def validate_edit_reminder(cls, reminder_id, new_time):
         pass
 
     @classmethod
@@ -128,7 +128,7 @@ class RequestValidator:
         pass
     
     @classmethod
-    def validate_filter_by_dates(cls, calendar, start_time, end_time):
+    def validate_filter_calendar_by_dates(cls, calendar, start_time, end_time):
         pass
 
     # Returns true if string contains no invalid chars
