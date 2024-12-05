@@ -1,13 +1,13 @@
-#Aidan
 #Task.py
 #Task Class, a type of happening with completion status
 
 from Happening import Happening
 import datetime
 
+
 class Task(Happening):
-    def __init__(self, task_ID, name, time, desc = ""):
-        super().__init__(task_ID, name, desc, time)
+    def __init__(self, id:int, name:str, time:datetime, desc = ""):
+        super().__init__(id, name, time, desc)
         self._completed = False
 
     def get_completed(self):
