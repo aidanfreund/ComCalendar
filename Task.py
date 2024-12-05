@@ -13,6 +13,6 @@ class Task(Happening):
     def get_completed(self):
         return self._completed
     
-    def flip_completed(self):
-        self._completed = not(self._completed)
+    def set_completed(self, completion:bool):
+        self._completed = completion
         return True
