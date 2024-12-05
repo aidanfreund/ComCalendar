@@ -2,26 +2,26 @@ from Calendar import Calendar
 
 class Profile():
 
-    def __init__(self, username:str, calendars:list):
-        self.user_name = username
-        #self.profile_ID = profile_ID
-        self.calendars = calendars
+    def __init__(self, username:str, profile_id: str, calendars:list):
+        self._username = username
+        self._profile_id = profile_id
+        self._calendars = calendars
 
     def get_calendars(self):
-        print(self.calendars)
-        print("getting calendar list")
-
-    def get_profileID(self):
-        return self.profile_ID
+        return self._calendars
+    
+    def get_profile_id(self):
+        return self._profile_id
     
     def get_username(self):
-        return self.userName
+        return self._username
     
-    def createCalendar(self, ID:int, name:str):
-        if len(self.calendars)>5:
+    def create_new_calendar(self, id:int, name:str):
+        if len(self._calendars)>5:
             print("Profile has too many calendars, must have less than 6 in order to make a new calendar")
             return False
-        self.calendars.append(Calendar.__init__(self, Profile.calendar_ID, name, [], []))
-        Profile.calendar_ID += 1
+        self.calendars.append(Calendar.__init__(self, id, name, [], []))
         print("New Calendar Created")
         return True
+
+

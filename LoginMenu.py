@@ -6,8 +6,6 @@ class LoginMenu:
     def login(self,username,password):
         if(RequestValidator.validate_login(username, password)):
             pass # Do something
-        pass
-            
        
     # Returns bool if successful
     def create_profile(self, username, password):
