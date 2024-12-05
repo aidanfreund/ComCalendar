@@ -55,6 +55,21 @@ class DB_Profile(ABC):
     def add_profile(self, username,password, connection):
         pass
 
+    def add_reminder(self, time, happening,connection):
+        pass
+
+    def delete_reminder(self,reminder,connection):
+        pass
+
+    def change_reminder(self,reminder,connection):
+        pass
+
+    def read_reminder(self,happening,connection):
+        pass
+
+    def read_profile(self,username,password,connection):
+        pass
+
     def get_DB_profile():
         pass
 
@@ -111,7 +126,7 @@ class MySQLProfile(DB_Profile):
                 else:
                     calendar_array = []
                     for row in result:
-                        calendar_array.append(Calendar(result['calendar_id'],result['name']))
+                        calendar_array.append(Calendar(row['calendar_id'],row['name'],None,None))
                     return calendar_array
         except Exception as e:
             print(f"Error: {e}")
@@ -172,12 +187,12 @@ class MySQLProfile(DB_Profile):
             return False
     #function that takes a calendar object and db connection that gets all associated tasks to the calendar
     #returns Task object array corresponding to tasks associated with the calendar passed
-    def read_task(self,calendar:Calendar, connection:Database_Connection):
+    def read_tasks(self,calendar:Calendar, connection:Database_Connection):
         
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_statement = "Select * from new_schema.tasks where calendar_id = %s"
-                cursor(sql_statement,(calendar.get_calendar_id(),))
+                cursor.execute(sql_statement,(calendar.get_calendar_id(),))
 
                 result = cursor.fetchall()
                 if not result:
@@ -185,7 +200,7 @@ class MySQLProfile(DB_Profile):
                 else:
                     task_array = []
                     for row in result:
-                        task_array.append(Task(result['task_id'],result['name'],result['time'],result['description']))
+                        task_array.append(Task(row['task_id'],row['name'],row['start_time'],row['description']))
                     return task_array
         except Exception as e:
             print(f"Error: {e}")
@@ -284,7 +299,7 @@ class MySQLProfile(DB_Profile):
 
     #function that takes a Calendar object and DB connection that gets all events associated with the calendar
     #returns Event object array
-    def read_event(self,calendar:Calendar, connection:Database_Connection):
+    def read_events(self,calendar:Calendar, connection:Database_Connection):
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_statement = "Select * from new_schema.events where calendar_id = %s"
@@ -296,7 +311,7 @@ class MySQLProfile(DB_Profile):
                 else:
                     event_array = []
                     for row in result:
-                        event_array.append(Event(result['event_id'],result['name'],None,result['start_time'],result['end_time'],result['description']))
+                        event_array.append(Event(row['event_id'],row['name'],None,row['start_time'],row['end_time'],row['description']))
                     return event_array
         except Exception as e:
             print(f"Error: {e}")
@@ -557,6 +572,19 @@ class MySQLProfile(DB_Profile):
             print(f"Error: {e}")
             return None
                     
-    
+    def read_profile(self,username:str,password:str,connection:Database_Connection):
+        try:
+            with connection.cursor(pymysql.cursors.DictCursor) as cursor:
+                sql_statement = "Select * from new_schema.profiles Where username = %s and password = %s"
+                cursor.execute(sql_statement,(username,password))
+
+                result = cursor.fetchone()
+                if result is None:
+                    return None
+                else:
+                    return Profile(result['username'],result['user_id'],None)
+        except Exception as e:
+            print(f"Error: {e}")
+            return None
 
 

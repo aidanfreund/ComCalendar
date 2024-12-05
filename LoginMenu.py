@@ -9,7 +9,7 @@ class LoginMenu:
        
     # Returns bool if successful
     def create_profile(self, username, password):
-        return RequestValidator.validate_call((username,password))
+        return RequestValidator.validate_create_account((username,password))
     
    
     

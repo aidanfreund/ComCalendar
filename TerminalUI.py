@@ -13,9 +13,9 @@ class Terminal_UI():
                 option_bool = Terminal_UI.select_option(profile)
                 if option_bool is False:
                     break
-                selection = input("Type quit or q to exit, type anything else to select another option again: ")
+                selection = input("Type exit or e to exit, type anything else to select another option again: ")
                 selection.lower()
-                if selection == "quit" or selection == "q":
+                if selection == "exit" or selection == "e":
                     sys.exit()
 
     def login():
@@ -36,10 +36,11 @@ class Terminal_UI():
         
 
     def create_account():
-        username = input("Enter username: ")
+        username = input("Enter username or exit(e): ")
         while re.search("^[a-zA-Z1-9]*$",username) is None:
             username = input("Enter valid username: ")
-
+        if username == "exit" or username == "e":
+            sys.exit()
         password = input("Enter password: ")
         while re.search("^[a-zA-Z1-9]*$",password) is None:
             password = input("Enter valid password: ")
@@ -52,22 +53,24 @@ class Terminal_UI():
         return profile
 
     def select_option(profile):
-        input_selection = input("Enter Selection Number: "
-                                +"\n1. Logout\n2. Upload Calendar to Profile"
-                                +"\n3. Show Profile's Calendars\n4. Exit")
-        match input_selection:
-            case 1:
-                return False
-            case 2:
-                Terminal_UI.upload_calendar(profile)
-            case 3:
-                Terminal_UI.show_calendar_list()
-            case 4:
-                sys.exit()
-            case _:
-                print("Invalid Selection")
+        while True:
+            input_selection = input("Enter Selection Number: "
+                                    +"\n1. Logout\n2. Upload Calendar to Profile"
+                                    +"\n3. Show Profile's Calendars\n4. Exit")
+            match input_selection:
+                case 1:
+                    return False
+                case 2:
+                    Terminal_UI.upload_calendar(profile)
+                case 3:
+                    Terminal_UI.show_calendar_list(profile)
+                case 4:
+                    sys.exit()
+                case _:
+                    print("Invalid Selection")
             
     def login_statement():
+        profile = None
         while True:
             input_selection = input("Login(L) or Create Account(CA) or Exit(E): ")
             input_selection = input_selection.lower()
@@ -89,5 +92,17 @@ class Terminal_UI():
         calendar_string = input("Enter calendar file: ")
         calendar_name = input('Enter calendar name: ')
         InputController.upload_calendar(calendar_string,calendar_name)
+
+    def show_calendar_list(profile):
+        calendars = profile.get_calendars()
+        while True:
+            i = 0
+            for element in calendars:
+                print(f"{i+1}. Calendar: {element.get_calendar_name()}")
+
+def main():
+    Terminal_UI.run()
+
+main()
 
     

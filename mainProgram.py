@@ -69,6 +69,17 @@ result_event_change = db_profile.change_event(test_event,db_connection)
 if result_event_change is True:
     print("Change Event Working")
 
+print("Read Profile: ")
+print(db_profile.read_profile("abcd","aaa",db_connection))
+print("Read Calendars: ")
+print(db_profile.read_calendars(test_profile,db_connection))
+print("Read Events: ")
+print( db_profile.read_events(test_calendar,db_connection))
+print("Read Tasks: ")
+print(db_profile.read_tasks(test_calendar,db_connection))
+print("Read Reminder (Event): ")
+print(db_profile.read_reminder(test_event,db_connection))
+
 result_reminder_bool = db_profile.delete_reminder(test_reminder,db_connection)
 if result_reminder_bool is True:
     print("Delete Reminder working")

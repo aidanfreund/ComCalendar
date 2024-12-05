@@ -21,8 +21,7 @@ class Profile():
         self.calendars = calendars
 
     def get_calendars(self):
-        print(self.calendars)
-        print("getting calendar list")
+        return self.calendars
 
     def get_profile_ID(self):
         return self.profile_ID
