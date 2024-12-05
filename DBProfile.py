@@ -6,71 +6,71 @@ from Calendar import Calendar
 from Profile import Profile
 from Task import Task
 from Event import Event
-from DBConnection import Database_Connection
+from DBConnection import Database_Connection, MySQLConnection
 import datetime
 from Happening import Happening
 from Reminder import Reminder
 
 class DB_Profile(ABC):
     
-    def add_calendar(self, calendar_name, profile, connection):
+    def add_calendar(self, calendar_name, profile):
         pass
     
-    def read_calendars(self,profile, connection):
+    def read_calendars(self,profile):
         pass
 
-    def change_calendar(self, calendar, connection):
+    def change_calendar(self, calendar):
         pass
 
-    def delete_calendar(self, calendar, connection):
+    def delete_calendar(self, calendar):
         pass
 
-    def read_tasks(self,calendar, connection):
+    def read_tasks(self,calendar):
         pass
 
-    def delete_task(self, task, connection):
+    def delete_task(self, task):
         pass
     
-    def change_task(self, task, connection):
+    def change_task(self, task):
         pass
 
-    def add_task(self, task, calendar, connection):
+    def add_task(self, task, calendar):
         pass
     
-    def read_events(self,calendar, connection):
+    def read_events(self,calendar):
         pass
 
-    def delete_event(self, event, connection):
+    def delete_event(self, event):
         pass
 
-    def change_event(self, event, connection):
+    def change_event(self, event):
         pass
 
-    def add_event(self,description, start_time,end_time,name, calendar, connection):
+    def add_event(self,description, start_time,end_time,name, calendar):
         pass
 
-    def delete_profile(self, profile, connection):
+    def delete_profile(self, profile):
         pass
 
-    def add_profile(self, username,password, connection):
+    def add_profile(self, username,password):
         pass
 
-    def add_reminder(self, time, happening,connection):
+    def add_reminder(self, time, happening):
         pass
 
-    def delete_reminder(self,reminder,connection):
+    def delete_reminder(self,reminder):
         pass
 
-    def change_reminder(self,reminder,connection):
+    def change_reminder(self,reminder):
         pass
 
-    def read_reminder(self,happening,connection):
+    def read_reminder(self,happening):
         pass
 
-    def read_profile(self,username,password,connection):
+    def read_profile(self,username,password):
         pass
 
-    def get_DB_profile():
+    def get_db_profile():
         pass
 
 
@@ -83,14 +83,15 @@ class MySQLProfile(DB_Profile):
         MySQLProfile.my_sql_profile = MySQLProfile()
     #function that is used to retrieve the DB Profile object to use for database operations
     #returns DB Profile Object
-    def get_DB_profile():
+    def get_db_profile():
         if(MySQLProfile.my_sql_profile == None):
             MySQLProfile.___init__()
         return MySQLProfile.my_sql_profile
     #working
     #function that takes a calendar name and profile that the new calendar will be connected to
     #returns id of the calendar or -1 for error
-    def add_calendar(self, calendar_name:str, profile:Profile, connection:Database_Connection):
+    def add_calendar(self, calendar_name:str, profile:Profile):
+        connection = MySQLConnection.get_db_connection()
         if type(profile) is not Profile:
             print("passed profile object is not a Profile object")
             return -1
@@ -114,7 +115,8 @@ class MySQLProfile(DB_Profile):
             return -1
     #function that takes a Profile object and DBConnection Object to obtain the Calendars from the database associated with the profile
     #returns Calendar object array that holds calendars associated with the passed profile
-    def read_calendars(self,profile:Profile, connection:Database_Connection):
+    def read_calendars(self,profile:Profile):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_get_calendars_statement = "Select * from new_schema.calendars where user_id = %s"
@@ -135,7 +137,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes a calendar object and database connection that will change the name of the calendar if it differs from the database
     #returns boolean based on success of change if there was a change needed
-    def change_calendar(self, calendar:Calendar, connection:Database_Connection):
+    def change_calendar(self, calendar:Calendar):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 
@@ -163,7 +166,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes a calendar object and database connection that deletes the calendar passed from the database 
     # returns a boolean indicating success of deletion  
-    def delete_calendar(self, calendar:Calendar, connection:Database_Connection):
+    def delete_calendar(self, calendar:Calendar):
+        connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
             print("Calendar passed is not of type Calendar")
             return False
@@ -187,8 +191,8 @@ class MySQLProfile(DB_Profile):
             return False
     #function that takes a calendar object and db connection that gets all associated tasks to the calendar
     #returns Task object array corresponding to tasks associated with the calendar passed
-    def read_tasks(self,calendar:Calendar, connection:Database_Connection):
-        
+    def read_tasks(self,calendar:Calendar):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_statement = "Select * from new_schema.tasks where calendar_id = %s"
@@ -208,7 +212,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes a Task object and DB connection object that deletes the passed task in the database
     #returns Boolean based on success of deletion
-    def delete_task(self, task:Task, connection:Database_Connection):
+    def delete_task(self, task:Task):
+        connection = MySQLConnection.get_db_connection()
         if type(task) is not Task:
             print("Task passed is not type Task")
             return False
@@ -233,7 +238,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes a Task object and DB Connection object that changes the task in the databse based on the passed object
     #returns Boolean based on success of changes
-    def change_task(self, task:Task, connection:Database_Connection):
+    def change_task(self, task:Task):
+        connection = MySQLConnection.get_db_connection()
         if type(task) is not Task:
             print("Task passed is not a Task object")
             return False
@@ -275,7 +281,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes string,datetime,string,Calendar object, and DB connection that adds a task to the database tying it to the calendar
     #returns the id of the newly added task or -1 for error
-    def add_task(self, description:str,time:datetime,name:str, calendar:Calendar, connection:Database_Connection):
+    def add_task(self, description:str,time:datetime,name:str, calendar:Calendar):
+        connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
             print("Passed calendar is not of type Calendar")
             return -1
@@ -299,7 +306,8 @@ class MySQLProfile(DB_Profile):
 
     #function that takes a Calendar object and DB connection that gets all events associated with the calendar
     #returns Event object array
-    def read_events(self,calendar:Calendar, connection:Database_Connection):
+    def read_events(self,calendar:Calendar):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_statement = "Select * from new_schema.events where calendar_id = %s"
@@ -322,7 +330,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes an Event object and DB connection Object that deletes the corresponding Event in the database
     #returns Boolean based on success of deletion
-    def delete_event(self, event:Event, connection:Database_Connection):
+    def delete_event(self, event:Event):
+        connection = MySQLConnection.get_db_connection()
         if type(event) is not Event:
             print("Event passed is not type Event")
             return False
@@ -348,7 +357,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes an Event object and DB Connection that changes the Event in the database based on the passed Event
     #returns Boolean based on success of changing the Event
-    def change_event(self, event:Event, connection:Database_Connection):
+    def change_event(self, event:Event):
+        connection = MySQLConnection.get_db_connection()
         if type(event) is not Event:
             print("Passed event is not type Event")
             return False
@@ -385,7 +395,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes string,datetime,datetime,string,Calendar object, and DB Connection that adds and Event to the database tied to the calendar
     #returns the id of the Event or -1 for error
-    def add_event(self,description:str, start_time:datetime,end_time:datetime,name:str, calendar:Calendar, connection:Database_Connection):
+    def add_event(self,description:str, start_time:datetime,end_time:datetime,name:str, calendar:Calendar):
+        connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
             print("Calendar passed is not type Calendar")
             return -1
@@ -409,7 +420,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes a profile Object and DB connection and deletes the passed profile from the database
     #returns Boolean based on success of deletion
-    def delete_profile(self, profile:Profile, connection:Database_Connection):
+    def delete_profile(self, profile:Profile):
+        connection = MySQLConnection.get_db_connection()
         if type(profile) is not Profile:
             print("Profile parameter is not type Profile")
             return False
@@ -436,7 +448,8 @@ class MySQLProfile(DB_Profile):
     #working
     #function that takes a username and password and creates a profile in the database
     #returns int that is the id for that profile
-    def add_profile(self, username:str, password:str, connection:Database_Connection):
+    def add_profile(self, username:str, password:str):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor() as cursor:
                 #sql statment to be executed
@@ -457,7 +470,8 @@ class MySQLProfile(DB_Profile):
             #return -1 to indicate an error occured
             return -1
         
-    def check_username_unique(self, username:str, connection:Database_Connection):
+    def check_username_unique(self, username:str):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor() as cursor:
 
@@ -474,7 +488,8 @@ class MySQLProfile(DB_Profile):
             return False
         
 
-    def add_reminder(self,time:datetime,happening:Happening, connection: Database_Connection):
+    def add_reminder(self,time:datetime,happening:Happening):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor() as cursor:
                 if type(happening) is Task:
@@ -510,7 +525,8 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return -1
 
-    def change_reminder(self, reminder:Reminder, connection:Database_Connection):
+    def change_reminder(self, reminder:Reminder):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_statement = "Select * from new_schema.reminders where reminder_id = %s"
@@ -527,7 +543,8 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return False
 
-    def delete_reminder(self, reminder:Reminder, connection: Database_Connection):
+    def delete_reminder(self, reminder:Reminder):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor() as cursor:
                 sql_statement = "Delete from new_schema.reminders Where reminder_id = %s"
@@ -546,7 +563,8 @@ class MySQLProfile(DB_Profile):
             connection.rollback()
             return False
 
-    def read_reminder(self,happening:Happening,connection:Database_Connection):
+    def read_reminder(self,happening:Happening):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 if type(happening) is Task:
@@ -558,7 +576,7 @@ class MySQLProfile(DB_Profile):
                     else:
                         print("No reminder found connected to this task")
                         return None
-                else:
+                elif type(happening) is Event:
                     sql_statement = "Select * from new_schema.reminders where event_id = %s"
                     cursor.execute(sql_statement,(happening.get_id(),))
 
@@ -572,7 +590,8 @@ class MySQLProfile(DB_Profile):
             print(f"Error: {e}")
             return None
                     
-    def read_profile(self,username:str,password:str,connection:Database_Connection):
+    def read_profile(self,username:str,password:str):
+        connection = MySQLConnection.get_db_connection()
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_statement = "Select * from new_schema.profiles Where username = %s and password = %s"

@@ -79,6 +79,10 @@ print("Read Tasks: ")
 print(db_profile.read_tasks(test_calendar,db_connection))
 print("Read Reminder (Event): ")
 print(db_profile.read_reminder(test_event,db_connection))
+test_reminder_two_id = db_profile.add_reminder(datetime.datetime.now(),test_task,db_connection)
+test_reminder_two = Reminder(test_reminder_two_id,datetime.datetime.now())
+print("Read Reminder (Task): ")
+print(db_profile.read_reminder(test_task,db_connection))
 
 result_reminder_bool = db_profile.delete_reminder(test_reminder,db_connection)
 if result_reminder_bool is True:
