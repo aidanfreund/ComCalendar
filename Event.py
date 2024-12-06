@@ -1,13 +1,11 @@
-# Aidan
 #Event.py
 #Event class, type of Happening that inlcudes a second time
 from Happening import Happening
 import datetime
-from Reminder import Reminder
 
 class Event(Happening):
-    def __init__(self, task_ID:int, name:str, reminder:Reminder, first_time:datetime, second_time:datetime, desc = ""):
-        super().__init__(task_ID, name, reminder, first_time, desc)
+    def __init__(self, task_ID:int, name:str, first_time:datetime, second_time:datetime, desc = ""):
+        super().__init__(task_ID, name, first_time, desc)
         self._second_time = second_time
         
     def get_second_time(self):
@@ -36,3 +34,30 @@ class Event(Happening):
     
     def get_id(self):
         return self._hap_id
+
+    #Edits The Specific Reminder Object
+    def edit_reminder(self, reminder_id:int, date:datetime):
+        self._reminder_id = reminder_id
+        for id in self._reminder:
+            if self._reminder_id == self._reminder[id]:
+                self._reminder[id].date = date.date
+                self._reminder[id].time = date.time
+        return True
+    
+    #Removes Reminder Object
+    def remove_reminder(self, reminder_id):
+      
+        self._reminder_id = reminder_id
+
+        for id in self._reminder:
+            if self.reminder_id == self._reminder[id]:
+                self._reminder.remove(id)
+                return True
+                
+        return False
+    
+    #Creates a new Reminder
+    def create_reminder(self, reminder_id):
+        self._reminder_id = reminder_id
+        self._reminder.append(self._reminder_id)
+        return True
