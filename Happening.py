@@ -36,7 +36,7 @@ class Happening(ABC):
             pass
 
         @abstractmethod
-        def edit_reminder(self, reminder_id, date):
+        def edit_reminder(self, reminder_id, date:datetime):
             pass
         
         @abstractmethod
@@ -46,4 +46,3 @@ class Happening(ABC):
         @abstractmethod
         def create_reminder(self, reminder_id):
             pass
-
