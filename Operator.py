@@ -15,11 +15,7 @@ from DBProfile import DB_Profile
 class Operator:
 
     factory:DatabaseFactory = FactoryProducer("Profile")
-    db_connection:Database_Connection = factory.DB_Connection
     db_profile:DB_Profile = factory.DB_profile
-
-    if db_connection is None:
-        raise Exception('Failed to connect to database')
 
     # Creates new event with attributes, returns true if successful
     @classmethod

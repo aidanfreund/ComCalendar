@@ -134,7 +134,7 @@ class InputController:
 
     # Adds task to a calendar, returns true if successful
     @classmethod
-    def add_task(cls, description, due_date):
+    def add_task(cls, name, description, due_date):
         if RequestValidator.validate_add_task(description, due_date):
             Operator.add_task(description, due_date, calendar_obj)
         else:
@@ -148,14 +148,14 @@ class InputController:
 
     # Edits a task, returns true if successful
     @classmethod
-    def edit_task(cls, description, due_date):
+    def edit_task(cls,name, description, due_date):
         if RequestValidator.validate_edit_task(description, due_date):
             Operator.edit_task(description, due_date, task_obj)
         else:
             raise Exception("Validation error occurred")
         
     # Marks a task as complete
-    def complete_task(cls):
+    def set_complete_task(cls):
         pass
     
     # Removes reminder, returns true if successful
