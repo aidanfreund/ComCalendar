@@ -3,6 +3,11 @@ from RequestValidator import RequestValidator
 
 class InputController:
 
+    profile = None
+    calendar = None
+    happening = None
+    reminder = None
+
     @classmethod
     def add_event(cls, event_id, name, start_time, end_time, calendar):
         if(RequestValidator.validate_add_event(event_id,name,start_time,end_time,calendar)):
@@ -163,3 +168,6 @@ class InputController:
             Operator.filter_by_dates(calendar, start_date, end_date)
         else:
             raise Exception("Validation error occured")
+
+    def get_calendar():
+        return calendar
