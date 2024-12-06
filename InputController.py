@@ -11,24 +11,24 @@ class InputController:
 
     # Creates new event with attributes, returns true if successful
     @classmethod
-    def add_event(cls, name, start_time, end_time, calendar_obj):
-        if RequestValidator.validate_add_event(name, start_time, end_time):
-            Operator.add_event(name, start_time, end_time, calendar_obj)
+    def add_event(cls, name, start_time, end_time, description, calendar_obj):
+        if RequestValidator.validate_add_event(name, start_time, end_time, description,):
+            Operator.add_event(name, start_time, end_time, description, calendar_obj)
         else:
             raise Exception("Validation error occurred")
 
     # Edits event, returns true if successful
     @classmethod
-    def edit_event(cls, name, start_time, end_time, event_obj):
-        if RequestValidator.validate_edit_event(name, start_time, end_time):
-            Operator.edit_event(name, start_time, end_time, event_obj)
+    def edit_event(cls, name, start_time, end_time, description, event_obj):
+        if RequestValidator.validate_edit_event(name, start_time, description, end_time):
+            Operator.edit_event(name, start_time, end_time, description, event_obj)
         else:
             raise Exception("Validation error occurred")
     
     # Deletes event from calendar, returns true if successful
     @classmethod
-    def delete_event(cls, event_obj, profile_obj):
-        Operator.delete_event(event_obj, profile_obj)
+    def delete_event(cls, event_obj, calendar_obj):
+        Operator.delete_event(event_obj, calendar_obj)
     
     # Creates new calendar with name, returns true if successful
     @classmethod

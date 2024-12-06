@@ -1,10 +1,20 @@
 from Profile import Profile
+from Calendar import Calendar
+from Happening import Happening
+from Event import Event
+from Task import Task
+from Reminder import Reminder
+from DBFactory import DatabaseFactory,FactoryProducer
+from DBConnection import Database_Connection
+from DBProfile import DB_Profile
+
+
 
 
 
 class Operator:
 
-    factory:Database_factory = FactoryProducer("Profile")
+    factory:DatabaseFactory = FactoryProducer("Profile")
     db_connection:Database_Connection = factory.DB_Connection
     db_profile:DB_Profile = factory.DB_profile
 
@@ -13,12 +23,19 @@ class Operator:
 
     # Creates new event with attributes, returns true if successful
     @classmethod
-    def add_event(cls, name, start_time, end_time, calendar_obj):
-        pass
+    def add_event(cls, name, start_time, end_time, description, calendar_obj):
+        new_event_id = cls.db_profile.add_event(description,start_time,end_time,name,calendar_obj)
+        if new_event_id is not -1:
+            calendar_obj.add_event(Event(new_event_id,name,start_time,end_time,description))
+            return True
+        else:
+            return False
+
+            
 
     # Edits event, returns true if successful
     @classmethod
-    def edit_event(cls, name, start_time, end_time, event_obj):
+    def edit_event(cls, name, start_time, end_time, description, event_obj):
         pass
     
     # Deletes event from calendar, returns true if successful
