@@ -61,9 +61,9 @@ class InputController:
 
     # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
-    def compare_calendars(cls, calendar_id1, calendar_id2, start_time, end_time):
-        if RequestValidator.validate_compare_calendars(calendar_id1, calendar_id2, start_time, end_time):
-            Operator.compare_calendars(calendar_id1, calendar_id2, start_time, end_time)
+    def compare_calendars(cls, calendar_obj1, calendar_obj2, start_time, end_time):
+        if RequestValidator.validate_compare_calendars(start_time, end_time):
+            Operator.compare_calendars(calendar_obj1, calendar_obj2, start_time, end_time)
         else:
             raise Exception("Validation error occurred")
     
@@ -81,25 +81,11 @@ class InputController:
         else:
             raise Exception("Validation error occurred")
 
-    # To be discussed
-    @classmethod
-    def retrieve_calendar(cls, calendar_id):
-        pass
-
-    # To be discussed
-    @classmethod
-    def retrieve_event_information(cls, event_id, calendar_obj):
-        pass
-
-    # To be discussed
-    @classmethod
-    def retrieve_task_information(cls, task_id, calendar_obj):
-        pass
 
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_events(cls, calendar_obj, start_date, end_date):
-        if RequestValidator.validate_filter_calendar_by_events(calendar_obj, start_date, end_date):
+        if RequestValidator.validate_filter_calendar_by_events( start_date, end_date):
             Operator.filter_calendar_by_events(calendar_obj, start_date, end_date)
         else:
             raise Exception("Validation error occurred")
@@ -107,7 +93,7 @@ class InputController:
     # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_tasks(cls, calendar_obj, start_date, end_date):
-        if RequestValidator.validate_filter_calendar_by_tasks(calendar_obj, start_date, end_date):
+        if RequestValidator.validate_filter_calendar_by_tasks(start_date, end_date):
             Operator.filter_calendar_by_tasks(calendar_obj, start_date, end_date)
         else:
             raise Exception("Validation error occurred")
@@ -115,7 +101,7 @@ class InputController:
      # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
     def filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):
-        if RequestValidator.validate_filter_calendar_by_dates(calendar_obj, start_date, end_date):
+        if RequestValidator.validate_filter_calendar_by_dates( start_date, end_date):
             Operator.filter_calendar_by_dates(calendar_obj, start_date, end_date)
         else:
             raise Exception("Validation error occurred")
@@ -149,19 +135,17 @@ class InputController:
 
     # Edits a reminder object, returns true if successful
     @classmethod
-    def edit_reminder(cls, reminder_id, new_time):
-        if RequestValidator.validate_edit_reminder(reminder_id, new_time):
-            Operator.edit_reminder(reminder_id, new_time)
+    def edit_reminder(cls, reminder_obj, new_time):
+        if RequestValidator.validate_edit_reminder(reminder_obj, new_time):
+            Operator.edit_reminder(reminder_obj, new_time)
         else:
             raise Exception("Validation error occurred")
 
     # Deletes profile obj, returns true if successful
     @classmethod
     def delete_profile(cls, profile_obj):
-        if RequestValidator.validate_delete_profile(profile_obj):
-            Operator.delete_profile(profile_obj)
-        else:
-            raise Exception("Validation error occurred")
+        Operator.delete_profile(profile_obj)
+     
 
     #Logs in to profile using username and password
     #Returns profile obj if a match exists

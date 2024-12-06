@@ -3,7 +3,9 @@ from Calendar import Calendar
 from DBFactory import FactoryProducer, Database_factory 
 from DBProfile import DB_Profile
 from DBConnection import Database_Connection
-from CalendarFilter import CalendarFilter
+from ICSFileFunctions import read_ics_file
+from ICSFileFunctions import write_ics_file
+
 
 
 
@@ -15,7 +17,7 @@ class Operator:
 
     if db_connection is None:
         raise Exception('Failed to connect to database')
-    
+
     # Creates new event with attributes, returns true if successful
     @classmethod
     def add_event(cls, name, start_time, end_time, calendar_obj):
@@ -58,7 +60,7 @@ class Operator:
 
     # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
-    def compare_calendars(cls, calendar_id1, calendar_id2, start_time, end_time):
+    def compare_calendars(cls, calendar_obj1, calendar_obj2, start_time, end_time):
         pass
     
     # Combines calendars, returns a new calendar with combined objects
