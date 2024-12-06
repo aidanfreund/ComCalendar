@@ -46,3 +46,4 @@ class Happening(ABC):
         @abstractmethod
         def create_reminder(self, reminder_id):
             pass
+
