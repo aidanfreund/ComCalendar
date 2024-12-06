@@ -117,12 +117,14 @@ class TerminalUI():
                     if calendars.len() < 2:
                         print("There are not 2 calendars to combine")
                     else:
-                        calendar_one = input("Enter first calendar number: ")
-                        calendar_two = input("Enter second calendar number: ")
-                        if int(calendar_one) > calendars.len() or int(calendar_one) < 1 or int(calendar_two) > calendars.len() or int(calendar_two) < 1:
+                        calendar_one = int(input("Enter first calendar number: "))
+                        calendar_two = int(input("Enter second calendar number: "))
+                        if calendar_one > calendars.len() or calendar_one < 1 or calendar_two > calendars.len() or calendar_two < 1:
                             print("Incorrect number selection of calendar")
                         else:
-                            InputController.aggregate_calendar(calendars[int(calendar_one)],calendars[int(calendar_two)])
+                            new_calendar_name = input("Enter name for new Calendar: ")
+                            calendar_output = InputController.aggregate_calendar((calendar_one - 1),(calendar_two - 1), new_calendar_name)
+
                 else:
                     print("Invalid Input")
 
@@ -132,12 +134,14 @@ class TerminalUI():
         InputController.create_calendar(calendar_name)
 
     def compare_calendars():
+        calendars = InputController.get_profile().get_calendars()
         calendar_one = int(input("Enter Number of first calendar: "))
         calendar_two = int(input("Enter Number of second calendar: "))
-        calendar_compared = InputController.compare_calendars(InputController.get_calendar()[calendar_one],InputController.get_calendar()[calendar_two])
-        print("Events: ")
-        for event in calendar_compared.get_events():
-            needwork
+        if calendar_one > calendars.len() or calendar_one < 1 or calendar_two > calendars.len() or calendar_two < 1:
+            print("Incorrect number selection of calendar")
+        else:
+            calendar_compared_string = InputController.compare_calendars((calendar_one - 1),(calendar_two - 1))
+            print(calendar_compared_string)
     
     def calendar_options():
         while True:

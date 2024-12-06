@@ -6,12 +6,12 @@ from Calendar import Calendar
 from Profile import Profile
 from Task import Task
 from Event import Event
-from DBConnection import Database_Connection, MySQLConnection
+from DBConnection import DatabaseConnection, MySQLConnection
 import datetime
 from Happening import Happening
 from Reminder import Reminder
 
-class DB_Profile(ABC):
+class DBProfile(ABC):
     
     def add_calendar(self, calendar_name, profile):
         pass
@@ -75,7 +75,7 @@ class DB_Profile(ABC):
 
 
 
-class MySQLProfile(DB_Profile):
+class MySQLProfile(DBProfile):
     
     my_sql_profile = None
 
