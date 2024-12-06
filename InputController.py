@@ -3,13 +3,11 @@ from RequestValidator import RequestValidator
 
 class InputController:
 
-    active_profile = None
-    active_calendar = None
-    active_happening = None
-    active_reminder = None
-    #calendar
+    profile = None
+    calendar = None
+    happening = None
+    reminder = None
 
-    # Creates new event with attributes, returns true if successful
     @classmethod
     def add_event(cls, name, start_time, end_time, calendar_obj):
         if RequestValidator.validate_add_event(name, start_time, end_time):
@@ -162,5 +160,7 @@ class InputController:
         if RequestValidator.validate_login(username, password):
             Operator.create_profile(username, password)
         else:
-            raise Exception("Validation error occurred")
-        
+            raise Exception("Validation error occured")
+
+    def get_calendar():
+        return InputController.calendar
