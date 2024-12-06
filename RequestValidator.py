@@ -5,137 +5,132 @@ from datetime import datetime
 
 class RequestValidator:
     
-    uppercase_letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"]
-    lowercase_letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-    numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
-    special_characters = [
-    "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "+", "-", "=", "[", "]", "{", "}", "|", ";", ":", "'", "\"", 
-    ",", "<", ".", ">", "/", "?", "~", "`"
-    ]
-    spaces = [" "]
-
-    total_chars = uppercase_letters + lowercase_letters + numbers + special_characters + spaces
-
-    
-    
+   
 
 
-    # Checks for:
-    # username is within 3-30 characters
-    # password 8-30 characters
-    # no invalid chars
+    # Creates new event with attributes, returns true if successful
     @classmethod
-    def validate_login(cls, username, password):
-        if (3 < len(username) > 30 and 8 < len(password) > 30):
-           return cls.__check_permitted_chars(username + password)
-        else:    
-            return False
-
-
-    @classmethod
-    def validate_add_event(cls, event_id, name, start_time, end_time, calendar):
-        isValid = False
-        
-        if cls.__check_permitted_chars(name) is False:
-            return False
-        if calendar is None:
-            return False
-        
-        
-
-    @classmethod
-    def validate_edit_event(cls, event_id, old_name, new_name, start_time, end_time, calendar):
+    def validate_add_event(cls, name, start_time, end_time, calendar_obj):
         pass
 
+    # Edits event, returns true if successful
     @classmethod
-    def validate_delete_event(cls, event_id, calendar):
+    def validate_edit_event(cls, name, start_time, end_time, event_obj):
         pass
 
+    # Deletes event from calendar, returns true if successful
     @classmethod
-    def validate_create_calendar(cls, user_id, calendar_name):
+    def validate_delete_event(cls, event_obj, profile_obj):
         pass
 
+    # Creates new calendar with name, returns true if successful
     @classmethod
-    def validate_delete_calendar(cls, calendar_id):
+    def validate_create_calendar(cls, name, profile_obj):
         pass
 
+    # Deletes calendar
     @classmethod
-    def validate_upload_calendar(cls, calendar):
+    def validate_delete_calendar(cls, calendar_obj, profile_obj):
         pass
 
+    # Processes .ics file string and returns calendar object
+    @classmethod
+    def validate_upload_calendar(cls, calendar_obj, profile_obj):
+        pass
+
+    # Returns .ics file string
     @classmethod
     def validate_download_calendar(cls):
         pass
 
+    # Copies a calendar and adds it to profile, returns true if successful
     @classmethod
-    def validate_aggregate_calendar(cls, calendar1, calendar2):
+    def validate_copy_calendar(cls, calendar_obj, profile_obj):
         pass
 
+    # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
-    def validate_create_reminder(cls, reminder_id, reminder_time):
+    def validate_compare_calendars(cls, calendar_id1, calendar_id2, start_time, end_time):
         pass
 
+    # Combines calendars, returns a new calendar with combined objects
+    @classmethod
+    def validate_aggregate_calendar(cls, calendar_obj1, calendar_obj2):
+        pass
+
+    # Adds reminder to happening obj, returns true if successful
+    @classmethod
+    def validate_create_reminder(cls, start_time, happ_obj):
+        pass
+
+    # To be discussed
     @classmethod
     def validate_retrieve_calendar(cls, calendar_id):
         pass
 
+    # To be discussed
     @classmethod
-    def validate_filter_calendar_by_events(cls, calendar, start_time, end_time):
+    def validate_retrieve_event_information(cls, event_id, calendar_obj):
         pass
 
+    # To be discussed
     @classmethod
-    def validate_retrieve_event_information(cls, event_id, calendar):
+    def validate_retrieve_task_information(cls, task_id, calendar_obj):
         pass
 
+    # Filters calendar by events, returns a filtered calendar obj
     @classmethod
-    def validate_retrieve_task_information(cls, task_id, calendar):
+    def validate_filter_calendar_by_events(cls, calendar_obj, start_date, end_date):
         pass
 
+    # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
-    def validate_filter_calendar_by_tasks(cls, calendar, start_time, end_time):
+    def validate_filter_calendar_by_tasks(cls, calendar_obj, start_date, end_date):
         pass
 
+    # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
-    def validate_add_task(cls, task_id, name, due_date, calendar):
+    def validate_filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):
         pass
 
+    # Adds task to a calendar, returns true if successful
     @classmethod
-    def validate_remove_task(cls, task_id, calendar):
+    def validate_add_task(cls, description, due_date, calendar_obj):
         pass
 
+    # Removes a task from calendar, returns true if successful
     @classmethod
-    def validate_edit_task(cls, task_id, old_name, new_name, due_date, calendar):
+    def validate_remove_task(cls, task_obj, calendar_obj):
         pass
 
+    # Edits a task, returns true if successful
     @classmethod
-    def validate_copy_calendar(cls, calendar_id):
+    def validate_edit_task(cls, description, due_date, task_obj):
         pass
 
+    # Removes reminder, returns true if successful
     @classmethod
-    def validate_compare_calendars(cls, calendar_id1, calendar_id2):
+    def validate_remove_reminder(cls, reminder_obj, happ_obj):
         pass
 
+    # Edits a reminder object, returns true if successful
     @classmethod
-    def validate_remove_reminder(cls, reminder_id):
+    def validate_edit_reminder(cls, reminder_obj, new_time):
         pass
 
+    # Deletes profile obj, returns true if successful
     @classmethod
-    def validate_change_reminder(cls, reminder_id, new_time):
+    def validate_delete_profile(cls, profile_obj):
         pass
 
+    # Logs in to profile using username and password
+    # Returns profile obj if a match exists
     @classmethod
-    def validate_delete_profile(cls, user_id):
-        pass
-    
-    @classmethod
-    def validate_filter_by_dates(cls, calendar, start_time, end_time):
+    def validate_login(cls, username, password):
         pass
 
-    # Returns true if string contains no invalid chars
+    # Creates a profile obj and returns it
     @classmethod
-    def __check_permitted_chars(cls,str):
-        for char in str:
-            if char not in cls.total_chars:
-                return False 
-        return True
+    def validate_create_profile(cls, username, password):
+        pass
 

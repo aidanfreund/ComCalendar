@@ -3,163 +3,164 @@ from RequestValidator import RequestValidator
 
 class InputController:
 
-    @classmethod
-    def add_event(cls, event_id, name, start_time, end_time, calendar):
-        if(RequestValidator.validate_add_event(event_id,name,start_time,end_time,calendar)):
-            Operator.add_event(event_id, name, start_time, end_time, calendar)
-        else:
-            raise Exception("Validation error occured")
+    active_profile = None
+    active_calendar = None
+    active_happening = None
+    active_reminder = None
+    #calendar
 
+    # Creates new event with attributes, returns true if successful
     @classmethod
-    def edit_event(cls, event_id, new_name, new_description, start_time, end_time, calendar):
-        if(RequestValidator.validate_edit_event(event_id, new_name, new_description, start_time, end_time, calendar)):
-            Operator.edit_event(event_id, new_name, new_description, start_time, end_time, calendar)
+    def add_event(cls, name, start_time, end_time, calendar_obj):
+        if RequestValidator.validate_add_event(name, start_time, end_time):
+            Operator.add_event(name, start_time, end_time, calendar_obj)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
 
+    # Edits event, returns true if successful
     @classmethod
-    def delete_event(cls, event_id, calendar):
-        if(RequestValidator.validate_delete_event(event_id, calendar)):
-            Operator.delete_event(event_id, calendar)
+    def edit_event(cls, name, start_time, end_time, event_obj):
+        if RequestValidator.validate_edit_event(name, start_time, end_time):
+            Operator.edit_event(name, start_time, end_time, event_obj)
         else:
-            raise Exception("Validation error occured")
-
+            raise Exception("Validation error occurred")
+    
+    # Deletes event from calendar, returns true if successful
     @classmethod
-    def create_calendar(cls, calendar_id, name):
-        if(RequestValidator.validate_create_calendar(calendar_id, name)):
-            Operator.create_calendar(calendar_id, name)
-        else:
-            raise Exception("Validation error occured")
-
+    def delete_event(cls, event_obj, profile_obj):
+        Operator.delete_event(event_obj, profile_obj)
+    
+    # Creates new calendar with name, returns true if successful
     @classmethod
-    def delete_calendar(cls, calendar_id):
-        if(RequestValidator.validate_delete_calendar(calendar_id)):
-            Operator.delete_calendar(calendar_id)
+    def create_calendar(cls, name, profile_obj):
+        if RequestValidator.validate_create_calendar(name):
+            Operator.create_calendar(name, profile_obj)
         else:
-            raise Exception("Validation error occured")
-
+            raise Exception("Validation error occurred")
+    
+    # Deletes calendar 
     @classmethod
-    def upload_calendar(cls, calendar):
-        if(RequestValidator.validate_upload_calendar(calendar)):
-            Operator.upload_calendar(calendar)
-        else:
-            raise Exception("Validation error occured")
+    def delete_calendar(cls, calendar_obj, profile_obj):
+        Operator.create_calendar(calendar_obj, profile_obj)
 
+    # Processes .ics file string and returns calendar object
+    @classmethod
+    def upload_calendar(cls, calendar_obj, profile_obj):
+        Operator.upload_calendar(calendar_obj, profile_obj)
+    
+    # Returns .ics file string 
     @classmethod
     def download_calendar(cls):
-        if(RequestValidator.validate_download_calendar()):
-            Operator.download_calendar()
-        else:
-            raise Exception("Validation error occured")
+        pass
 
+     # Copies a calendar and adds it to profile, returns true if successful
     @classmethod
-    def aggregate_calendar(cls, calendar1, calendar2):
-        if(RequestValidator.validate_aggregate_calendar(calendar1, calendar2)):
-            Operator.aggregate_calendar(calendar1, calendar2)
-        else:
-            raise Exception("Validation error occured")
+    def copy_calendar(cls, calendar_obj, profile_obj):
+        Operator.copy_calendar(calendar_obj, profile_obj)
+       
 
+    # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
-    def create_reminder(cls, reminder_id, time):
-        if(RequestValidator.validate_create_reminder(reminder_id, time)):
-            Operator.create_reminder(reminder_id, time)
+    def compare_calendars(cls, calendar_obj1, calendar_obj2, start_time, end_time):
+        if RequestValidator.validate_compare_calendars(start_time, end_time):
+            Operator.compare_calendars(calendar_obj1, calendar_obj2, start_time, end_time)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
+    
+    # Combines calendars, returns a new calendar with combined objects
+    @classmethod
+    def aggregate_calendar(cls, calendar_obj1, calendar_obj2):
+        Operator.aggregate_calendar(calendar_obj1, calendar_obj2)
+      
 
+    # Adds reminder to happening obj, returns true if successful
     @classmethod
-    def retrieve_calendar(cls, calendar_id):
-        if(RequestValidator.validate_retrieve_calendar(calendar_id)):
-            Operator.retrieve_calendar(calendar_id)
+    def create_reminder(cls, start_time, happ_obj):
+        if RequestValidator.validate_create_reminder(start_time):
+            Operator.create_reminder(start_time, happ_obj)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
 
-    @classmethod
-    def filter_calendar_by_events(cls, calendar, start_time, end_time):
-        if(RequestValidator.validate_filter_calendar_by_events(calendar, start_time, end_time)):
-            Operator.filter_calendar_by_events(calendar, start_time, end_time)
-        else:
-            raise Exception("Validation error occured")
 
+     # Filters calendar by events, returns a filtered calendar obj
     @classmethod
-    def retrieve_event_information(cls, event_id, calendar):
-        if(RequestValidator.validate_retrieve_event_information(event_id, calendar)):
-            Operator.retrieve_event_information(event_id, calendar)
+    def filter_calendar_by_events(cls, calendar_obj, start_date, end_date):
+        if RequestValidator.validate_filter_calendar_by_events( start_date, end_date):
+            Operator.filter_calendar_by_events(calendar_obj, start_date, end_date)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
 
+    # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
-    def retrieve_task_information(cls, task_id, calendar):
-        if(RequestValidator.validate_retrieve_task_information(task_id, calendar)):
-            Operator.retrieve_task_information(task_id, calendar)
+    def filter_calendar_by_tasks(cls, calendar_obj, start_date, end_date):
+        if RequestValidator.validate_filter_calendar_by_tasks(start_date, end_date):
+            Operator.filter_calendar_by_tasks(calendar_obj, start_date, end_date)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
+    
+     # Filters calendar by dates, returning a new filtered calendar obj
+    @classmethod
+    def filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):
+        if RequestValidator.validate_filter_calendar_by_dates( start_date, end_date):
+            Operator.filter_calendar_by_dates(calendar_obj, start_date, end_date)
+        else:
+            raise Exception("Validation error occurred")
 
+    # Adds task to a calendar, returns true if successful
     @classmethod
-    def filter_calendar_by_tasks(cls, calendar, start_time, end_time):
-        if(RequestValidator.validate_filter_calendar_by_tasks(calendar, start_time, end_time)):
-            Operator.filter_calendar_by_tasks(calendar, start_time, end_time)
+    def add_task(cls, description, due_date, calendar_obj):
+        if RequestValidator.validate_add_task(description, due_date):
+            Operator.add_task(description, due_date, calendar_obj)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
 
+    # Removes an task from calendar, returns true if successful
     @classmethod
-    def add_task(cls, task_id, description, due_date, calendar):
-        if(RequestValidator.validate_add_task(task_id, description, due_date, calendar)):
-            Operator.add_task(task_id, description, due_date, calendar)
-        else:
-            raise Exception("Validation error occured")
+    def remove_task(cls, task_obj, calendar_obj):
+        Operator.remove_task(task_obj, calendar_obj)
 
-    @classmethod
-    def remove_task(cls, task_id, calendar):
-        if(RequestValidator.validate_remove_task(task_id, calendar)):
-            Operator.remove_task(task_id, calendar)
-        else:
-            raise Exception("Validation error occured")
 
+    # Edits a task, returns true if successful
     @classmethod
-    def edit_task(cls, task_id, new_name, new_description, due_date, calendar):
-        if(RequestValidator.validate_edit_task(task_id, new_name, new_description, due_date, calendar)):
-            Operator.edit_task(task_id, new_name, new_description, due_date, calendar)
+    def edit_task(cls, description, due_date, task_obj):
+        if RequestValidator.validate_edit_task(description, due_date):
+            Operator.edit_task(description, due_date, task_obj)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
+    
+    # Removes reminder, returns true if successful
+    @classmethod
+    def remove_reminder(cls, reminder_obj, happ_obj):
+        Operator.remove_reminder(reminder_obj, happ_obj)
 
+    # Edits a reminder object, returns true if successful
     @classmethod
-    def copy_calendar(cls, calendar_id):
-        if(RequestValidator.validate_copy_calendar(calendar_id)):
-            Operator.copy_calendar(calendar_id)
+    def edit_reminder(cls, reminder_obj, new_time):
+        if RequestValidator.validate_edit_reminder(reminder_obj, new_time):
+            Operator.edit_reminder(reminder_obj, new_time)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
 
+    # Deletes profile obj, returns true if successful
     @classmethod
-    def compare_calendars(cls, calendar_id1, calendar_id2):
-        if(RequestValidator.validate_compare_calendars(calendar_id1, calendar_id2)):
-            Operator.compare_calendars(calendar_id1, calendar_id2)
-        else:
-            raise Exception("Validation error occured")
+    def delete_profile(cls, profile_obj):
+        Operator.delete_profile(profile_obj)
+     
 
+    #Logs in to profile using username and password
+    #Returns profile obj if a match exists
     @classmethod
-    def remove_reminder(cls, reminder_id):
-        if(RequestValidator.validate_remove_reminder(reminder_id)):
-            Operator.remove_reminder(reminder_id)
+    def login(cls,username, password):
+        if RequestValidator.validate_login(username, password):
+            Operator.login(username, password)
         else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
 
+    #Creates a profile obj and returns it 
     @classmethod
-    def change_reminder(cls, reminder_id, new_time):
-        if(RequestValidator.validate_change_reminder(reminder_id, new_time)):
-            Operator.change_reminder(reminder_id, new_time)
+    def create_profile(cls, username, password):
+        if RequestValidator.validate_login(username, password):
+            Operator.create_profile(username, password)
         else:
-            raise Exception("Validation error occured")
-
-    @classmethod
-    def delete_profile(cls, profile_id):
-        if(RequestValidator.validate_delete_profile(profile_id)):
-            Operator.delete_profile(profile_id)
-        else:
-            raise Exception("Validation error occured")
-
-    @classmethod
-    def filter_by_dates(cls, calendar, start_date, end_date):
-        if(RequestValidator.validate_dfilter_by_dates(calendar, start_date, end_date)):
-            Operator.filter_by_dates(calendar, start_date, end_date)
-        else:
-            raise Exception("Validation error occured")
+            raise Exception("Validation error occurred")
+        
