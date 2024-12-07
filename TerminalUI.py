@@ -143,12 +143,13 @@ class Terminal_UI():
         calendar_compared = InputController.compare_calendars(InputController.get_calendar()[calendar_one],InputController.get_calendar()[calendar_two])
         print("Events: ")
         for event in calendar_compared.get_events():
+            print("hello")
 
-    
     def calendar_options():
-        while True:
-            input_selection = input("Select Option Number:"
-                                    + "\n1. Download Calendar \n2. ")
+        print("hello")
+        # while True:
+        #     input_selection = input("Select Option Number:"
+        #                             + "\n1. Download Calendar \n2. ")
         
 
 def main():

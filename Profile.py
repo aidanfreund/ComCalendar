@@ -1,3 +1,9 @@
+#Profile.py
+#implementation of Profile class
+
+#It is solely my fault (aidan) for this not being wrong in the Class Diagram
+# missing delete_calendar(Calendar) and list parameters in create_new_calendar
+
 from Calendar import Calendar
 
 class Profile():
@@ -17,10 +23,16 @@ class Profile():
     def get_username(self):
         return self._username
     
-    #take a name and id to create a blank calendar, ensures user has less than 6
-    def create_new_calendar(self, id:int, name:str):
-        if len(self._calendars)>5:
-            print("Profile has too many calendars, must have less than 6 in order to make a new calendar")
+    #take a name and id to create a new calendar
+    def create_new_calendar(self, id:int, name:str, events = [], tasks = []):
+        #indicates error in database
+        if id == -1:
             return False
-        self.calendars.append(Calendar.__init__(self, id, name, [], []))
+        self.calendars.append(Calendar.__init__(self, id, name, events, tasks))
+        return True
+    
+    #derefferences calendar from profile obj
+    def delete_calendar(self, cal:Calendar):
+        #simply dereference to delete
+        self._calendars.remove(cal)
         return True
