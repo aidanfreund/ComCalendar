@@ -34,7 +34,7 @@ class RequestValidator:
 
     @staticmethod
     def validate_upload_calendar(file_path, name):
-        return re.search("^((\/[a-zA-Z0-9-_]+)+|\/)$",file_path) and RequestValidator.__validate_name(name)
+        return (re.search("^((\/[a-zA-Z0-9-_]+)+|\/)$",file_path) is not None) and RequestValidator.__validate_name(name)
 
     @staticmethod
     def validate_create_reminder(start_time):
@@ -50,31 +50,27 @@ class RequestValidator:
 
     @staticmethod
     def validate_remove_task(happ_obj):
-        pass
+        return isinstance(happ_obj,Task)
 
     @staticmethod
     def validate_edit_task(name, description, due_date, is_completed, happ_obj):
-        pass
+        return RequestValidator.validate_add_task(name,description,due_date) and isinstance(is_completed,bool) and isinstance(happ_obj,Task)
 
     @staticmethod
     def validate_edit_reminder(new_time):
-        pass
-
-    @staticmethod
-    def validate_login(username, password):
-        pass
+        return isinstance(new_time,datetime)
 
     @staticmethod
     def validate_create_profile(username, password):
-        pass
+        return re.search("^[a-zA-Z1-9]*$",username) is not None and re.search("^[a-zA-Z1-9]*$",password) is not None
 
     @staticmethod
     def __validate_description(desc):
-        return re.search("^[\w .,!]*$",desc)
+        return re.search("^[\w .,!]*$",desc) is not None
 
     @staticmethod
     def __validate_name(name):
-        return re.search("^[\w ]*$",name)
+        return re.search("^[\w ]*$",name) is not None
 
 
  

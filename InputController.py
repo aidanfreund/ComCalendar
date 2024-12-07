@@ -199,11 +199,9 @@ class InputController:
     #logins in and sets active profile object and returns true if successful
     @classmethod
     def login(cls,username, password):
-        if RequestValidator.validate_login(username, password):
-            cls.active_profile = Operator.attempt_login(username, password)
-            return isinstance(cls.active_profile, Profile)
-        else:
-            return False
+        cls.active_profile = Operator.attempt_login(username, password)
+        return isinstance(cls.active_profile, Profile)
+        
 
     #Creates a profile obj, sets it to active, and returns true is successful
     @classmethod
