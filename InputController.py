@@ -18,6 +18,7 @@ class InputController:
         +get_task_list(): String
 
         
+        Getters and setters:
         +set_active_happening(id): Boolean
         +set_active_calendar(id):Boolean
 
@@ -29,7 +30,9 @@ class InputController:
         +get_task_string()
 
         
-        Update parameters and design
+        Update operator parameter names and design
+   
+
     
     
     '''
@@ -39,22 +42,25 @@ class InputController:
     @classmethod
     def add_event(cls, name, start_time, end_time, description):
         if RequestValidator.validate_add_event(name, start_time, end_time, description,):
-            Operator.add_event(name, start_time, end_time, description, calendar_obj)
+            return Operator.add_event(name, start_time, end_time, description, cls.active_calendar)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
     # Edits event, returns true if successful
     @classmethod
     def edit_event(cls, name, start_time, end_time, description):
-        if RequestValidator.validate_edit_event(name, start_time, description, end_time):
-            Operator.edit_event(name, start_time, end_time, description, event_obj)
+        if RequestValidator.validate_edit_event(name, start_time, description, end_time, cls.active_happening):
+            return Operator.edit_event(name, start_time, end_time, description, cls.active_happening)
         else:
-            raise Exception("Validation error occurred")
+            return False
     
     # Deletes event from calendar, returns true if successful
     @classmethod
     def delete_event(cls):
-        Operator.delete_event(event_obj, calendar_obj)
+        if RequestValidator.validate_edit_event(name, start_time, description, end_time, cls.active_happening):
+            return Operator.delete_event(cls.active_happening, cls.active_calendar)
+        else:
+            return 
     
     # Creates new calendar with name, returns true if successful
     @classmethod
@@ -62,7 +68,7 @@ class InputController:
         if RequestValidator.validate_create_calendar(name):
             Operator.create_calendar(name, profile_obj)
         else:
-            raise Exception("Validation error occurred")
+            return False
     
     # Deletes calendar 
     @classmethod
@@ -85,13 +91,13 @@ class InputController:
         Operator.copy_calendar(calendar_obj, profile_obj)
        
 
-    # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
+    # Compares calendars in a given time frame, returns string of free times
     @classmethod
-    def compare_calendars(cls, start_time, end_time, calendar1_id, calendar2_id):
-        if RequestValidator.validate_compare_calendars(start_time, end_time):
-            Operator.compare_calendars(calendar_obj1, calendar_obj2, start_time, end_time)
+    def compare_calendars(cls, calendar1_id, calendar2_id):
+        if RequestValidator.validate_compare_calendars(calendar1_id,calendar2_id):
+            Operator.compare_calendars(calendar_obj1, calendar_obj2)
         else:
-            raise Exception("Validation error occurred")
+            return False
     
     # Combines calendars, adds a new combined calendar to profile
     @classmethod
@@ -105,7 +111,7 @@ class InputController:
         if RequestValidator.validate_create_reminder(start_time):
             Operator.create_reminder(start_time, happ_obj)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
 
      # Filters calendar by events, returns a string of filtered events
@@ -114,7 +120,7 @@ class InputController:
         if RequestValidator.validate_filter_calendar_by_events( start_date, end_date):
             Operator.filter_calendar_by_events(calendar_obj, start_date, end_date)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
     # Filters calendar by tasks, returns a string of filtered events
     @classmethod
@@ -122,7 +128,7 @@ class InputController:
         if RequestValidator.validate_filter_calendar_by_tasks(start_date, end_date):
             Operator.filter_calendar_by_tasks(calendar_obj, start_date, end_date)
         else:
-            raise Exception("Validation error occurred")
+            return False
     
      # Filters calendar by dates, returning a string of filtered events
     @classmethod
@@ -130,7 +136,7 @@ class InputController:
         if RequestValidator.validate_filter_calendar_by_dates( start_date, end_date):
             Operator.filter_calendar_by_dates(calendar_obj, start_date, end_date)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
     # Adds task to a calendar, returns true if successful
     @classmethod
@@ -138,7 +144,7 @@ class InputController:
         if RequestValidator.validate_add_task(description, due_date):
             Operator.add_task(description, due_date, calendar_obj)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
     # Removes an task from calendar, returns true if successful
     @classmethod
@@ -152,7 +158,7 @@ class InputController:
         if RequestValidator.validate_edit_task(description, due_date):
             Operator.edit_task(description, due_date, task_obj)
         else:
-            raise Exception("Validation error occurred")
+            return False
         
     # Marks a task as complete
     def set_complete_task(cls):
@@ -169,7 +175,7 @@ class InputController:
         if RequestValidator.validate_edit_reminder(reminder_obj, new_time):
             Operator.edit_reminder(reminder_obj, new_time)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
     # Deletes profile obj, returns true if successful
     @classmethod
@@ -183,7 +189,7 @@ class InputController:
         if RequestValidator.validate_login(username, password):
             Operator.login(username, password)
         else:
-            raise Exception("Validation error occurred")
+            return False
 
     #Creates a profile obj, sets it to active, and returns true is successful
     @classmethod
@@ -191,5 +197,5 @@ class InputController:
         if RequestValidator.validate_login(username, password):
             Operator.create_profile(username, password)
         else:
-            raise Exception("Validation error occurred")
+            return False
         

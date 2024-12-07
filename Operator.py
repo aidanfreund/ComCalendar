@@ -5,8 +5,9 @@ from Event import Event
 from Task import Task
 from Reminder import Reminder
 from DBFactory import DatabaseFactory,FactoryProducer
-from DBConnection import Database_Connection
 from DBProfile import DB_Profile
+
+
 
 
 
@@ -26,8 +27,7 @@ class Operator:
             return True
         else:
             return False
-
-            
+  
 
     # Edits event, returns true if successful
     @classmethod
@@ -36,7 +36,7 @@ class Operator:
     
     # Deletes event from calendar, returns true if successful
     @classmethod
-    def delete_event(cls, event_obj, profile_obj):
+    def delete_event(cls, event_obj, calendar_obj):
         pass
     
     # Creates new calendar with name, returns true if successful
@@ -51,12 +51,12 @@ class Operator:
 
     # Processes .ics file string and returns calendar object
     @classmethod
-    def upload_calendar(cls, calendar_obj, profile_obj):
+    def upload_calendar(cls, file_path, name, profile_obj):
         pass
     
     # Returns .ics file string 
     @classmethod
-    def download_calendar(cls):
+    def download_calendar(cls, calendar_obj):
         pass
 
      # Copies a calendar and adds it to profile, returns true if successful
@@ -66,7 +66,7 @@ class Operator:
 
     # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
-    def compare_calendars(cls, calendar_obj1, calendar_obj2, start_time, end_time):
+    def compare_calendars(cls, calendar_obj1, calendar_obj2):
         pass
     
     # Combines calendars, returns a new calendar with combined objects
@@ -129,7 +129,7 @@ class Operator:
     #Logs in to profile using username and password
     #Returns profile obj if a match exists
     @classmethod
-    def login(cls,username, password):
+    def attempt_login(cls,username, password):
         pass
 
 
