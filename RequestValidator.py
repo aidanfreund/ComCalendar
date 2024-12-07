@@ -1,126 +1,80 @@
-from Operator import Operator
-from Calendar import Calendar
-from datetime import datetime
-
+import re
+import datetime
+from Event import Event
+from Task import Task
 
 class RequestValidator:
-    
-   
 
+    @staticmethod
+    def validate_add_event(name, start_time, end_time, description):
+        passed = isinstance(name,str) and isinstance(start_time,datetime) and isinstance(end_time,datetime) and isinstance(description,str)
 
-    # Creates new event with attributes, returns true if successful
-    @classmethod
-    def validate_add_event(cls, name, start_time, end_time, calendar_obj):
+        if not RequestValidator.__validate_name(name) or not RequestValidator.__validate_description(description):
+            passed = False
+
+        return passed
+        
+
+    @staticmethod
+    def validate_edit_event(name, start_time, end_time, description, happ_obj):
+        passed = RequestValidator.validate_add_event(name,start_time,end_time,description)
+        
+        if not isinstance(happ_obj,Event):
+            passed = False
+
+        return passed
+
+    @staticmethod
+    def validate_delete_event(happ_obj):
+        return isinstance(happ_obj,Event)
+
+    @staticmethod
+    def validate_create_calendar(name):
+        return RequestValidator.__validate_name(name)
+
+    @staticmethod
+    def validate_upload_calendar(file_path, name):
+        return re.search("^((\/[a-zA-Z0-9-_]+)+|\/)$",file_path) and RequestValidator.__validate_name(name)
+
+    @staticmethod
+    def validate_create_reminder(start_time):
+        return isinstance(start_time,datetime)
+
+    @staticmethod
+    def validate_filter_calendar_by_dates(start_date, end_date):
+        return isinstance(start_date,datetime) and isinstance(end_date,datetime)
+
+    @staticmethod
+    def validate_add_task(name, description, due_date):
+        isinstance(name,str) and isinstance(due_date,datetime) and isinstance(description,str)
+
+    @staticmethod
+    def validate_remove_task(happ_obj):
         pass
 
-    # Edits event, returns true if successful
-    @classmethod
-    def validate_edit_event(cls, name, start_time, end_time, event_obj):
+    @staticmethod
+    def validate_edit_task(name, description, due_date, is_completed, happ_obj):
         pass
 
-    # Deletes event from calendar, returns true if successful
-    @classmethod
-    def validate_delete_event(cls, event_obj, profile_obj):
+    @staticmethod
+    def validate_edit_reminder(new_time):
         pass
 
-    # Creates new calendar with name, returns true if successful
-    @classmethod
-    def validate_create_calendar(cls, name, profile_obj):
+    @staticmethod
+    def validate_login(username, password):
         pass
 
-    # Deletes calendar
-    @classmethod
-    def validate_delete_calendar(cls, calendar_obj, profile_obj):
+    @staticmethod
+    def validate_create_profile(username, password):
         pass
 
-    # Processes .ics file string and returns calendar object
-    @classmethod
-    def validate_upload_calendar(cls, file_path, name):
-        pass
+    @staticmethod
+    def __validate_description(desc):
+        return re.search("^[\w .,!]*$",desc)
 
-    # Returns .ics file string
-    @classmethod
-    def validate_download_calendar(cls):
-        pass
+    @staticmethod
+    def __validate_name(name):
+        return re.search("^[\w ]*$",name)
 
-    # Copies a calendar and adds it to profile, returns true if successful
-    @classmethod
-    def validate_copy_calendar(cls, calendar_obj, profile_obj):
-        pass
 
-    # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
-    @classmethod
-    def validate_compare_calendars(cls, calendar_id1, calendar_id2, start_time, end_time):
-        pass
-
-    # Combines calendars, returns a new calendar with combined objects
-    @classmethod
-    def validate_aggregate_calendar(cls, calendar_obj1, calendar_obj2):
-        pass
-
-    # Adds reminder to happening obj, returns true if successful
-    @classmethod
-    def validate_create_reminder(cls, start_time, happ_obj):
-        pass
-
-    # To be discussed
-    @classmethod
-    def validate_retrieve_calendar(cls, calendar_id):
-        pass
-
-    # To be discussed
-    @classmethod
-    def validate_retrieve_event_information(cls, event_id, calendar_obj):
-        pass
-
-    # To be discussed
-    @classmethod
-    def validate_retrieve_task_information(cls, task_id, calendar_obj):
-        pass
-
-    # Filters calendar by dates, returning a new filtered calendar obj
-    @classmethod
-    def validate_filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):
-        pass
-
-    # Adds task to a calendar, returns true if successful
-    @classmethod
-    def validate_add_task(cls, name, description, due_date):
-        pass
-
-    # Removes a task from calendar, returns true if successful
-    @classmethod
-    def validate_remove_task(cls, task_obj, calendar_obj):
-        pass
-
-    # Edits a task, returns true if successful
-    @classmethod
-    def validate_edit_task(cls, name, description, due_date, task_obj):
-        pass
-
-    # Removes reminder, returns true if successful
-    @classmethod
-    def validate_remove_reminder(cls, reminder_obj, happ_obj):
-        pass
-
-    # Edits a reminder object, returns true if successful
-    @classmethod
-    def validate_edit_reminder(cls, reminder_obj, new_time):
-        pass
-
-    # Deletes profile obj, returns true if successful
-    @classmethod
-    def validate_delete_profile(cls, profile_obj):
-        pass
-
-    # Logs in to profile using username and password
-    # Returns profile obj if a match exists
-    @classmethod
-    def validate_login(cls, username, password):
-        pass
-
-    # Creates a profile obj and returns it
-    @classmethod
-    def validate_create_profile(cls, username, password):
-        pass
-
+ 

@@ -4,6 +4,7 @@ from Task import Task
 from Happening import Happening
 from Profile import Profile
 from Calendar import Calendar
+from Reminder import Reminder
 
 class InputController:
 
@@ -11,35 +12,7 @@ class InputController:
     active_calendar = None
     active_happening = None
     active_reminder = None
-    
 
-    '''
-        ToDo:
-
-        ID list with names:
-        +get_calendar_list():String
-        +get_event_list(): String
-        +get_task_list(): String
-
-        
-        Getters and setters:
-        +set_active_happening(id): Boolean
-        +set_active_calendar(id):Boolean
-
-        +get_happenings_string()
-        +get_events_string()
-        +get_tasks_string()
-        +get_reminder_string()
-        +get_event_string()
-        +get_task_string()
-
-        
-        Update operator parameter names and design
-   
-
-    
-    
-    '''
     
 
     # Creates new event with attributes, returns true if successful
@@ -53,7 +26,7 @@ class InputController:
     # Edits event, returns true if successful
     @classmethod
     def edit_event(cls, name, start_time, end_time, description):
-        if RequestValidator.validate_edit_event(name, start_time, description, end_time, cls.active_happening):
+        if RequestValidator.validate_edit_event(name, start_time, end_time, description, cls.active_happening):
             return Operator.edit_event(name, start_time, end_time, description, cls.active_happening)
         else:
             return False
@@ -62,9 +35,12 @@ class InputController:
     @classmethod
     def delete_event(cls):
         if RequestValidator.validate_delete_event(cls.active_happening):
-            return Operator.delete_event(cls.active_happening,cls.active_calendar)
+            passed = Operator.delete_event(cls.active_happening,cls.active_calendar)
+            if passed:
+                cls.active_happening = None
+            return passed
         else:
-            return 
+            return False
     
     # Creates new calendar with name, returns true if successful
     @classmethod
@@ -77,7 +53,10 @@ class InputController:
     # Deletes calendar 
     @classmethod
     def delete_calendar(cls):
-        return Operator.delete_calendar(cls.active_calendar)
+        passed = Operator.delete_calendar(cls.active_calendar,cls.active_profile)
+        if passed:
+            cls.active_calendar = None
+        return passed
 
     # Processes .ics file string and adds it to profile
     @classmethod
@@ -102,56 +81,31 @@ class InputController:
     @classmethod
     def compare_calendars(cls, calendar1_id, calendar2_id):
 
-        calendar_obj1, calendar_obj2 = None
-
         cal_list = cls.active_profile.get_calendars()
 
-        num_calendars = len(cal_list)
+        calendar_obj1 = cal_list[calendar1_id]
+        calendar_obj2 = cal_list[calendar2_id]
         
-
-        if RequestValidator.validate_compare_calendars(calendar1_id,calendar2_id,num_calendars):
-        
-            for i in range(num_calendars):
-
-                if i is calendar1_id:
-                    calendar_obj1 = cal_list[i]
-                else:
-                    if i is calendar2_id:
-                        calendar_obj2 = cal_list[i]
-                        
-            if calendar_obj1 or calendar_obj2 is None:
-                return "Failed to find calendars"
+ 
+        if calendar_obj1 or calendar_obj2 is None:
+            return "Failed to find calendars"
             
-            return Operator.compare_calendars(calendar_obj1, calendar_obj2)
-        else:
-            return "Compare calendars IDs failed validation"
+        return Operator.compare_calendars(calendar_obj1, calendar_obj2)
+       
     
     # Combines calendars using calendars calendar id's in range 0-numCalendars (converted to real id), returns a calendar object
     @classmethod
     def aggregate_calendar(cls, calendar1_id, calendar2_id, name):
 
-        calendar_obj1, calendar_obj2 = None
-
         cal_list = cls.active_profile.get_calendars()
 
-        num_calendars = len(cal_list)
+        calendar_obj1 = cal_list[calendar1_id]
+        calendar_obj2 = cal_list[calendar2_id]
 
-        if RequestValidator.validate_aggregate_calendar(calendar1_id,calendar2_id, num_calendars):
-
-            for i in range(num_calendars):
-
-                if i is calendar1_id:
-                    calendar_obj1 = cal_list[i]
-                else:
-                    if i is calendar2_id:
-                        calendar_obj2 = cal_list[i]
-                        
-            if calendar_obj1 or calendar_obj2 is None:
-                return False
-        
-            return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2)
-        else:
-            return False
+        if calendar_obj1 or calendar_obj2 is None:
+            return "Failed to find calendars"
+            
+        return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2)
       
 
     # Adds reminder to happening obj, returns true if successful
@@ -194,7 +148,10 @@ class InputController:
     @classmethod
     def remove_task(cls):
         if RequestValidator.validate_remove_task(cls.active_happening):
-            return Operator.remove_task(cls.active_happening, cls.active_calendar)
+            passed = Operator.remove_task(cls.active_happening,cls.active_calendar)
+            if passed:
+                cls.active_happening = None
+            return passed
         else:
             return False
 
@@ -202,8 +159,8 @@ class InputController:
     # Edits a task, returns true if successful
     @classmethod
     def edit_task(cls,name, description, due_date, is_completed):
-        if RequestValidator.validate_edit_task(name, description, due_date, cls.active_happening):
-            return Operator.edit_task(name, description, due_date, cls.active_happening)
+        if RequestValidator.validate_edit_task(name, description, due_date, is_completed, cls.active_happening):
+            return Operator.edit_task(name, description, due_date, is_completed, cls.active_happening)
         else:
             return False
         
@@ -233,7 +190,10 @@ class InputController:
     # Deletes profile obj, returns true if successful
     @classmethod
     def delete_profile(cls):
-        return Operator.delete_profile(cls.active_profile)
+        passed = Operator.delete_profile(cls.active_profile)
+        if passed:
+            cls.active_profile = None
+        return passed
      
 
     #logins in and sets active profile object and returns true if successful
@@ -255,86 +215,36 @@ class InputController:
             return False
         
     
-    #UI controls
 
     
+    #Getters and setters
 
-    def get_calendar_list(cls):
-
-        message_str = ""
-
-        if not cls.active_profile:
-            message_str = "No active profile"
-        else:
-            message_str += "Calendar list:\n"
-            cal_list = cls.active_profile
-            for cal in cal_list:
-                message_str += f"   {cal.get_calendar_id()}: {cal.get_calendar_name()}\n"
-
-        return message_str
-
-
-    def get_event_list(cls):
-        message_str = ""
-
-        if not cls.active_calendar:
-            message_str = "No active calendar"
-        else:
-            message_str += "Event list:\n"
-            event_list = cls.active_calendar.retrieve_events()
-            for event in event_list:
-                message_str += f"   {event.get_id()}: {event.get_name()}\n"
-
-        return message_str
-        
-
-    def get_task_list(cls):
-        message_str = ""
-
-        if not cls.active_calendar:
-            message_str = "No active calendar"
-        else:
-            message_str += "Task list:\n"
-            task_list = cls.active_calendar.retrieve_tasks()
-            for task in task_list:
-                message_str += f"   {task.get_id()}: {task.get_name()}\n"
-
-        return message_str
-
-
-    def set_active_happening(cls,id):
-        if isinstance(cls.active_calendar, Calendar):
-            happ_list = cls.active_calendar.retrieve_events() + cls.active_calendar.retrieve_tasks()
-            for happ in happ_list:
-                if happ.get_id() is id:
-                    cls.active_happening = happ
-                    return True
-            return False
-        else:
-            return False
-        
-
-
-
-
-    def set_active_calendar(cls,id):
-        if isinstance(cls.active_profile, Profile):
-            cal_list = cls.active_profile.get_calendars()
-            for cal in cal_list:
-                if cal.get_calendar_id() is id:
-                    cls.active_calendar = cal
-                    return True
-            return False
-        else:
-            return False
-        
     
+    @classmethod
+    def get_profile(cls):
+        return cls.active_profile
 
-    def get_happenings_string(cls):
-        pass
-    def get_reminder_string(cls):
-        pass
-    def get_event_string(cls):
-        pass
-    def get_task_string(cls):
-        pass
+    @classmethod
+    def get_calendar(cls):
+        return cls.active_calendar
+
+    @classmethod
+    def get_happening(cls):
+        return cls.active_happening
+
+    @classmethod
+    def get_reminder(cls):
+        return cls.active_reminder
+
+    @classmethod
+    def set_calendar(cls, calendar_obj):
+        cls.active_calendar = calendar_obj
+
+    @classmethod
+    def set_happening(cls, happ_obj):
+        cls.active_happening = happ_obj
+
+    @classmethod
+    def set_reminder(cls, reminder_obj):
+        cls.active_reminder = reminder_obj
+
