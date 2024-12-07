@@ -3,12 +3,12 @@ from abc import ABC
 import pymysql
 
 #abstract database connection class
-class Database_Connection(ABC):
+class DatabaseConnection(ABC):
     def get_db_connection(self):
         pass
 
 #implementation of MySQL database connection
-class MySQLConnection(Database_Connection):
+class MySQLConnection(DatabaseConnection):
     __SQL_connection = None
 
     #private init only called on first creation of a connection

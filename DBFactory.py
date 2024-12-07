@@ -1,6 +1,6 @@
 
 from abc import ABC
-from DBProfile import DB_Profile
+from DBProfile import DBProfile
 from DBConnection import MySQLConnection
 
 #abstract factory
@@ -21,7 +21,7 @@ class SQLFactory(DatabaseFactory):
     def __create_db_connection():
         MySQLConnection.get_db_connection()
     def __create_profile_controller():
-        return DB_Profile.get_db_profile()
+        return DBProfile.get_db_profile()
 
 class FactoryProducer():
     def __init__(self, functionality):

@@ -1,16 +1,17 @@
 import threading
+import re
 import sys
-import calendar
-import datetime
+from LoginMenu import LoginMenu
 from InputController import InputController
 
-class TerminalUI():
+class Terminal_UI():
     def run():
         while True:
-            login_bool = TerminalUI.login_statement()
-            while login_bool:
-                login_bool = TerminalUI.select_option()
-                if login_bool is False:
+            profile = Terminal_UI.login_statement()
+            option_bool = True
+            while option_bool:
+                option_bool = Terminal_UI.select_option(profile)
+                if option_bool is False:
                     break
                 selection = input("Type exit or e to exit, type anything else to select another option again: ")
                 selection.lower()
@@ -19,8 +20,15 @@ class TerminalUI():
 
     def login():
         username = input("Enter username: ")
+        while re.search("^[a-zA-Z1-9]*$",username) is None:
+            username = input("Enter valid username: ")
+
         password = input("Enter password: ")
-        login_bool = InputController.login(username,password)
+        while re.search("^[a-zA-Z1-9!]*$",password) is None:
+            password = input("Enter valid password: ")
+
+        login_menu = LoginMenu()
+        login_bool = login_menu.login(username,password)
         if login_bool is not True:
             print("Failed to login")
             return False
@@ -32,36 +40,34 @@ class TerminalUI():
         if username == "exit" or username == "e":
             sys.exit()
         password = input("Enter password: ")
-        profile_bool = InputController.create_profile(username,password)
+
+        login_menu = LoginMenu()
+        profile_bool = login_menu.create_profile(username,password)
         if profile_bool is False:
             print("Failed to create profile")
             return False
         return True
 
-    def select_option():
+    def select_option(profile):
         while True:
-            input_selection = int(input("Enter Selection Number: "
+            input_selection = input("Enter Selection Number: "
                                     +"\n1. Logout\n2. Upload Calendar to Profile"
                                     +"\n3. Show Profile's Calendars\n4. Delete Profile"
-                                    + "\n5. Exit"))
+                                    + "\n5. Exit")
             match input_selection:
                 case 1:
                     return False
                 case 2:
-                    TerminalUI.upload_calendar()
+                    Terminal_UI.upload_calendar(profile)
                 case 3:
-                    TerminalUI.show_calendar_list()
+                    Terminal_UI.show_calendar_list(profile)
                 case 4:
                     input_char = input("Are You sure?(y/n): ")
                     input_char.lower()
                     if input_char == "n":
                         print("Canceled Delete")
                     if input_char == "y":
-                        bool_delete = InputController.delete_profile()
-                        if bool_delete == "False":
-                            print("Failed to delete")
-                        else:
-                            print("Delete successful")
+                        InputController.delete_profile()
                     
                 case 5:
                     sys.exit()
@@ -74,13 +80,13 @@ class TerminalUI():
             input_selection = input("Login(L) or Create Account(CA) or Exit(E): ")
             input_selection = input_selection.lower()
             if input_selection == "l" or input_selection == "login":
-                login_bool = TerminalUI.login()
+                login_bool = Terminal_UI.login()
                 while login_bool is not True:
-                    profile_bool = TerminalUI.login()
+                    profile_bool =Terminal_UI.login()
                 return profile_bool
             elif input_selection == "ca" or input_selection == "create account":
                 while profile_bool is False:
-                    profile_bool = TerminalUI.create_account()
+                    profile_bool = Terminal_UI.create_account()
                 return profile_bool
             elif input_selection == "e" or input_selection == "exit":
                 sys.exit()
@@ -93,7 +99,7 @@ class TerminalUI():
         InputController.upload_calendar(calendar_string,calendar_name)
 
     def show_calendar_list():
-        calendars = InputController.get_profile().get_calendars()
+        calendars = InputController.get_calendars()
         while True:
             i = 0
             for element in calendars:
@@ -103,16 +109,16 @@ class TerminalUI():
                 input_selection = input("Select Calendar to operate on, type add to add calendar, type aggregate to combine 2 calendars,"
                                         +"type compare to compare calendars, or type back to go back: ")
                 if input_selection == "add":
-                    TerminalUI.add_calendar()
+                    Terminal_UI.add_calendar()
                 elif input_selection == "back":
                     return
                 elif int(input_selection) > 0 and int(input_selection) < calendars.len():
-                    TerminalUI.calendar_options(calendars[int(input_selection)])
+                    Terminal_UI.calendar_options(calendars[int(input_selection)])
                 elif input_selection == "compare":
                     if calendars.len() < 2:
                         print("Not enough calendars to compare")
                     else:
-                        TerminalUI.compare_calendars()
+                        Terminal_UI.compare_calendars()
                 elif input_selection == "aggregate":
                     if calendars.len() < 2:
                         print("There are not 2 calendars to combine")
@@ -132,117 +138,23 @@ class TerminalUI():
         InputController.create_calendar(calendar_name)
 
     def compare_calendars():
-        calendar_one = int(input("Enter Number of first calendar: "))
-        calendar_two = int(input("Enter Number of second calendar: "))
+        calendar_one = input("Enter Number of first calendar: ")
+        calendar_two = input("Enter Number of second calendar: ")
         calendar_compared = InputController.compare_calendars(InputController.get_calendar()[calendar_one],InputController.get_calendar()[calendar_two])
         print("Events: ")
         for event in calendar_compared.get_events():
-            needwork
-    
+            print("hello")
+
     def calendar_options():
-        while True:
-            calendar = InputController.get_calendar()
-            print(calendar.get_calendar_name())
-            TerminalUI.print_calendar()
-            input_selection = int(input("Select Option Number:"
-                                    + "\n1. Download Calendar \n2. View Events"
-                                    + "\n3. View Tasks \n4. View All"
-                                    + "\n5. Delete Calendar \n6. Create Copy of Calendar"
-                                    + "\n7. Back"))
-            match input_selection:
-                case 1:
-                    download_string = InputController.download_calendar()
-                    print("File: ")
-                    print(download_string)
-                case 2: #view Events
-                    TerminalUI.view_events()
-                case 3: #view Tasks
-                    TerminalUI.view_tasks()
-                case 4: #veiw all
-                    calendar = InputController.get_calendar()
-                    i = 0
-                    print("Events: ")
-                    for event in calendar.get_events():
-                        print(f"{i+1}. {event.get_name()} starts at {event.get_start_time()} and ends at {event.get_end_time()}")
-                        i += 1
-                    print("Tasks: ")
-                    k = 0
-                    for task in calendar.get_tasks():
-                        print(f"{k+1}. {task.get_name()} starts at {task.get_start_time()} and Completion status: {task.get_completed()}")
-                        k += 1    
-                case 5:
-                    check_input = input("Are you sure you want to delete the calendar?(y/n)")
-                    check_input.lower()
-                    if check_input == "y":
-                        delete_bool = InputController.delete_calendar()
-                        if delete_bool is True:
-                            print("Deletion Successful")
-                        else:
-                            print("Deletion Failed")
-                    else:
-                        print("Deletion Stopped")
-                case 6:
-                    TerminalUI.copy_calendar()
-                case 7:
-                    return
-                case _:
-                    print("Invalid Input")
+        print("hello")
+        # while True:
+        #     input_selection = input("Select Option Number:"
+        #                             + "\n1. Download Calendar \n2. ")
+        
 
-    def print_calendar():
+def main():
+    Terminal_UI.run()
 
-        print(calendar.month_name[datetime.datetime.now().month], datetime.datetime.now().year)
-        print("Mo\t  Tu \tWe\t  Th \tFr \t  Sa \tSu")
-
-        month_days = calendar.monthcalendar(datetime.datetime.now().year, datetime.datetime.now().month)
-
-        for week in month_days:
-            for day in week:
-                if day == 0:
-                    print("    ", end="  ")
-                else:
-                    print(f"{day:2d}  ", end="  ")
-            print()  
-
-    def view_events():
-        calendar = InputController.get_calendar()
-        i = 0
-        for event in calendar.get_events():
-            print(f"{i+1}. {event.get_name()} starts at {event.get_start_time()} and ends at {event.get_end_time()}")
-            i += 1
-        while True:
-            option_input = int(input("Select an Event number or 0 to go back"))
-            if option_input > 0 and option_input < calendar.get_events().len():
-                InputController.set_happening(calendar.get_events()[option_input])
-                TerminalUI.event_options()
-            elif option_input == 0:
-                return
-            else:
-                print("Invalid Input")
-
-    def view_tasks():
-        calendar = InputController.get_calendar()
-        i = 0
-        for task in calendar.get_tasks():
-            print(f"{i+1}. {task.get_name()} starts at {task.get_start_time()} and Completion status: {task.get_completed()}")
-            i += 1
-        while True:
-            option_input = int(input("Select an Event number or 0 to go back"))
-            if option_input > 0 and option_input < calendar.get_events().len():
-                InputController.set_happening(calendar.get_tasks()[option_input])
-                TerminalUI.task_options()
-            elif option_input == 0:
-                return
-            else:
-                print("Invalid Input")
-
-    def event_options():
-        pass
-    def task_options():
-        pass
-    def reminder_options():
-        pass
-    def reminder_check():
-        pass
-
+main()
 
     
