@@ -27,7 +27,12 @@ class Calendar:
         return self._events
     
     def add_task(self, hap_id, name, datetime):
-        self._tasks.append(hap_id)
+        for i, (hap_id, name, edatetime) in enumerate(self._tasks):
+            if datetime < edatetime:
+                self._tasks.append(hap_id)
+                return True
+            else:
+                self._tasks.append((hap_id, name, datetime))
         return True
     
     def add_event(self, hap_id, name, start_time, end_time ):
