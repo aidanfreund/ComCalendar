@@ -1,4 +1,8 @@
+#operator.py
+#Class to handle operation requests
+
 from Profile import Profile
+
 from DBProfile import DBProfile
 from Calendar import Calendar
 from DBFactory import DatabaseFactory, FactoryProducer
@@ -9,6 +13,7 @@ from Profile import Profile
 from Calendar import Calendar
 from Event import Event
 from Task import Task
+from Reminder import Reminder
 
 from ics import Calendar as ICS_Calendar
 from ics import Event as ICS_Event
@@ -19,16 +24,16 @@ class Operator:
     factory:DatabaseFactory = FactoryProducer("Profile")
     db_profile:DBProfile = factory.DB_profile
 
-
-    #Creates new event with attributes, returns true if successful
+    # Creates new event with attributes, returns true if successful
     @classmethod
-    def add_event(cls, name, start_time, end_time, calendar_obj:Calendar, description = ""):
-        #add to db
-        id = cls.db_profile.add_event(description, start_time, end_time, name, calendar_obj)
-        #add to machine
-        calendar_obj.add_event(id, name, start_time, end_time, description)
-        return True
-
+    def add_event(cls, name, start_time, end_time, description, calendar_obj):
+        new_event_id = cls.db_profile.add_event(description,start_time,end_time,name,calendar_obj)
+        if new_event_id is not -1:
+            calendar_obj.add_event(Event(new_event_id,name,start_time,end_time,description))
+            return True
+        else:
+            return False
+  
     # Edits event, returns true if successful
     @classmethod
     def edit_event(cls, name:str, start_time:datetime, end_time:datetime, event_obj:Event, desc:str):
@@ -66,6 +71,7 @@ class Operator:
     
     # Deletes calendar 
     @classmethod
+
     def delete_calendar(cls, calendar_obj:Calendar, profile_obj:Profile):
         #
         cls.db_profile.delete_calendar(calendar_obj)
@@ -135,7 +141,7 @@ class Operator:
     
     # Returns .ics file string 
     @classmethod
-    def download_calendar(cls):
+    def download_calendar(cls, calendar_obj):
         pass
 
      # Copies a calendar and adds it to profile, returns true if successful
@@ -145,6 +151,7 @@ class Operator:
 
     # Compares calendars in a given time frame, returns string of *(conflicts or free space?)
     @classmethod
+
     def compare_calendars(cls, calendar_id1, calendar_id2):
 
   
@@ -194,13 +201,13 @@ class Operator:
 
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
-    def filter_calendar_by_events(cls, calendar_obj, start_date, end_date):
+    def filter_calendar_by_events(cls, calendar_obj):
         pass
 
 
     # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
-    def filter_calendar_by_tasks(cls, calendar_obj, start_date, end_date):
+    def filter_calendar_by_tasks(cls, calendar_obj):
         pass
     
      # Filters calendar by dates, returning a new filtered calendar obj
@@ -210,7 +217,7 @@ class Operator:
 
     # Adds task to a calendar, returns true if successful
     @classmethod
-    def add_task(cls, description, due_date, calendar_obj):
+    def add_task(cls, name, description, due_date, calendar_obj):
         pass
 
     # Removes an task from calendar, returns true if successful
@@ -220,7 +227,7 @@ class Operator:
 
     # Edits a task, returns true if successful
     @classmethod
-    def edit_task(cls, description, due_date, task_obj):
+    def edit_task(cls,name, description, due_date, is_completed, task_obj):
         pass
     
     # Removes reminder, returns true if successful
@@ -242,7 +249,7 @@ class Operator:
     #Logs in to profile using username and password
     #Returns profile obj if a match exists
     @classmethod
-    def login(cls,username, password):
+    def attempt_login(cls,username, password):
         pass
 
 
