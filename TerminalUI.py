@@ -2,8 +2,13 @@ import threading
 import sys
 import calendar
 import datetime
+import time
+from datetime import timedelta
 from InputController import InputController
 from Calendar import Calendar
+
+thread_flag_lock = threading.Lock()
+thread_flag = False
 
 class TerminalUI():
     def run():
@@ -169,6 +174,9 @@ class TerminalUI():
                                     + "\n6.Add Event \n7. Add Task"
                                     + "\n8.Delete Calendar \n9. Create Copy of Calendar"
                                     + "\n10. Back"))
+            with thread_flag_lock:
+                thread_flag = True
+            TerminalUI.reminder_check()
             match input_selection:
                 case 1:
                     download_string = InputController.download_calendar()
@@ -244,6 +252,10 @@ class TerminalUI():
                         delete_bool = InputController.delete_calendar()
                         if delete_bool is True:
                             print("Deletion Successful")
+                            with thread_flag_lock:
+                                thread_flag = False
+                            InputController.set_calendar(None)
+                            return
                         else:
                             print("Deletion Failed")
                     else:
@@ -255,6 +267,8 @@ class TerminalUI():
                     else:
                         print("Failed to copy calendar")
                 case 10: #back
+                    with thread_flag_lock:
+                        thread_flag = False
                     return
                 case _:
                     print("Invalid Input")
@@ -537,7 +551,26 @@ class TerminalUI():
                     print("Invalid Input")
 
     def reminder_check():
+        def check_reminders_in_calendar(calendar):
+            global thread_flag
+            while True:
+                with thread_flag_lock:
+                    if thread_flag is True:
+                        for event in calendar.get_events():
+                            if event.get_reminder().get_time() - timedelta(seconds = 60) <= datetime.datetime.now() <= event.get_reminder().get_time() + timedelta(seconds=60):
+                                print(f"Event {event.get_name()} starts at: {event.get_first_time()}")
+                        for task in calendar.get_events():
+                            if task.get_reminder().get_time() - timedelta(seconds = 60) <= datetime.datetime.now() <= task.get_reminder().get_time() + timedelta(seconds=60):
+                                print(f"Task {task.get_name()} time is: {task.get_first_time()}")
+                        time.sleep(60)
+                    else:
+                        break
         
+        thread = threading.Thread(target=check_reminders_in_calendar, args=(InputController.get_calendar(),))
+        thread.start()
+
+        
+        thread.join()
 
 
     
