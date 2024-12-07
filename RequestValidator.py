@@ -35,7 +35,7 @@ class RequestValidator:
 
     # Processes .ics file string and returns calendar object
     @classmethod
-    def validate_upload_calendar(cls, calendar_obj, profile_obj):
+    def validate_upload_calendar(cls, file_path, name):
         pass
 
     # Returns .ics file string
@@ -95,7 +95,7 @@ class RequestValidator:
 
     # Adds task to a calendar, returns true if successful
     @classmethod
-    def validate_add_task(cls, description, due_date, calendar_obj):
+    def validate_add_task(cls, name, description, due_date):
         pass
 
     # Removes a task from calendar, returns true if successful
@@ -105,7 +105,7 @@ class RequestValidator:
 
     # Edits a task, returns true if successful
     @classmethod
-    def validate_edit_task(cls, description, due_date, task_obj):
+    def validate_edit_task(cls, name, description, due_date, task_obj):
         pass
 
     # Removes reminder, returns true if successful

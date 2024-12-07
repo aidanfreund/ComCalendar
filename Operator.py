@@ -97,7 +97,7 @@ class Operator:
 
     # Adds task to a calendar, returns true if successful
     @classmethod
-    def add_task(cls, description, due_date, calendar_obj):
+    def add_task(cls, name, description, due_date, calendar_obj):
         pass
 
     # Removes an task from calendar, returns true if successful
@@ -107,7 +107,7 @@ class Operator:
 
     # Edits a task, returns true if successful
     @classmethod
-    def edit_task(cls, description, due_date, task_obj):
+    def edit_task(cls,name, description, due_date, is_completed, task_obj):
         pass
     
     # Removes reminder, returns true if successful
