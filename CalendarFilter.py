@@ -8,5 +8,3 @@ class CalendarFilter(Calendar):
     
     def FilterByEvent(self, event):
         return any(thing['event'] == event for thing in self.events)
-    
-    
