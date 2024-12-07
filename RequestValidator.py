@@ -78,16 +78,6 @@ class RequestValidator:
     def validate_retrieve_task_information(cls, task_id, calendar_obj):
         pass
 
-    # Filters calendar by events, returns a filtered calendar obj
-    @classmethod
-    def validate_filter_calendar_by_events(cls, calendar_obj, start_date, end_date):
-        pass
-
-    # Filters calendar by tasks, returns a filtered calendar obj
-    @classmethod
-    def validate_filter_calendar_by_tasks(cls, calendar_obj, start_date, end_date):
-        pass
-
     # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
     def validate_filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):

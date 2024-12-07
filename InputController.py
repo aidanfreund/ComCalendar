@@ -165,19 +165,14 @@ class InputController:
 
      # Filters calendar by events, returns a string of filtered events
     @classmethod
-    def filter_calendar_by_events(cls, start_date, end_date):
-        if RequestValidator.validate_filter_calendar_by_events( start_date, end_date):
-            Operator.filter_calendar_by_events(cls.active_calendar, start_date, end_date)
-        else:
-            return False
+    def filter_calendar_by_events(cls):
+        Operator.filter_calendar_by_events(cls.active_calendar)
+
 
     # Filters calendar by tasks, returns a string of filtered events
     @classmethod
-    def filter_calendar_by_tasks(cls, start_date, end_date):
-        if RequestValidator.validate_filter_calendar_by_tasks(start_date, end_date):
-            Operator.filter_calendar_by_tasks(cls.active_calendar, start_date, end_date)
-        else:
-            return False
+    def filter_calendar_by_tasks(cls):
+        Operator.filter_calendar_by_tasks(cls.active_calendar)
     
      # Filters calendar by dates, returning a string of filtered events
     @classmethod
@@ -323,13 +318,19 @@ class InputController:
 
 
     def set_active_calendar(cls,id):
-        pass
+        if isinstance(cls.active_profile, Profile):
+            cal_list = cls.active_profile.get_calendars()
+            for cal in cal_list:
+                if cal.get_calendar_id() is id:
+                    cls.active_calendar = cal
+                    return True
+            return False
+        else:
+            return False
+        
+    
 
     def get_happenings_string(cls):
-        pass
-    def get_events_string(cls):
-        pass
-    def get_tasks_string(cls):
         pass
     def get_reminder_string(cls):
         pass
