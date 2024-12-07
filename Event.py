@@ -4,7 +4,7 @@ from Happening import Happening
 import datetime
 
 class Event(Happening):
-    def __init__(self, task_ID:int, name:str, first_time:datetime, second_time:datetime, desc = ""):
+    def __init__(self, task_ID:int, name:str, first_time:datetime, second_time:datetime, desc:str):
         super().__init__(task_ID, name, first_time, desc)
         self._second_time = second_time
         
