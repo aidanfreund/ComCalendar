@@ -6,7 +6,7 @@ from Calendar import Calendar
 from Profile import Profile
 from Task import Task
 from Event import Event
-from DBConnection import Database_Connection, MySQLConnection
+from DBConnection import DatabaseConnection, MySQLConnection
 import datetime
 from Happening import Happening
 from Reminder import Reminder
