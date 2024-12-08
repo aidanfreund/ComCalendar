@@ -27,7 +27,7 @@ class InputController:
     @classmethod
     def edit_event(cls, name, start_time, end_time, description):
         if RequestValidator.validate_edit_event(name, start_time, end_time, description, cls.active_happening):
-            return Operator.edit_event(name, start_time, end_time, description, cls.active_happening)
+            return Operator.edit_event(name, start_time, end_time, cls.active_happening,description)
         else:
             return False
     
@@ -105,7 +105,7 @@ class InputController:
         if calendar_obj1 or calendar_obj2 is None:
             return "Failed to find calendars"
             
-        return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2)
+        return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2,cls.active_profile)
       
 
     # Adds reminder to happening obj, returns true if successful
@@ -120,23 +120,13 @@ class InputController:
      # Filters calendar by events, returns a string of filtered events
     @classmethod
     def filter_calendar_by_events(cls):
-        event_array = Operator.filter_calendar_by_events(cls.active_calendar)
-        result_string = ""
-        i = 0
-        for event in event_array:
-            result_string += f"\n{i+1}.Event: {event.get_name()} Start Time: {event.get_first_time()} End Time: {event.get_second_time()} Description: {event.get_description()}"
-            i += 1
+        result_string = Operator.filter_calendar_by_events(cls.active_calendar)
         return result_string
 
     # Filters calendar by tasks, returns a string of filtered events
     @classmethod
     def filter_calendar_by_tasks(cls):
-        task_array = Operator.filter_calendar_by_tasks(cls.active_calendar)
-        result_string = ""
-        i = 0
-        for task in task_array:
-            result_string += f"\n{i+1}.Task: {task.get_name()} Time: {task.get_first_time()} Description: {task.get_description()} Completion Status: {task.get_completed()}"
-            i += 1
+        result_string = Operator.filter_calendar_by_tasks(cls.active_calendar)
         return result_string
      # Filters calendar by dates, returning a string of filtered events
     @classmethod

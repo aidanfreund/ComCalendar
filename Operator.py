@@ -279,25 +279,29 @@ class Operator:
         #add in machine
         return happ_obj.create_reminder(id, time)
 
-     # Filters calendar by events, returns a filtered calendar obj
+     # Filters calendar by events in the future, returns a fstring of events that end after now
     @classmethod
     def filter_calendar_by_events(cls, calendar_obj: Calendar):
         events = calendar_obj.retrieve_events()
-        future_events = []
+        future_events = f"Calendar {calendar_obj.get_calendar_name()} Events:\n"
+        i = 0
         for event in events:
-            if event.get_first_time() > datetime.now():
-                future_events.append(event)
+            if event.get_second_time() > datetime.now():
+                future_events += f"{i+1}. Name: {event.get_name()} Start: {event.get_first_time()}, End: {event.get_second_time()} Description: {event.get_description()}\n"
+                i += 1
         return future_events
 
 
-     # Filters calendar by tasks, returns a filtered calendar obj
+    # Filters calendar by tasks, returns a string of tasks to be completed in the future
     @classmethod
     def filter_calendar_by_tasks(cls, calendar_obj: Calendar):
         tasks = calendar_obj.retrieve_tasks()
-        future_tasks = []
+        future_tasks = f"Calendar {calendar_obj.get_calendar_name()} Tasks:\n"
+        i = 0
         for task in tasks:
             if task.get_first_time() > datetime.now():
-                future_tasks.append(task)
+                future_tasks += f"{i+1}. Name: {task.get_name()} Start: {task.get_first_time()} Completion Status: {task.get_completed()} Description: {task.get_description()}\n"
+                i += 1
         return future_tasks
      
      # Filters calendar by dates, returning a new filtered calendar obj

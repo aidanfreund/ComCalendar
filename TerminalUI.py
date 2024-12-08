@@ -198,7 +198,7 @@ class TerminalUI():
         if calendar_one > len(calendars) or calendar_one < 1 or calendar_two > len(calendars) or calendar_two < 1:
             print("Incorrect number selection of calendar")
         else:
-            calendar_compared_string = InputController.compare_calendars((calendar_one - 1),(calendar_two - 1))
+            calendar_compared_string = InputController.compare_calendars(calendar_one - 1,calendar_two - 1)
             print(calendar_compared_string)
     
     def calendar_options():
@@ -303,7 +303,7 @@ class TerminalUI():
                             print("Failed to add Task") 
 
                     case 8: #delete calendar
-                        check_input = input("Are you sure you want to delete the calendar?(y/n)")
+                        check_input = input("Are you sure you want to delete the calendar?(y/n): ")
                         check_input = check_input.lower()
                         if check_input == "y":
                             delete_bool = InputController.delete_calendar()
@@ -501,7 +501,6 @@ class TerminalUI():
         task = InputController.get_happening()
         while True:
             if task.get_reminder() is None:
-
                 try:
                     input_option = int(input("Select operation for Task: "
                                     +"\n1. Edit Task \n2. Delete Task"
@@ -511,6 +510,15 @@ class TerminalUI():
                         case 1:
                             task_name = input("Enter new name for Task: ")
                             task_description = input("Enter new description of Task: ")
+                            task_complete_input = input("Enter Completion Status(t/f): ")
+                            task_complete_input = task_complete_input.lower()
+                            if task_complete_input =="t":
+                                task_completed = True
+                            elif task_complete_input == "f":
+                                task_completed = False
+                            else:
+                                print("Invalid Input, Defaulting to False")
+                                task_completed = False     
                             while True:
                                 task_time_input = input("Enter new time of Task in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
@@ -519,7 +527,7 @@ class TerminalUI():
                                 except ValueError:
                                     print("Invalid Format")
                                     continue 
-                            create_task_bool = InputController.edit_task(task_name,task_description,task_time,task.get_completed()) 
+                            create_task_bool = InputController.edit_task(task_name,task_description,task_time,task_completed) 
                             if create_task_bool is True:
                                 print("Task edited Successfully")
                             else:
@@ -565,7 +573,7 @@ class TerminalUI():
                 
             else:
                 try:
-                    input_option = int(input("Select operation for Event: "
+                    input_option = int(input("Select operation for Task: "
                                         +"\n1. Edit Task \n2. Delete Task"
                                         +"\n3. View Reminder \n4. Complete Task"
                                         + "\n5. Back\n"))

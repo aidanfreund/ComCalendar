@@ -34,20 +34,20 @@ class Calendar:
             return False
         task = Task(id, name, time, desc)
         for i, etask in enumerate(self._tasks):
-            if time < etask:
-                self._tasks.insert(i, task.get_first_time())
+            if time < etask.get_first_time():
+                self._tasks.insert(i, task)
                 return True
-        self._tasks.append(task.get_first_time())
+        self._tasks.append(task)
         return True
     def add_event(self, id:int, name:str, time1:datetime, time2:datetime, desc:str):
         if id < 0:
             return False
         event = Event(id, name, time1, time2, desc)
         for i, e_event in enumerate(self._events):
-            if time1 < e_event:
-                self._events.insert(i, event.get_second_time())
+            if time1 < e_event.get_first_time():
+                self._events.insert(i, event)
                 return True
-        self._events.append(event.get_second_time())
+        self._events.append(event)
 
         return True
   
