@@ -106,7 +106,7 @@ class Operator:
             ics_content = f.read()
         ics_calendar = ICS_Calendar(ics_content)
 
-       if calendar_made:
+        if calendar_made:
             #get cal obj
             cals = profile_obj.get_calendars()
             for cal in cals:
