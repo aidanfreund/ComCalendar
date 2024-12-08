@@ -31,12 +31,20 @@ class Calendar:
     
     def add_task(self, id:int, time:datetime, name:str, desc:str):
         task = Task(id, name, time, desc)
-        self._tasks.append(task)
+        for i, etask in enumerate(self._tasks):
+            if time < etask:
+                self._tasks.insert(i, task.get_first_time())
+                return True
+        self._tasks.append(task.get_first_time())
         return True
-    
     def add_event(self, id:int, name:str, time1:datetime, time2:datetime, desc:str):
         event = Event(id, name, time1, time2, desc)
-        self._events.append(event)
+        for i, e_event in enumerate(self._events):
+            if time1 < e_event:
+                self._events.insert(i, event.get_second_time())
+                return True
+        self._events.append(event.get_second_time())
+
         return True
   
     #removes task from task array. using the id associated with task

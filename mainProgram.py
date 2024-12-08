@@ -13,6 +13,7 @@ db_connection = MySQLConnection.get_db_connection()
 if(db_connection != None):
     print("Working")
 
+
 db_profile = MySQLProfile.get_db_profile()
 result_profile_ID = db_profile.add_profile("abcd", "aaa")
 if result_profile_ID > 0:
@@ -20,11 +21,13 @@ if result_profile_ID > 0:
 
 test_profile = Profile("abcd",result_profile_ID,None)
 
+
 result_calendar_ID = db_profile.add_calendar("Test1",test_profile)
 if result_calendar_ID > 0:
     print("Add calendar working")
 
 test_calendar = Calendar(result_calendar_ID,"Test1",None,None)
+
 
 result_task_ID = db_profile.add_task("Test Description",datetime.datetime.now(),"Test Task",test_calendar)
 if result_task_ID > 0:
@@ -34,7 +37,6 @@ result_event_ID = db_profile.add_event("Test Description", datetime.datetime.now
 if result_event_ID > 0:
     print("Add Event working")
 
-
 test_event = Event(result_event_ID,"Test Event",datetime.datetime.now(),datetime.datetime.now(),"Test Description")
 test_task = Task(result_task_ID,"Test Task",datetime.datetime.now(),"Test Description")
 
@@ -43,14 +45,17 @@ if reminder_int > 0:
     print("Add reminder working")
 
 test_reminder = Reminder(reminder_int,datetime.datetime.now())
+
 reminder_bool = db_profile.change_reminder(test_reminder)
 if reminder_bool:
     print("Change reminder working")
 
 test_calendar.set_calendar_name("Test Change")
+
 result_calendar_change = db_profile.change_calendar(test_calendar)
 if result_calendar_change is True:
     print("Change Calendar Working")
+
 
 
 test_task.set_completed(True)
@@ -65,11 +70,13 @@ test_event.set_first_time(datetime.datetime.now())
 test_event.set_name("Test Event Change")
 test_event.set_description("Testing Event Description Change")
 test_event.set_second_time(datetime.datetime.now())
+
 result_event_change = db_profile.change_event(test_event)
 if result_event_change is True:
     print("Change Event Working")
 
 print("Read Profile: ")
+
 print(db_profile.read_profile("abcd","aaa"))
 print("Read Calendars: ")
 print(db_profile.read_calendars(test_profile))

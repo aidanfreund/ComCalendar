@@ -12,6 +12,7 @@ class Task(Happening):
     def get_completed(self):
         return self._completed
     
+
     def set_completed(self,bool):
         self._completed = bool
         return True

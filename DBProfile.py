@@ -100,6 +100,7 @@ class MySQLProfile(DBProfile):
                 #sql statement
                 sql_statement = "INSERT INTO new_schema.calendars (user_id, name) VALUES (%s,%s)"
                 #values to go into the sql statement
+
                 values = (profile.get_profile_id(), calendar_name)
                 #executes sql statement using the values found above
                 cursor.execute(sql_statement, values)
@@ -120,6 +121,7 @@ class MySQLProfile(DBProfile):
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_get_calendars_statement = "Select * from new_schema.calendars where user_id = %s"
+
                 cursor.execute(sql_get_calendars_statement,(profile.get_profile_id(),))
                 result = cursor.fetchall()
 
@@ -429,6 +431,7 @@ class MySQLProfile(DBProfile):
             with connection.cursor() as cursor:
 
                 sql_statement = "Delete from new_schema.profiles where user_id = %s"
+
 
                 cursor.execute(sql_statement,(profile.get_profile_id(),))
 
