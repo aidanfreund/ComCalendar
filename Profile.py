@@ -7,8 +7,6 @@
 from Calendar import Calendar
 
 class Profile():
-    calendar_ID = 0
-
     def __init__(self, username:str, profile_id: str, calendars:list):
         self._username = username
         self._profile_id = profile_id
