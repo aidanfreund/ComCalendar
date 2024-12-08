@@ -3,6 +3,7 @@
 
 from Happening import Happening
 import datetime
+from Reminder import Reminder
 
 class Task(Happening):
     def __init__(self, task_ID, name, time, desc):
@@ -12,8 +13,9 @@ class Task(Happening):
     def get_completed(self):
         return self._completed
     
-    def flip_completed(self):
-        self._completed = not(self._completed)
+
+    def set_completed(self,bool):
+        self._completed = bool
         return True
     
     def set_first_time(self,time):
@@ -36,30 +38,36 @@ class Task(Happening):
     
     def get_name(self):
         return self._name
+    
+    def get_reminder(self):
+        return self._reminder
 
     #Edits The Specific Reminder Object
     def edit_reminder(self, reminder_id:int, date:datetime):
-        self._reminder_id = reminder_id
-        for id in self._reminder:
-            if self._reminder_id == self._reminder[id]:
-                self._reminder[id].date = date.date
-                self._reminder[id].time = date.time
-        return True
-    
+        if reminder_id >-1:
+            self._reminder_id = reminder_id
+            for id in self._reminder:
+                if self._reminder_id == self._reminder[id]:
+                    self._reminder[id].date = date.date
+                    self._reminder[id].time = date.time
+            return True
+        else:
+            return False
     #Removes Reminder Object
     def remove_reminder(self, reminder_id):
-      
-        self._reminder_id = reminder_id
-
         for id in self._reminder:
             if self.reminder_id == self._reminder[id]:
                 self._reminder.remove(id)
                 return True
-                
+        
         return False
     
     #Creates a new Reminder
-    def create_reminder(self, reminder_id):
-        self._reminder_id = reminder_id
-        self._reminder.append(self._reminder_id)
+    def create_reminder(self, reminder_id,time:datetime):
+        if reminder_id <0:
+            return False
+        self._reminder = Reminder(reminder_id,time)
         return True
+    
+    def set_reminder(self,reminder:Reminder):
+        self._reminder = reminder

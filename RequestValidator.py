@@ -1,5 +1,5 @@
 import re
-import datetime
+from datetime import datetime
 from Event import Event
 from Task import Task
 
@@ -34,7 +34,7 @@ class RequestValidator:
 
     @staticmethod
     def validate_upload_calendar(file_path, name):
-        return (re.search("^((\/[a-zA-Z0-9-_]+)+|\/)$",file_path) is not None) and RequestValidator.__validate_name(name)
+        return isinstance(file_path,str) and RequestValidator.__validate_name(name)
 
     @staticmethod
     def validate_create_reminder(start_time):
@@ -46,7 +46,7 @@ class RequestValidator:
 
     @staticmethod
     def validate_add_task(name, description, due_date):
-        isinstance(name,str) and isinstance(due_date,datetime) and isinstance(description,str)
+        return isinstance(name,str) and isinstance(due_date,datetime) and isinstance(description,str)
 
     @staticmethod
     def validate_remove_task(happ_obj):

@@ -7,8 +7,6 @@
 from Calendar import Calendar
 
 class Profile():
-    calendar_ID = 0
-
     def __init__(self, username:str, profile_id: str, calendars:list):
         self._username = username
         self._profile_id = profile_id
@@ -28,7 +26,7 @@ class Profile():
         #indicates error in database
         if id == -1:
             return False
-        self.calendars.append(Calendar.__init__(self, id, name, events, tasks))
+        self._calendars.append(Calendar(id, name, events, tasks))
         return True
     
     #derefferences calendar from profile obj

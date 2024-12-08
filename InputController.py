@@ -27,7 +27,7 @@ class InputController:
     @classmethod
     def edit_event(cls, name, start_time, end_time, description):
         if RequestValidator.validate_edit_event(name, start_time, end_time, description, cls.active_happening):
-            return Operator.edit_event(name, start_time, end_time, description, cls.active_happening)
+            return Operator.edit_event(name, start_time, end_time, cls.active_happening,description)
         else:
             return False
     
@@ -63,6 +63,8 @@ class InputController:
     def upload_calendar(cls,file_path, name):
         if RequestValidator.validate_upload_calendar(file_path,name):
             return Operator.upload_calendar(file_path,name,cls.active_profile)
+        else:
+            return False
         
         
     
@@ -83,13 +85,18 @@ class InputController:
 
         cal_list = cls.active_profile.get_calendars()
 
-        calendar_obj1 = cal_list[calendar1_id]
-        calendar_obj2 = cal_list[calendar2_id]
-        
+        for cal in cal_list:
+            if cal.get_calendar_id() == calendar1_id():
+                calendar_obj1 = cal
+            if cal.get_calendar_id() == calendar2_id():
+                calendar_obj2 = cal
+
  
         if calendar_obj1 or calendar_obj2 is None:
             return "Failed to find calendars"
-            
+        elif calendar_obj1 == calendar_obj2:
+            return "Cannot operate on the same calendar"
+
         return Operator.compare_calendars(calendar_obj1, calendar_obj2)
        
     
@@ -105,7 +112,7 @@ class InputController:
         if calendar_obj1 or calendar_obj2 is None:
             return "Failed to find calendars"
             
-        return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2)
+        return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2,cls.active_profile)
       
 
     # Adds reminder to happening obj, returns true if successful
@@ -120,14 +127,14 @@ class InputController:
      # Filters calendar by events, returns a string of filtered events
     @classmethod
     def filter_calendar_by_events(cls):
-        Operator.filter_calendar_by_events(cls.active_calendar)
-
+        result_string = Operator.filter_calendar_by_events(cls.active_calendar)
+        return result_string
 
     # Filters calendar by tasks, returns a string of filtered events
     @classmethod
     def filter_calendar_by_tasks(cls):
-        Operator.filter_calendar_by_tasks(cls.active_calendar)
-    
+        result_string = Operator.filter_calendar_by_tasks(cls.active_calendar)
+        return result_string
      # Filters calendar by dates, returning a string of filtered events
     @classmethod
     def filter_calendar_by_dates(cls, start_date, end_date):

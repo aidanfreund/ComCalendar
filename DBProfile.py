@@ -34,7 +34,7 @@ class DBProfile(ABC):
     def change_task(self, task):
         pass
 
-    def add_task(self, task, calendar):
+    def add_task(self, description,time,name, calendar):
         pass
     
     def read_events(self,calendar):
@@ -93,14 +93,14 @@ class MySQLProfile(DBProfile):
     def add_calendar(self, calendar_name:str, profile:Profile):
         connection = MySQLConnection.get_db_connection()
         if type(profile) is not Profile:
-            print("passed profile object is not a Profile object")
             return -1
         try: #creates a cursor to perform functions with
             with connection.cursor() as cursor:
                 #sql statement
                 sql_statement = "INSERT INTO new_schema.calendars (user_id, name) VALUES (%s,%s)"
                 #values to go into the sql statement
-                values = (profile.get_profile_ID(), calendar_name)
+
+                values = (profile.get_profile_id(), calendar_name)
                 #executes sql statement using the values found above
                 cursor.execute(sql_statement, values)
                 #commits the changes to the database
@@ -120,11 +120,12 @@ class MySQLProfile(DBProfile):
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
                 sql_get_calendars_statement = "Select * from new_schema.calendars where user_id = %s"
-                cursor.execute(sql_get_calendars_statement,(profile.get_profile_ID(),))
+
+                cursor.execute(sql_get_calendars_statement,(profile.get_profile_id(),))
                 result = cursor.fetchall()
 
                 if not result:
-                    return None
+                    return []
                 else:
                     calendar_array = []
                     for row in result:
@@ -132,7 +133,7 @@ class MySQLProfile(DBProfile):
                     return calendar_array
         except Exception as e:
             print(f"Error: {e}")
-            return None 
+            return [] 
             
     #working
     #function that takes a calendar object and database connection that will change the name of the calendar if it differs from the database
@@ -149,7 +150,6 @@ class MySQLProfile(DBProfile):
                 result = cursor.fetchone()
 
                 if result is None:
-                    print(f"No calendar found with ID: {calendar.get_calendar_id()}")
                     return False
                 if result['name'] != calendar.get_calendar_name():
                     sql_statement2 ="Update new_schema.calendars Set name = %s where calendar_id = %s"
@@ -157,7 +157,6 @@ class MySQLProfile(DBProfile):
                     connection.commit()
                     return True
                 else:
-                    print("Nothing to change on calendar")
                     return False
         except Exception as e:
             print(f"Error: {e}")
@@ -169,7 +168,6 @@ class MySQLProfile(DBProfile):
     def delete_calendar(self, calendar:Calendar):
         connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
-            print("Calendar passed is not of type Calendar")
             return False
         try:
             with connection.cursor() as cursor:
@@ -179,11 +177,9 @@ class MySQLProfile(DBProfile):
                 cursor.execute(sql_statement,(calendar.get_calendar_id(),))
 
                 if cursor.rowcount > 0:
-                    print("Calendar deleted")
                     connection.commit()
                     return True
                 else:
-                    print("No Calendar found to delete with same primary key")
                     return False
         except Exception as e:
             connection.rollback()
@@ -200,7 +196,7 @@ class MySQLProfile(DBProfile):
 
                 result = cursor.fetchall()
                 if not result:
-                    return None
+                    return []
                 else:
                     task_array = []
                     for row in result:
@@ -208,14 +204,13 @@ class MySQLProfile(DBProfile):
                     return task_array
         except Exception as e:
             print(f"Error: {e}")
-            return None
+            return []
     #working
     #function that takes a Task object and DB connection object that deletes the passed task in the database
     #returns Boolean based on success of deletion
     def delete_task(self, task:Task):
         connection = MySQLConnection.get_db_connection()
         if type(task) is not Task:
-            print("Task passed is not type Task")
             return False
         try:
             with connection.cursor() as cursor:
@@ -225,11 +220,9 @@ class MySQLProfile(DBProfile):
                 cursor.execute(sql_statement,(task.get_id(),))
 
                 if cursor.rowcount > 0:
-                    print("Task deleted")
                     connection.commit()
                     return True
                 else:
-                    print("Failed to delete task")
                     return False
         except Exception as e:
             print(f"Error: {e}")
@@ -241,7 +234,6 @@ class MySQLProfile(DBProfile):
     def change_task(self, task:Task):
         connection = MySQLConnection.get_db_connection()
         if type(task) is not Task:
-            print("Task passed is not a Task object")
             return False
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -253,7 +245,6 @@ class MySQLProfile(DBProfile):
                 result = cursor.fetchone()
 
                 if result is None:
-                    print("No record found")
                     return False
                 
                 if result['start_time'] != task.get_first_time():
@@ -284,7 +275,6 @@ class MySQLProfile(DBProfile):
     def add_task(self, description:str,time:datetime,name:str, calendar:Calendar):
         connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
-            print("Passed calendar is not of type Calendar")
             return -1
         try:
             with connection.cursor() as cursor:
@@ -315,15 +305,15 @@ class MySQLProfile(DBProfile):
 
                 result = cursor.fetchall()
                 if not result:
-                    return None
+                    return []
                 else:
                     event_array = []
                     for row in result:
-                        event_array.append(Event(row['event_id'],row['name'],None,row['start_time'],row['end_time'],row['description']))
+                        event_array.append(Event(row['event_id'],row['name'],row['start_time'],row['end_time'],row['description']))
                     return event_array
         except Exception as e:
             print(f"Error: {e}")
-            return None
+            return []
 
 
 
@@ -333,7 +323,6 @@ class MySQLProfile(DBProfile):
     def delete_event(self, event:Event):
         connection = MySQLConnection.get_db_connection()
         if type(event) is not Event:
-            print("Event passed is not type Event")
             return False
         try:
             with connection.cursor() as cursor:
@@ -343,11 +332,9 @@ class MySQLProfile(DBProfile):
                 cursor.execute(sql_statement,(event.get_id(),))
 
                 if cursor.rowcount > 0:
-                    print("Event deleted")
                     connection.commit()
                     return True
                 else:
-                    print("No event found to delete")
                     connection.rollback()
                     return False
         except Exception as e:
@@ -360,7 +347,6 @@ class MySQLProfile(DBProfile):
     def change_event(self, event:Event):
         connection = MySQLConnection.get_db_connection()
         if type(event) is not Event:
-            print("Passed event is not type Event")
             return False
         try:
             with connection.cursor(pymysql.cursors.DictCursor) as cursor:
@@ -398,7 +384,6 @@ class MySQLProfile(DBProfile):
     def add_event(self,description:str, start_time:datetime,end_time:datetime,name:str, calendar:Calendar):
         connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
-            print("Calendar passed is not type Calendar")
             return -1
         try:
             with connection.cursor() as cursor:
@@ -421,6 +406,7 @@ class MySQLProfile(DBProfile):
     #function that takes a profile Object and DB connection and deletes the passed profile from the database
     #returns Boolean based on success of deletion
     def delete_profile(self, profile:Profile):
+        print(type(profile))
         connection = MySQLConnection.get_db_connection()
         if type(profile) is not Profile:
             print("Profile parameter is not type Profile")
@@ -430,14 +416,13 @@ class MySQLProfile(DBProfile):
 
                 sql_statement = "Delete from new_schema.profiles where user_id = %s"
 
-                cursor.execute(sql_statement,(profile.get_profile_ID(),))
+
+                cursor.execute(sql_statement,(profile.get_profile_id(),))
 
                 if cursor.rowcount > 0:
-                    print("Deleted Profile")
                     connection.commit()
                     return True
                 else:
-                    print("No profile found to delete")
                     connection.rollback()
                     return False
         except Exception as e:
@@ -504,7 +489,6 @@ class MySQLProfile(DBProfile):
                         connection.commit()
                         return result_id
                     else:
-                        print("Failed to add reminder")
                         connection.rollback()
                         return -1
                 else:
@@ -517,7 +501,6 @@ class MySQLProfile(DBProfile):
                         connection.commit()
                         return result_id
                     else:
-                        print("Failed to add reminder")
                         connection.rollback()
                         return -1
         except Exception as e:
@@ -551,11 +534,9 @@ class MySQLProfile(DBProfile):
                 cursor.execute(sql_statement,(reminder.get_id(),))
 
                 if cursor.rowcount > 0:
-                    print("Reminder Deleted")
                     connection.commit()
                     return True
                 else:
-                    print("Reminder not found in database")
                     connection.rollback()
                     return False
         except Exception as e:
@@ -574,7 +555,6 @@ class MySQLProfile(DBProfile):
                     if result:
                         return Reminder(result['reminder_id'],result['time'])
                     else:
-                        print("No reminder found connected to this task")
                         return None
                 elif type(happening) is Event:
                     sql_statement = "Select * from new_schema.reminders where event_id = %s"
@@ -584,7 +564,6 @@ class MySQLProfile(DBProfile):
                     if result:
                         return Reminder(result['reminder_id'],result['time'])
                     else:
-                        print("No reminder found connected to this event")
                         return None
         except Exception as e:
             print(f"Error: {e}")
@@ -601,7 +580,7 @@ class MySQLProfile(DBProfile):
                 if result is None:
                     return None
                 else:
-                    return Profile(result['username'],result['user_id'],None)
+                    return Profile(result['username'],result['user_id'],[])
         except Exception as e:
             print(f"Error: {e}")
             return None
