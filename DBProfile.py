@@ -406,10 +406,8 @@ class MySQLProfile(DBProfile):
     #function that takes a profile Object and DB connection and deletes the passed profile from the database
     #returns Boolean based on success of deletion
     def delete_profile(self, profile:Profile):
-        print(type(profile))
         connection = MySQLConnection.get_db_connection()
         if type(profile) is not Profile:
-            print("Profile parameter is not type Profile")
             return False
         try:
             with connection.cursor() as cursor:

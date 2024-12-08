@@ -140,9 +140,10 @@ class InputController:
     @classmethod
     def filter_calendar_by_dates(cls, start_date, end_date):
         if RequestValidator.validate_filter_calendar_by_dates( start_date, end_date):
-            Operator.filter_calendar_by_dates(cls.active_calendar, start_date, end_date)
+            result_string = Operator.filter_calendar_by_dates(cls.active_calendar, start_date, end_date)
+            return result_string
         else:
-            return False
+            return "Failed Validation"
 
     # Adds task to a calendar, returns true if successful
     @classmethod
@@ -241,6 +242,10 @@ class InputController:
     @classmethod
     def get_reminder(cls):
         return cls.active_reminder
+    
+    @classmethod
+    def set_profile(cls,profile_obj):
+        cls.active_profile = profile_obj
 
     @classmethod
     def set_calendar(cls, calendar_obj):

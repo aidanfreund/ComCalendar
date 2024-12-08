@@ -208,7 +208,7 @@ class Operator:
             cal_created = profile_obj.create_new_calendar(id, name, events, tasks)
             if cal_created:
                 #update calendar in db
-                cls.db_profile.change_calendar(copy_calendar, profile_obj)
+                cls.db_profile.change_calendar(copy_calendar)
             return cal_created
         else:
             print("Profile may only have 6 calendars, delete one and try again")
@@ -327,8 +327,36 @@ class Operator:
      # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
     def filter_calendar_by_dates(cls, calendar_obj:Calendar, start_date, end_date):
-        filtered_events = [event for event in calendar_obj.retrieve_events() if start_date<= event.get_first_time() <= end_date]
-        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
+        filtered_events = []
+
+        # Loop through each event to check if it falls within the date range
+        for event in calendar_obj.retrieve_events():
+            event_start_time = event.get_first_time()
+            if start_date <= event_start_time <= end_date:
+                filtered_events.append(event)
+
+        event_string = f"Calendar {calendar_obj.get_calendar_name()} Events:\n"
+        i = 0
+        for event in filtered_events:
+            event_string += f"{i+1}. Name: {event.get_name()} Start: {event.get_first_time()} End: {event.get_second_time()} Description: {event.get_description()}\n"
+            i += 1
+
+        # Filter tasks by the date range 
+        tasks = calendar_obj.retrieve_tasks()
+        filtered_tasks = [
+            task for task in tasks 
+            if start_date <= task.get_first_time() <= end_date
+        ]
+
+        # Prepare the output string for tasks
+        task_string = f"\nCalendar {calendar_obj.get_calendar_name()} Tasks:\n"
+        i = 0
+        for task in filtered_tasks:
+            task_string += f"{i+1}. Name: {task.get_name()} Start: {task.get_first_time()} Completion Status: {task.get_completed()} Description: {task.get_description()}\n"
+            i += 1
+        
+        # Combine the event and task strings and return the result
+        return event_string + task_string
 
 
     # Adds task to a calendar, returns true if successful
@@ -380,10 +408,7 @@ class Operator:
     # Deletes profile obj, returns true if successful
     @classmethod
     def delete_profile(cls, profile_obj: Profile):
-        profile_id = profile_obj.get_profile_id()
-        if cls.db_profile.delete_profile(profile_id):
-            for calendar in profile_obj.get_calendars():
-                cls.db_profile.delete_calendar(calendar)
+        if cls.db_profile.delete_profile(profile_obj):
             return True
         else:
             return False

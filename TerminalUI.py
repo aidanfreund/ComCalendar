@@ -58,7 +58,6 @@ class TerminalUI():
                     case 1:
                         return False
                     case 2:
-
                         TerminalUI.upload_calendar()
                     case 3:
                         TerminalUI.show_calendar_list()
@@ -73,6 +72,8 @@ class TerminalUI():
                                 print("Failed to delete")
                             else:
                                 print("Delete successful")
+                                InputController.set_profile(None)
+                                return False
                         else:
                             print("Invalid Input")
                         
@@ -540,7 +541,7 @@ class TerminalUI():
                             else:
                                 print("Failed to edit Task")
                         case 2:
-                            delete_task_bool = InputController.delete_task()
+                            delete_task_bool = InputController.remove_task()
                             if delete_task_bool is True:
                                 print("Task Successfully deleted")
                                 InputController.set_happening(None)
@@ -564,12 +565,12 @@ class TerminalUI():
                         case 4:
                             if task.get_completed() is True:
                                 print("Task already completed")
-                                break
-                            complete_task_bool = InputController.edit_task(task.get_name(),task.get_description(),task.get_first_time(),True)
-                            if complete_task_bool is True:
-                                print("Completed Task")
                             else:
-                                print("Failed to complete Task")
+                                complete_task_bool = InputController.edit_task(task.get_name(),task.get_description(),task.get_first_time(),True)
+                                if complete_task_bool is True:
+                                    print("Completed Task")
+                                else:
+                                    print("Failed to complete Task")
                         case 5:#back
                             return
                         case _:
@@ -602,7 +603,7 @@ class TerminalUI():
                             else:
                                 print("Failed to edit Task")
                         case 2:
-                            delete_task_bool = InputController.delete_task()
+                            delete_task_bool = InputController.remove_task()
                             if delete_task_bool is True:
                                 print("Task Successfully deleted")
                                 InputController.set_happening(None)
