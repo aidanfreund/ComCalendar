@@ -1,10 +1,15 @@
-from Happening import Hapenning
+from Happening import Happening
+from Task import Task
+from Event import Event
+from datetime import datetime
+
 class Calendar:
     def __init__(self, calendar_id, calendar_name, events, tasks):
         self._calendar_id = calendar_id
         self._calendar_name = calendar_name
         self._events = events if events is not None else []
         self._tasks = tasks if tasks is not None else []
+
 
     def get_calendar_id(self):
         return self._calendar_id
@@ -27,34 +32,26 @@ class Calendar:
         return self._events
     
     def add_task(self, hap_id, name, datetime):
-        for i, (hap_id, name, edatetime) in enumerate(self._tasks):
-            if datetime < edatetime:
-                self._tasks.append(hap_id)
-                return True
-            else:
-                self._tasks.append((hap_id, name, datetime))
-        return True
+        self._tasks.append(hap_id)
     
     def add_event(self, hap_id, name, start_time, end_time ):
         self._events.append(hap_id)
-        return True
         
 
     def delete_task(self, hap_id):
         try:
             for task in self._tasks:
                 if task.get_id() == hap_id:
-                    self._tasks.remove(hap_id)
+                    self._tasks.remove(task)
+            return True
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
-            return False
 
     def delete_event(self, hap_id):
         try:
             for event in self._events:
                 if event.get_id() == hap_id:
                     self._tasks.remove(hap_id)
-                    return True
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
             return False
