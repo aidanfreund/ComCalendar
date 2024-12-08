@@ -580,6 +580,7 @@ class Terminal_UI():
         thread.join()
 
 
-main()
+def main():
+    
 
     
