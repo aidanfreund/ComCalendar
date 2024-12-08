@@ -96,6 +96,15 @@ class Operator:
         else:
             return False
     @classmethod
+    def login(cls, username: str, password: str):
+        profile_id = cls.db_profile.verify_user_credentials(username, password)
+        if profile_id != -1:
+            profile_obj = cls.get_profile_by_id(profile_id)
+            return profile_obj
+        else:
+            print("Invalid username or password.")
+            return None
+    @classmethod
     def filter_calendar_by_events(cls, calendar_obj: Calendar, event_filter):
         filtered_events = [event for event in calendar_obj.retrieve_events() if event == event_filter]
         return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
