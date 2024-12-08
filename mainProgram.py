@@ -4,8 +4,10 @@ from DBProfile import MySQLProfile
 from Profile import Profile
 from Calendar import Calendar
 import datetime
+import time
 from Task import Task
 from Event import Event
+from Reminder import Reminder
 
 db_connection = MySQLConnection.get_db_connection()
 if(db_connection != None):
@@ -32,8 +34,18 @@ result_event_ID = db_profile.add_event("Test Description", datetime.datetime.now
 if result_event_ID > 0:
     print("Add Event working")
 
+
 test_event = Event(result_event_ID,"Test Event",None,"Test Description",datetime.datetime.now(),datetime.datetime.now())
-test_task = Task(result_task_ID,"Test Task",None,"Test Description",datetime.datetime.now())
+test_task = Task(result_task_ID,"Test Task",datetime.datetime.now(),"Test Description")
+
+reminder_int = db_profile.add_reminder(datetime.datetime.now(),test_event,db_connection)
+if reminder_int > 0:
+    print("Add reminder working")
+
+test_reminder = Reminder(reminder_int,datetime.datetime.now())
+reminder_bool = db_profile.change_reminder(test_reminder,db_connection)
+if reminder_bool:
+    print("Change reminder working")
 
 test_calendar.set_calendar_name("Test Change")
 result_calendar_change = db_profile.change_calendar(test_calendar,db_connection)
@@ -57,11 +69,24 @@ result_event_change = db_profile.change_event(test_event,db_connection)
 if result_event_change is True:
     print("Change Event Working")
 
+print("Read Profile: ")
+print(db_profile.read_profile("abcd","aaa",db_connection))
+print("Read Calendars: ")
+print(db_profile.read_calendars(test_profile,db_connection))
+print("Read Events: ")
+print( db_profile.read_events(test_calendar,db_connection))
+print("Read Tasks: ")
+print(db_profile.read_tasks(test_calendar,db_connection))
+print("Read Reminder (Event): ")
+print(db_profile.read_reminder(test_event,db_connection))
+test_reminder_two_id = db_profile.add_reminder(datetime.datetime.now(),test_task,db_connection)
+test_reminder_two = Reminder(test_reminder_two_id,datetime.datetime.now())
+print("Read Reminder (Task): ")
+print(db_profile.read_reminder(test_task,db_connection))
 
-test_profile.set_user_name("Test Profile Change Name")
-result_profile_change = db_profile.change_profile_credentials(test_profile,db_connection)
-if result_profile_change is True:
-    print("Change Profile Working")
+result_reminder_bool = db_profile.delete_reminder(test_reminder,db_connection)
+if result_reminder_bool is True:
+    print("Delete Reminder working")
 
 result_event_bool = db_profile.delete_event(test_event,db_connection)
 if result_event_bool is True:

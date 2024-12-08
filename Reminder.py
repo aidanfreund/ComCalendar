@@ -1,10 +1,10 @@
 #Reminder class for Calendar
 #Contributers: Edwin Chavez
 
-
 import datetime
 
 class Reminder():
+
 
     def __init__(self, reminder_id:int, notice_time:datetime):
         self._reminder_id = reminder_id
@@ -16,7 +16,7 @@ class Reminder():
     def get_time(self):
         return self._time
     
-    def set_time(self, date):
-        self.date = date.datetime
+    def set_time(self, time:datetime):
+        self.date = time.datetime
         return True
   
