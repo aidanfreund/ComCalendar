@@ -3,6 +3,7 @@ import datetime
 from Event import Event
 from Task import Task
 from RequestValidator import RequestValidator
+import unittest
 
 def test_add_event():
     valid_name = "Meeting"
