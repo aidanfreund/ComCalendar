@@ -120,13 +120,13 @@ class InputController:
      # Filters calendar by events, returns a string of filtered events
     @classmethod
     def filter_calendar_by_events(cls):
-        Operator.filter_calendar_by_events(cls.active_calendar)
+        return Operator.filter_calendar_by_events(cls.active_calendar)
 
 
     # Filters calendar by tasks, returns a string of filtered events
     @classmethod
     def filter_calendar_by_tasks(cls):
-        Operator.filter_calendar_by_tasks(cls.active_calendar)
+        return Operator.filter_calendar_by_tasks(cls.active_calendar)
     
      # Filters calendar by dates, returning a string of filtered events
     @classmethod

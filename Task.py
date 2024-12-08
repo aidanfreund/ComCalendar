@@ -3,6 +3,7 @@
 
 from Happening import Happening
 import datetime
+from Reminder import Reminder
 
 class Task(Happening):
     def __init__(self, task_ID, name, time, desc):
@@ -37,6 +38,9 @@ class Task(Happening):
     
     def get_name(self):
         return self._name
+    
+    def get_reminder(self):
+        return self._reminder
 
     #Edits The Specific Reminder Object
     def edit_reminder(self, reminder_id:int, date:datetime):
@@ -59,9 +63,11 @@ class Task(Happening):
         return False
     
     #Creates a new Reminder
-    def create_reminder(self, reminder_id):
+    def create_reminder(self, reminder_id,time:datetime):
         if reminder_id <0:
             return False
-        self._reminder_id = reminder_id
-        self._reminder.append(self._reminder_id)
+        self._reminder = Reminder(reminder_id,time)
         return True
+    
+    def set_reminder(self,reminder:Reminder):
+        self._reminder = reminder
