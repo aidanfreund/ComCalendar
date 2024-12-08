@@ -78,16 +78,32 @@ class Operator:
         #remove from profile array to delete
         profile_obj.delete_calendar(calendar_obj)
         pass
-
-
+    
+    @classmethod
+    def create_profile(cls, username: str, password: str):
+        profile_id = cls.db_profile.add_profilr(username, password)
+        if profile_id == -1:
+            return None
+        new_profile = Profile(username, profile_id, [])
+        return new_profile
+    @classmethod
+    def delete_profile(cls, profile_obj: Profile):
+        profile_id = profile_obj.get_profile_id()
+        if cls.db_profile.delete_profile(profile_id):
+            for calendar in profile_obj.get_calendars():
+                cls.db_profile.delete_calendar(calendar)
+            return True
+        else:
+            return False
+    @classmethod
     def filter_calendar_by_events(cls, calendar_obj: Calendar, event_filter):
         filtered_events = [event for event in calendar_obj.retrieve_events() if event == event_filter]
         return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
-    
+    @classmethod
     def filter_calendar_by_tasks(cls, calendar_obj: Calendar, task_filter):
         filtered_tasks = [task for task in calendar_obj.retrieve_tasks() if task == task_filter]
         return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), calendar_obj.retrieve_events(), filtered_tasks)
-    
+    @classmethod
     def filter_calendar_by_dates(cls, calendar_obj:Calendar, start_date, end_date):
         filtered_events = [event for event in calendar_obj.retrieve_events() if start_date<= event.get_first_time() <= end_date]
         return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
