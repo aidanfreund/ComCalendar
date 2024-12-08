@@ -79,6 +79,18 @@ class Operator:
         profile_obj.delete_calendar(calendar_obj)
         pass
 
+
+    def filter_calendar_by_events(cls, calendar_obj: Calendar, event_filter):
+        filtered_events = [event for event in calendar_obj.retrieve_events() if event == event_filter]
+        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
+    
+    def filter_calendar_by_tasks(cls, calendar_obj: Calendar, task_filter):
+        filtered_tasks = [task for task in calendar_obj.retrieve_tasks() if task == task_filter]
+        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), calendar_obj.retrieve_events(), filtered_tasks)
+    
+    def filter_calendar_by_dates(cls, calendar_obj:Calendar, start_date, end_date):
+        filtered_events = [event for event in calendar_obj.retrieve_events() if start_date<= event.get_first_time() <= end_date]
+        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
     # Processes .ics file string and returns a boolean indicating its success
     @classmethod
     def upload_calendar(cls, name:str, file_path:str, profile_obj:Profile):
