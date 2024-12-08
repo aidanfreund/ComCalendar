@@ -40,27 +40,28 @@ class Task(Happening):
 
     #Edits The Specific Reminder Object
     def edit_reminder(self, reminder_id:int, date:datetime):
-        self._reminder_id = reminder_id
-        for id in self._reminder:
-            if self._reminder_id == self._reminder[id]:
-                self._reminder[id].date = date.date
-                self._reminder[id].time = date.time
-        return True
-    
+        if reminder_id >-1:
+            self._reminder_id = reminder_id
+            for id in self._reminder:
+                if self._reminder_id == self._reminder[id]:
+                    self._reminder[id].date = date.date
+                    self._reminder[id].time = date.time
+            return True
+        else:
+            return False
     #Removes Reminder Object
     def remove_reminder(self, reminder_id):
-      
-        self._reminder_id = reminder_id
-
         for id in self._reminder:
             if self.reminder_id == self._reminder[id]:
                 self._reminder.remove(id)
                 return True
-                
+        
         return False
     
     #Creates a new Reminder
     def create_reminder(self, reminder_id):
+        if reminder_id <0:
+            return False
         self._reminder_id = reminder_id
         self._reminder.append(self._reminder_id)
         return True
