@@ -37,12 +37,15 @@ class Event(Happening):
 
     #Edits The Specific Reminder Object
     def edit_reminder(self, reminder_id:int, date:datetime):
-        self._reminder_id = reminder_id
-        for id in self._reminder:
-            if self._reminder_id == self._reminder[id]:
-                self._reminder[id].date = date.date
-                self._reminder[id].time = date.time
-        return True
+        if reminder_id >-1:
+            self._reminder_id = reminder_id
+            for id in self._reminder:
+                if self._reminder_id == self._reminder[id]:
+                    self._reminder[id].date = date.date
+                    self._reminder[id].time = date.time
+            return True
+        else:
+            return False
     
     #Removes Reminder Object
     def remove_reminder(self, reminder_id):

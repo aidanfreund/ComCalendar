@@ -7,15 +7,14 @@ import datetime
 class Task(Happening):
     def __init__(self, task_ID, name, time, desc):
         super().__init__(task_ID, name, desc, time)
-        self._completed = False
+        self._completed = False     
 
     def get_completed(self):
         return self._completed
     
-
-    def set_completed(self,bool):
-        self._completed = bool
-        return True
+    def set_completed(self, comp:bool):
+        self._completed = comp
+        return self._completed
     
     def set_first_time(self,time):
         self._first_time = time
@@ -40,12 +39,15 @@ class Task(Happening):
 
     #Edits The Specific Reminder Object
     def edit_reminder(self, reminder_id:int, date:datetime):
-        self._reminder_id = reminder_id
-        for id in self._reminder:
-            if self._reminder_id == self._reminder[id]:
-                self._reminder[id].date = date.date
-                self._reminder[id].time = date.time
-        return True
+        if reminder_id >-1:
+            self._reminder_id = reminder_id
+            for id in self._reminder:
+                if self._reminder_id == self._reminder[id]:
+                    self._reminder[id].date = date.date
+                    self._reminder[id].time = date.time
+            return True
+        else:
+            return False
     
     #Removes Reminder Object
     def remove_reminder(self, reminder_id):

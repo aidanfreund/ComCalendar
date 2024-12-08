@@ -2,7 +2,7 @@
 #implementation of Profile class
 
 #It is solely my fault (aidan) for this not being wrong in the Class Diagram
-# missing delete_calendar(Calendar) and list parameters in create_new_calendar
+# missing delete_calendar(Calendar) and missing two list parameters in create_new_calendar
 
 from Calendar import Calendar
 

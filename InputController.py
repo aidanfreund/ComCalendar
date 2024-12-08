@@ -4,7 +4,7 @@ from Task import Task
 from Happening import Happening
 from Profile import Profile
 from Calendar import Calendar
-from Reminder import Reminder
+
 
 class InputController:
 
@@ -245,4 +245,3 @@ class InputController:
     @classmethod
     def set_reminder(cls, reminder_obj):
         cls.active_reminder = reminder_obj
-
