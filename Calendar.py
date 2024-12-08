@@ -30,6 +30,8 @@ class Calendar:
         return self._events
     
     def add_task(self, id:int, time:datetime, name:str, desc:str):
+        if id < 0:
+            return False
         task = Task(id, name, time, desc)
         for i, etask in enumerate(self._tasks):
             if time < etask:
@@ -38,6 +40,8 @@ class Calendar:
         self._tasks.append(task.get_first_time())
         return True
     def add_event(self, id:int, name:str, time1:datetime, time2:datetime, desc:str):
+        if id < 0:
+            return False
         event = Event(id, name, time1, time2, desc)
         for i, e_event in enumerate(self._events):
             if time1 < e_event:
@@ -49,22 +53,18 @@ class Calendar:
   
     #removes task from task array. using the id associated with task
     def delete_task(self, hap_id:int):
-        try:
-            for task in self._tasks:
-                if task.get_id() == hap_id:
-                    self._tasks.remove(task)
-            return True
-        except ValueError:
-            print(f"Task ID '{hap_id}' not found." )
-            return False
+        for task in self._tasks:
+            if task.get_id() == hap_id:
+                self._tasks.remove(task)
+                return True
+        print(f"Task ID '{hap_id}' not found." )
+        return False
           
     #removes event from event array. using the id associated with event
     def delete_event(self, hap_id:int):
-        try:
-            for event in self._events:
-                if event.get_id() == hap_id:
-                    self._events.remove(event)
-            return True
-        except ValueError:
-            print(f"Task ID '{hap_id}' not found." )
-            return False
+        for event in self._events:
+            if event.get_id() == hap_id:
+                self._events.remove(event)
+                return True
+        print(f"Task ID '{hap_id}' not found." )
+        return False
