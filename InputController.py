@@ -81,22 +81,23 @@ class InputController:
 
     # Compares calendars using calendars calendar id's in range 0-numCalendars (converted to real id), returns a calendar object, returns string of free times
     @classmethod
-    def compare_calendars(cls, calendar1_id, calendar2_id):
+    def compare_calendars(cls, calendar1_index, calendar2_index):
 
         cal_list = cls.active_profile.get_calendars()
 
-        for cal in cal_list:
-            if cal.get_calendar_id() == calendar1_id():
-                calendar_obj1 = cal
-            if cal.get_calendar_id() == calendar2_id():
-                calendar_obj2 = cal
+        # Check if the indices are valid
+        if calendar1_index >= len(cal_list) or calendar2_index >= len(cal_list):
+            return "One or both calendar indices are invalid."
 
- 
-        if calendar_obj1 or calendar_obj2 is None:
-            return "Failed to find calendars"
-        elif calendar_obj1 == calendar_obj2:
-            return "Cannot operate on the same calendar"
+        # Get the calendar objects based on the indices
+        calendar_obj1 = cal_list[calendar1_index]
+        calendar_obj2 = cal_list[calendar2_index]
 
+        # Check if the calendars are the same
+        if calendar_obj1 == calendar_obj2:
+            return "Cannot operate on the same calendar."
+
+        # Perform the calendar comparison logic (or call an external comparison method)
         return Operator.compare_calendars(calendar_obj1, calendar_obj2)
        
     

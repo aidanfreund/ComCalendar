@@ -230,7 +230,10 @@ class Operator:
                     free_slots.append((end_time, next_start_time))
             # Add free slot from now until the first event, if applicable
             if events:
-                first_event_start = events[0].get_first_time()
+                event_time_array = []
+                for event in events:
+                    event_time_array.append(event.get_first_time())
+                first_event_start = min(event_time_array)
                 if current_time < first_event_start:
                     free_slots.insert(0, (current_time, first_event_start))
             return free_slots
@@ -251,13 +254,17 @@ class Operator:
             end_shared = min(end1, end2)
             if start_shared < end_shared:
                 slots += 1
-                shared_freetime += f"slot {slots}: {start_shared} -> {end_shared}\n"
+                shared_freetime += f"Free Time Slot {slots}: {start_shared} -> {end_shared}\n"
                 
             # Move to the next free slot
             if end1 < end2:
                 i += 1
             else:
                 j += 1
+        shared_freetime += Operator.filter_calendar_by_events(calendar1)
+        shared_freetime += Operator.filter_calendar_by_events(calendar2)
+        shared_freetime += Operator.filter_calendar_by_tasks(calendar1)
+        shared_freetime += Operator.filter_calendar_by_tasks(calendar2)
 
         return shared_freetime
     

@@ -196,14 +196,17 @@ class TerminalUI():
 
     def compare_calendars():
         calendars = InputController.get_profile().get_calendars()
-        calendar_one = int(input("Enter Number of first calendar: "))
-        calendar_two = int(input("Enter Number of second calendar: "))
+        try:
+            calendar_one = int(input("Enter Number of first calendar: "))
+            calendar_two = int(input("Enter Number of second calendar: "))
 
-        if calendar_one > len(calendars) or calendar_one < 1 or calendar_two > len(calendars) or calendar_two < 1:
-            print("Incorrect number selection of calendar")
-        else:
-            calendar_compared_string = InputController.compare_calendars(calendar_one - 1,calendar_two - 1)
-            print(calendar_compared_string)
+            if calendar_one > len(calendars) or calendar_one < 1 or calendar_two > len(calendars) or calendar_two < 1:
+                print("Incorrect number selection of calendar")
+            else:
+                calendar_compared_string = InputController.compare_calendars(calendar_one - 1,calendar_two - 1)
+                print(calendar_compared_string)
+        except ValueError:
+            print("Invalid Input")
     
     def calendar_options():
         while True:
