@@ -78,45 +78,8 @@ class Operator:
         #remove from profile array to delete
         profile_obj.delete_calendar(calendar_obj)
         pass
-    
-    @classmethod
-    def create_profile(cls, username: str, password: str):
-        profile_id = cls.db_profile.add_profilr(username, password)
-        if profile_id == -1:
-            return None
-        new_profile = Profile(username, profile_id, [])
-        return new_profile
-    @classmethod
-    def delete_profile(cls, profile_obj: Profile):
-        profile_id = profile_obj.get_profile_id()
-        if cls.db_profile.delete_profile(profile_id):
-            for calendar in profile_obj.get_calendars():
-                cls.db_profile.delete_calendar(calendar)
-            return True
-        else:
-            return False
-    @classmethod
-    def login(cls, username: str, password: str):
-        profile_id = cls.db_profile.verify_user_credentials(username, password)
-        if profile_id != -1:
-            profile_obj = cls.get_profile_by_id(profile_id)
-            return profile_obj
-        else:
-            print("Invalid username or password.")
-            return None
-    @classmethod
-    def filter_calendar_by_events(cls, calendar_obj: Calendar, event_filter):
-        filtered_events = [event for event in calendar_obj.retrieve_events() if event == event_filter]
-        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
-    @classmethod
-    def filter_calendar_by_tasks(cls, calendar_obj: Calendar, task_filter):
-        filtered_tasks = [task for task in calendar_obj.retrieve_tasks() if task == task_filter]
-        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), calendar_obj.retrieve_events(), filtered_tasks)
-    @classmethod
-    def filter_calendar_by_dates(cls, calendar_obj:Calendar, start_date, end_date):
-        filtered_events = [event for event in calendar_obj.retrieve_events() if start_date<= event.get_first_time() <= end_date]
-        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
-    # Processes .ics file string and returns a boolean indicating its success
+
+      # Processes .ics file string and returns a boolean indicating its success
     @classmethod
     def upload_calendar(cls, name:str, file_path:str, profile_obj:Profile):
         """reads an ICS file to create a calendar obj.  provided a file path to read from, 
@@ -238,19 +201,23 @@ class Operator:
 
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
-    def filter_calendar_by_events(cls, calendar_obj):
-        pass
+    def filter_calendar_by_events(cls, calendar_obj: Calendar):
+        filtered_events = [event for event in calendar_obj.retrieve_events() if event == event_filter]
+        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
 
 
     # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
-    def filter_calendar_by_tasks(cls, calendar_obj):
-        pass
-    
+    def filter_calendar_by_tasks(cls, calendar_obj: Calendar):
+        filtered_tasks = [task for task in calendar_obj.retrieve_tasks() if task == task_filter]
+        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), calendar_obj.retrieve_events(), filtered_tasks)
+     
      # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
-    def filter_calendar_by_dates(cls, calendar_obj, start_date, end_date):
-        pass
+    def filter_calendar_by_dates(cls, calendar_obj:Calendar, start_date, end_date):
+        filtered_events = [event for event in calendar_obj.retrieve_events() if start_date<= event.get_first_time() <= end_date]
+        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
+
 
     # Adds task to a calendar, returns true if successful
     @classmethod
@@ -279,19 +246,34 @@ class Operator:
 
     # Deletes profile obj, returns true if successful
     @classmethod
-    def delete_profile(cls, profile_obj):
-        pass
+    def delete_profile(cls, profile_obj: Profile):
+        profile_id = profile_obj.get_profile_id()
+        if cls.db_profile.delete_profile(profile_id):
+            for calendar in profile_obj.get_calendars():
+                cls.db_profile.delete_calendar(calendar)
+            return True
+        else:
+            return False
 
    
     #Logs in to profile using username and password
     #Returns profile obj if a match exists
     @classmethod
-    def attempt_login(cls,username, password):
-        pass
-
+    def attempt_login(cls, username: str, password: str):
+        profile_id = cls.db_profile.verify_user_credentials(username, password)
+        if profile_id != -1:
+            profile_obj = cls.get_profile_by_id(profile_id)
+            return profile_obj
+        else:
+            print("Invalid username or password.")
+            return None
 
     #Creates a profile obj and returns it 
     @classmethod
-    def create_profile(cls, username, password):
-        pass
-        
+    def create_profile(cls, username: str, password: str):
+        profile_id = cls.db_profile.add_profilr(username, password)
+        if profile_id == -1:
+            return None
+        new_profile = Profile(username, profile_id, [])
+        return new_profile      
+

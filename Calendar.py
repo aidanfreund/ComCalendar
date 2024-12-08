@@ -44,6 +44,7 @@ class Calendar:
                 self._events.insert(i, event.get_second_time())
                 return True
         self._events.append(event.get_second_time())
+
         return True
   
     #removes task from task array. using the id associated with task
@@ -67,5 +68,3 @@ class Calendar:
         except ValueError:
             print(f"Task ID '{hap_id}' not found." )
             return False
-        
-
