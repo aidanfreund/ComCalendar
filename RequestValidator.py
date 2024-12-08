@@ -1,5 +1,5 @@
 import re
-import datetime
+from datetime import datetime
 from Event import Event
 from Task import Task
 

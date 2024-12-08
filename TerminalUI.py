@@ -26,19 +26,18 @@ class TerminalUI():
 
     def login():
         username = input("Enter username: ")
-
         password = input("Enter password: ")
         login_bool = InputController.login(username,password)
-        if login_bool is not True:
+        if login_bool is False:
             print("Failed to login")
             return False
         return True
         
 
     def create_account():
-        username = input("Enter username or exit(e): ")
-        if username == "exit" or username == "e":
-            sys.exit()
+        username = input("Enter username or back: ")
+        if username == "back":
+            return
         password = input("Enter password: ")
 
         profile_bool = InputController.create_profile(username,password)
@@ -53,7 +52,7 @@ class TerminalUI():
             input_selection = int(input("Enter Selection Number: "
                                     +"\n1. Logout\n2. Upload Calendar to Profile"
                                     +"\n3. Show Profile's Calendars\n4. Delete Profile"
-                                    + "\n5. Exit"))
+                                    + "\n5. Exit\n"))
             match input_selection:
                 case 1:
                     return False
@@ -82,7 +81,7 @@ class TerminalUI():
                     print("Invalid Selection")
             
     def login_statement():
-        profile_bool = False
+        login_bool = False
         while True:
             input_selection = input("Login(L) or Create Account(CA) or Exit(E): ")
             input_selection = input_selection.lower()
@@ -90,12 +89,12 @@ class TerminalUI():
 
                 login_bool = TerminalUI.login()
                 while login_bool is not True:
-                    profile_bool = TerminalUI.login()
-                return profile_bool
+                    login_bool = TerminalUI.login()
+                return login_bool
             elif input_selection == "ca" or input_selection == "create account":
-                while profile_bool is False:
-                    profile_bool = TerminalUI.create_account()
-                return profile_bool
+                while login_bool is False:
+                    login_bool = TerminalUI.create_account()
+                return login_bool
             elif input_selection == "e" or input_selection == "exit":
                 sys.exit()
             else:
@@ -104,60 +103,83 @@ class TerminalUI():
     def upload_calendar():
         calendar_string = input("Enter calendar file: ")
         calendar_name = input('Enter calendar name: ')
-        InputController.upload_calendar(calendar_string,calendar_name)
+        upload_calendar = InputController.upload_calendar(calendar_string,calendar_name)
+        if upload_calendar is True:
+            print("Upload successful")
+        else:
+            print("Failes to upload")
 
     def show_calendar_list():
-
-        calendars = InputController.get_profile().get_calendars()
         while True:
+            calendars = InputController.get_profile().get_calendars()
             i = 0
+            print()
             for element in calendars:
                 print(f"{i+1}. Calendar: {element.get_calendar_name()}")
                 i +=1
-            while True:
-                input_selection = input("Select Calendar to operate on, type add to add calendar, type aggregate to combine 2 calendars,"
-                                        +"type compare to compare calendars, or type back to go back: ")
-                if input_selection == "add":
-
-                    TerminalUI.add_calendar()
-                elif input_selection == "back":
-                    return
-                elif int(input_selection) > 0 and int(input_selection) < len(calendars):
-                    InputController.set_calendar(calendars[input_selection - 1])
-                    TerminalUI.calendar_options()
-                elif input_selection == "compare":
-                    if len(calendars) < 2:
-                        print("Not enough calendars to compare")
-                    else:
-                        TerminalUI.compare_calendars()
-                elif input_selection == "aggregate":
-                    if len(calendars) < 2:
-                        print("There are not 2 calendars to combine")
-                    else:
-                        calendar_one = int(input("Enter first calendar number: "))
-                        calendar_two = int(input("Enter second calendar number: "))
-
-                        if calendar_one > len(calendars) or calendar_one < 1 or calendar_two > len(calendars) or calendar_two < 1:
-                            print("Incorrect number selection of calendar")
-                        else:
-                            new_calendar_name = input("Enter name for new Calendar: ")
-                            calendar_output = InputController.aggregate_calendar((calendar_one - 1),(calendar_two - 1), new_calendar_name)
-                            if type(calendar_output) is Calendar:
-                                print("New Calendar Events: ")
-                                for event in calendar_output.retrieve_events():
-                                    print(f"Event name: {event.get_name()}, Description: {event.get_description()}")
-                                    print(f"start time: {event.get_first_time()} , end time: {event.get_second_time()}")
-                                    print()
-                                print("New calendar Tasks: ")
-                                for task in calendar_output.retrieve_tasks():
-                                    print(f"Task name: {event.get_name()}, Description: {task.get_description()}")
-                                    print(f"Time: {task.get_first_time()} , Completion status: {task.get_completed}")
-                                    print()
+            print()
+            try:
+                input_selection = int(input("Select Option: \n1.Select Calendar to operate on \n2.Add Calendar"
+                                        +"\n3.Combine 2 calendars \n4.Compare calendars"
+                                        +"\n5. Back\n"))
+                match input_selection:
+                    case 1:
+                        if len(calendars) < 1:
+                            print("This profile has no calendars")
+                            break
+                        try:
+                            calendar_number = int(input("Enter Calendar number: "))
+                            if calendar_number < 1 or calendar_number > len(calendars):
+                                print("Invalid Input")
+                                break
                             else:
-                                print("Failed to aggregate calendars")
-                else:
-                    print("Invalid Input")
+                                InputController.set_calendar(calendars[calendar_number - 1])
+                                TerminalUI.calendar_options()
+                        except ValueError:
+                            print("Invalid Input")
+                            continue
+                    case 2:
+                        TerminalUI.add_calendar()
+                    case 3:
+                        if len(calendars) < 2:
+                            print("There are not 2 calendars to combine")
+                        else:
+                            try:
+                                calendar_one = int(input("Enter first calendar number: "))
+                                calendar_two = int(input("Enter second calendar number: "))
 
+                                if calendar_one > len(calendars) or calendar_one < 1 or calendar_two > len(calendars) or calendar_two < 1:
+                                    print("Incorrect number selection of calendar")
+                                else:
+                                    new_calendar_name = input("Enter name for new Calendar: ")
+                                    calendar_output = InputController.aggregate_calendar((calendar_one - 1),(calendar_two - 1), new_calendar_name)
+                                    if type(calendar_output) is Calendar:
+                                        print("New Calendar Events: ")
+                                        for event in calendar_output.retrieve_events():
+                                            print(f"Event name: {event.get_name()}, Description: {event.get_description()}")
+                                            print(f"start time: {event.get_first_time()} , end time: {event.get_second_time()}")
+                                            print()
+                                        print("New calendar Tasks: ")
+                                        for task in calendar_output.retrieve_tasks():
+                                            print(f"Task name: {event.get_name()}, Description: {task.get_description()}")
+                                            print(f"Time: {task.get_first_time()} , Completion status: {task.get_completed}")
+                                            print()
+                                    else:
+                                        print("Failed to aggregate calendars")
+                            except ValueError:
+                                print("Invalid Input")
+                    case 4:
+                        if len(calendars) < 2:
+                            print("Not enough calendars to compare")
+                        else:
+                            TerminalUI.compare_calendars()
+                    case 5:
+                        return
+                    case _:
+                        print("Invalid Input")
+            except ValueError:
+                print("Invalid Input")
+                continue
 
     def add_calendar():
         calendar_name = input("Enter new Calendar's name: ")
@@ -190,10 +212,11 @@ class TerminalUI():
                                         + "\n1. Download Calendar \n2. View Events"
                                         + "\n3. View Tasks \n4. View All Tasks and Events"
                                         + "\n5. View Tasks and Events Between specific dates"
-                                        + "\n6.Add Event \n7. Add Task"
-                                        + "\n8.Delete Calendar \n9. Create Copy of Calendar"
-                                        + "\n10. Back"))
+                                        + "\n6. Add Event \n7. Add Task"
+                                        + "\n8. Delete Calendar \n9. Create Copy of Calendar"
+                                        + "\n10. Back\n"))
                 with thread_flag_lock:
+                    global thread_flag
                     thread_flag = True
                 TerminalUI.reminder_check()
                 match input_selection:
@@ -202,17 +225,27 @@ class TerminalUI():
                         print("File: ")
                         print(download_string)
                     case 2: #view Events
-                        TerminalUI.view_events()
+                        if len(calendar.retrieve_events()) < 1:
+                            print("No Events to show")
+                        else:
+                            TerminalUI.view_events()
                     case 3: #view Tasks
-                        TerminalUI.view_tasks()
+                        if len(calendar.retrieve_tasks()) < 1:
+                            print("No Tasks to Show")
+                        else:
+                            TerminalUI.view_tasks()
                     case 4: #view all
-                        print(InputController.filter_calendar_by_events())
-                        print(InputController.filter_calendar_by_tasks())
+                        if len(calendar.retrieve_events()) > 0:        
+                            print(InputController.filter_calendar_by_events())
+                        if len(calendar.get_task()) > 0:
+                            print(InputController.filter_calendar_by_tasks())
+                        if len(calendar.retrieve_events()) == 0 and len(calendar.retrieve_tasks()) == 0:
+                            print("No events or tasks to show")
                     case 5:#filter by dates
                         while True:
                             first_time_input = input("Enter start date in the format (YYYY-MM-DD HH:MM) : ")
                             try:
-                                first_time = datetime.strptime(first_time_input,"%Y-%m-%d %H:%M")
+                                first_time = datetime.datetime.strptime(first_time_input,"%Y-%m-%d %H:%M")
                                 break
                             except ValueError:
                                 print("Invalid Format")
@@ -220,7 +253,7 @@ class TerminalUI():
                         while True:
                             second_time_input = input("Enter start date in the format (YYYY-MM-DD HH:MM) : ")
                             try:
-                                second_time = datetime.strptime(second_time_input,"%Y-%m-%d %H:%M")
+                                second_time = datetime.datetime.strptime(second_time_input,"%Y-%m-%d %H:%M")
                                 break
                             except ValueError:
                                 print("Invalid Format")
@@ -233,7 +266,7 @@ class TerminalUI():
                         while True:
                             event_first_time_input = input("Enter start time of Event in the format (YYYY-MM-DD HH:MM) : ")
                             try:
-                                event_first_time = datetime.strptime(event_first_time_input,"%Y-%m-%d %H:%M")
+                                event_first_time = datetime.datetime.strptime(event_first_time_input,"%Y-%m-%d %H:%M")
                                 break
                             except ValueError:
                                 print("Invalid Format")
@@ -241,7 +274,7 @@ class TerminalUI():
                         while True:
                             event_second_time_input = input("Enter end time of Event in the format (YYYY-MM-DD HH:MM) : ")
                             try:
-                                event_second_time = datetime.strptime(event_second_time_input,"%Y-%m-%d %H:%M")
+                                event_second_time = datetime.datetime.strptime(event_second_time_input,"%Y-%m-%d %H:%M")
                                 break
                             except ValueError:
                                 print("Invalid Format")
@@ -258,7 +291,7 @@ class TerminalUI():
                         while True:
                             task_time_input = input("Enter time of Task in the format (YYYY-MM-DD HH:MM) : ")
                             try:
-                                task_time = datetime.strptime(task_time_input,"%Y-%m-%d %H:%M")
+                                task_time = datetime.datetime.strptime(task_time_input,"%Y-%m-%d %H:%M")
                                 break
                             except ValueError:
                                 print("Invalid Format")
@@ -305,7 +338,7 @@ class TerminalUI():
     def print_calendar():
 
         print(calendar.month_name[datetime.datetime.now().month], datetime.datetime.now().year)
-        print("Mo\t  Tu \tWe\t  Th \tFr \t  Sa \tSu")
+        print("Mo    Tu    We    Th    Fr    Sa    Su")
 
         month_days = calendar.monthcalendar(datetime.datetime.now().year, datetime.datetime.now().month)
 
@@ -320,11 +353,10 @@ class TerminalUI():
     def view_events():
         print(InputController.filter_calendar_by_events())
         while True:
-
             try:
-                option_input = int(input("Select an Event number or 0 to go back"))
-                if option_input > 0 and option_input < len(calendar.get_events()):
-                    InputController.set_happening(calendar.get_events()[option_input - 1])
+                option_input = int(input("Select an Event number or 0 to go back: "))
+                if option_input > 0 and option_input < len(calendar.retrieve_events()):
+                    InputController.set_happening(calendar.retrieve_events()[option_input - 1])
                     TerminalUI.event_options()
                     return
                 elif option_input == 0:
@@ -341,8 +373,8 @@ class TerminalUI():
 
             try:
                 option_input = int(input("Select an Event number or 0 to go back"))
-                if option_input > 0 and option_input < len(calendar.get_events()):
-                    InputController.set_happening(calendar.get_tasks()[option_input - 1])
+                if option_input > 0 and option_input < len(calendar.retrieve_events()):
+                    InputController.set_happening(calendar.retrieve_tasks()[option_input - 1])
                     TerminalUI.task_options()
                     return
                 elif option_input == 0:
@@ -356,11 +388,10 @@ class TerminalUI():
     def event_options():
         while True:
             if InputController.get_happening().get_reminder() is None:
-
                 try:
                     input_option = int(input("Select operation for Event: "
                                     +"\n1. Edit Event \n2. Delete Event"
-                                    +"\n3. Add Reminder \n4. Back"))
+                                    +"\n3. Add Reminder \n4. Back\n"))
                     match input_option:
                         case 1:
                             name_input = input("Enter new Event name: ")
@@ -368,7 +399,7 @@ class TerminalUI():
                             while True:
                                 event_first_time_input = input("Enter new start time of Event in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    event_first_time = datetime.strptime(event_first_time_input,"%Y-%m-%d %H:%M")
+                                    event_first_time = datetime.datetime.strptime(event_first_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -376,7 +407,7 @@ class TerminalUI():
                             while True:
                                 event_second_time_input = input("Enter new end time of Event in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    event_second_time = datetime.strptime(event_second_time_input,"%Y-%m-%d %H:%M")
+                                    event_second_time = datetime.datetime.strptime(event_second_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -398,7 +429,7 @@ class TerminalUI():
                             while True:
                                 reminder_time_input = input("Enter time of Reminder in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    reminder_time = datetime.strptime(reminder_time_input,"%Y-%m-%d %H:%M")
+                                    reminder_time = datetime.datetime.strptime(reminder_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -420,7 +451,7 @@ class TerminalUI():
                 try:
                     input_option = int(input("Select operation for Event: "
                                         +"\n1. Change Event \n2. Delete Event"
-                                        +"\n3. View Reminder \n4. Back"))
+                                        +"\n3. View Reminder \n4. Back\n"))
                     match input_option:
                         case 1:
                             name_input = input("Enter new Event name: ")
@@ -428,7 +459,7 @@ class TerminalUI():
                             while True:
                                 event_first_time_input = input("Enter new start time of Event in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    event_first_time = datetime.strptime(event_first_time_input,"%Y-%m-%d %H:%M")
+                                    event_first_time = datetime.datetime.strptime(event_first_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -436,7 +467,7 @@ class TerminalUI():
                             while True:
                                 event_second_time_input = input("Enter new end time of Event in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    event_second_time = datetime.strptime(event_second_time_input,"%Y-%m-%d %H:%M")
+                                    event_second_time = datetime.datetime.strptime(event_second_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -474,7 +505,7 @@ class TerminalUI():
                     input_option = int(input("Select operation for Task: "
                                     +"\n1. Edit Task \n2. Delete Task"
                                     +"\n3. Add Reminder \n4.Complete Task"
-                                    + "\n5. Back"))
+                                    + "\n5. Back\n"))
                     match input_option:
                         case 1:
                             task_name = input("Enter new name for Task: ")
@@ -482,7 +513,7 @@ class TerminalUI():
                             while True:
                                 task_time_input = input("Enter new time of Task in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    task_time = datetime.strptime(task_time_input,"%Y-%m-%d %H:%M")
+                                    task_time = datetime.datetime.strptime(task_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -504,7 +535,7 @@ class TerminalUI():
                             while True:
                                 reminder_time_input = input("Enter time of Reminder in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    reminder_time = datetime.strptime(reminder_time_input,"%Y-%m-%d %H:%M")
+                                    reminder_time = datetime.datetime.strptime(reminder_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -536,7 +567,7 @@ class TerminalUI():
                     input_option = int(input("Select operation for Event: "
                                         +"\n1. Edit Task \n2. Delete Task"
                                         +"\n3. View Reminder \n4. Complete Task"
-                                        + "\n5. Back"))
+                                        + "\n5. Back\n"))
                     match input_option:
                         case 1:
                             task_name = input("Enter new name for Task: ")
@@ -544,7 +575,7 @@ class TerminalUI():
                             while True:
                                 task_time_input = input("Enter new time of Task in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    task_time = datetime.strptime(task_time_input,"%Y-%m-%d %H:%M")
+                                    task_time = datetime.datetime.strptime(task_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format") 
@@ -588,7 +619,7 @@ class TerminalUI():
             try:
                 input_option = int(input("Select Option Number:"
                                 + "\n1. Delete Reminder \n2. Edit Reminder"
-                                + "\n3. Back"))
+                                + "\n3. Back\n"))
                 match input_option:
                     case 1:
                         delete_reminder_bool = InputController.delete_reminder()
@@ -601,7 +632,7 @@ class TerminalUI():
                         while True:
                                 reminder_time_input = input("Enter new time of Reminder in the format (YYYY-MM-DD HH:MM) : ")
                                 try:
-                                    reminder_time = datetime.strptime(reminder_time_input,"%Y-%m-%d %H:%M")
+                                    reminder_time = datetime.datetime.strptime(reminder_time_input,"%Y-%m-%d %H:%M")
                                     break
                                 except ValueError:
                                     print("Invalid Format")
@@ -625,19 +656,21 @@ class TerminalUI():
             while True:
                 with thread_flag_lock:
                     if thread_flag is True:
-                        for event in calendar.get_events():
+                        for event in calendar.retrieve_events():
+                            if event.get_reminder() == None:
+                                break
                             if event.get_reminder().get_time() - timedelta(seconds = 60) <= datetime.datetime.now() <= event.get_reminder().get_time() + timedelta(seconds=60):
                                 print(f"Event {event.get_name()} starts at: {event.get_first_time()}")
-                        for task in calendar.get_events():
+                        for task in calendar.retrieve_events():
+                            if task.get_reminder() == None:
+                                break
                             if task.get_reminder().get_time() - timedelta(seconds = 60) <= datetime.datetime.now() <= task.get_reminder().get_time() + timedelta(seconds=60):
                                 print(f"Task {task.get_name()} time is: {task.get_first_time()}")
-                        time.sleep(60)
                     else:
                         break
+                time.sleep(60)
         
         thread = threading.Thread(target=check_reminders_in_calendar, args=(InputController.get_calendar(),))
+        thread.daemon = True
         thread.start()
-
-        
-        thread.join()
     

@@ -26,7 +26,7 @@ class Profile():
         #indicates error in database
         if id == -1:
             return False
-        self.calendars.append(Calendar.__init__(self, id, name, events, tasks))
+        self._calendars.append(Calendar(id, name, events, tasks))
         return True
     
     #derefferences calendar from profile obj

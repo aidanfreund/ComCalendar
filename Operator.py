@@ -1,7 +1,7 @@
 #operator.py
 #Class to handle operation requests
 from Profile import Profile
-from DBProfile import DBProfile
+from DBProfile import DBProfile,MySQLProfile
 from Calendar import Calendar
 from DBFactory import DatabaseFactory, FactoryProducer
 from DBConnection import DatabaseConnection
@@ -20,7 +20,7 @@ import os
 
 class Operator:
 
-    factory:DatabaseFactory = FactoryProducer("Profile")
+    factory:DatabaseFactory = FactoryProducer("Profile").factory
     db_profile:DBProfile = factory.DB_profile
 
     # Creates new event with attributes, returns true if successful
@@ -28,7 +28,7 @@ class Operator:
     def add_event(cls, name, start_time, end_time, description, calendar_obj):
         new_event_id = cls.db_profile.add_event(description,start_time,end_time,name,calendar_obj)
         if new_event_id is not -1:
-            calendar_obj.add_event(Event(new_event_id,name,start_time,end_time,description))
+            calendar_obj.add_event(new_event_id,name,start_time,end_time,description)
             return True
         else:
             return False
@@ -106,7 +106,7 @@ class Operator:
             ics_content = f.read()
         ics_calendar = ICS_Calendar(ics_content)
 
-       if calendar_made:
+        if calendar_made:
             #get cal obj
             cals = profile_obj.get_calendars()
             for cal in cals:
@@ -289,15 +289,23 @@ class Operator:
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_events(cls, calendar_obj: Calendar):
-        filtered_events = [event for event in calendar_obj.retrieve_events() if event == event_filter]
-        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), filtered_events, calendar_obj.retrieve_tasks())
+        events = calendar_obj.retrieve_events()
+        future_events = []
+        for event in events:
+            if event.get_first_time() > datetime.now():
+                future_events.append(event)
+        return future_events
 
 
-    # Filters calendar by tasks, returns a filtered calendar obj
+     # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_tasks(cls, calendar_obj: Calendar):
-        filtered_tasks = [task for task in calendar_obj.retrieve_tasks() if task == task_filter]
-        return Calendar(calendar_obj.get_calendar_id(), calendar_obj.get_calendar_name(), calendar_obj.retrieve_events(), filtered_tasks)
+        events = calendar_obj.retrieve_tasks()
+        future_events = []
+        for event in events:
+            if event.get_first_time() > datetime.now():
+                future_events.append(event)
+        return future_events
      
      # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
@@ -368,10 +376,19 @@ class Operator:
     #Returns profile obj if a match exists
     @classmethod
     def attempt_login(cls, username: str, password: str):
-        profile_id = cls.db_profile.verify_user_credentials(username, password)
-        if profile_id != -1:
-            profile_obj = cls.get_profile_by_id(profile_id)
-            return profile_obj
+        profile = cls.db_profile.read_profile(username, password)
+        if profile != None:
+            calendars = cls.db_profile.read_calendars(profile)
+            for cal in calendars:
+                events = cls.db_profile.read_events(cal)
+                for event in events:
+                    event.set_reminder(cls.db_profile.read_reminder(event))
+                tasks = cls.db_profile.read_tasks(cal)
+                for task in tasks:
+                    task.set_reminder(cls.db_profile.read_reminder(event))
+                profile.create_new_calendar(cal.get_calendar_id(), cal.get_calendar_name(), events, tasks)
+
+            return profile
         else:
             print("Invalid username or password.")
             return None
@@ -379,7 +396,9 @@ class Operator:
     #Creates a profile obj and returns it 
     @classmethod
     def create_profile(cls, username: str, password: str):
-        profile_id = cls.db_profile.add_profilr(username, password)
+        if not cls.db_profile.check_username_unique(username):
+            return False
+        profile_id = cls.db_profile.add_profile(username, password)
         if profile_id == -1:
             return None
         new_profile = Profile(username, profile_id, [])
