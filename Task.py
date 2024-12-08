@@ -12,8 +12,8 @@ class Task(Happening):
     def get_completed(self):
         return self._completed
     
-    def flip_completed(self):
-        self._completed = not(self._completed)
+    def set_completed(self,bool):
+        self._completed = bool
         return True
     
     def set_first_time(self,time):
