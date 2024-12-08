@@ -384,7 +384,6 @@ class MySQLProfile(DBProfile):
     def add_event(self,description:str, start_time:datetime,end_time:datetime,name:str, calendar:Calendar):
         connection = MySQLConnection.get_db_connection()
         if type(calendar) is not Calendar:
-            print("Calendar passed is not type Calendar")
             return -1
         try:
             with connection.cursor() as cursor:

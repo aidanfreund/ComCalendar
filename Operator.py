@@ -113,26 +113,29 @@ class Operator:
                 if cal.get_calendar_id() == id:
                     calendar = cal
                     break
-            #find current time, and convert to utc tme
+            #find current time
             today = datetime.now()
-            today = today.replace(tzinfo=timezone.utc)
+            today = today.replace(tzinfo=None)
             # Iterate through events in the .ics file and add them to the Calendar
             for ics_event in ics_calendar.events:
-                desc = ics_event.name
+                name = ics_event.name
                 start = ics_event.begin
                 end = ics_event.end
+                desc = ics_event.description
 
+                start = start.naive
+                end = end.naive
                 #Create an object and add it to the Calendar
                 #ics only has events, if start and end time are the same, interperate the event as a task    
                 if start != end:
-                    id = cls.db_profile.add_event(desc, start, end, name, cls.db_profile.read_calendars())
+                    id = cls.db_profile.add_event(desc, start, end, name, calendar)
                     calendar.add_event(id, name, start, end, desc)
                 else:
-                    task = Task(id, desc, start)
+                    task = Task(id, name, start,desc)
                     #assume tasks in past are completed
                     if start < today:
                         task.set_completed(False)
-                    calendar.add_task(task)
+                    calendar.add_task(id,start,name,desc)
 
             return True
         else:
@@ -145,23 +148,32 @@ class Operator:
         """Simply takes a calendar, and writes the file in ics format, 
         it will save to the desktop with the calendar name"""
 
-        #set default path to user desktop
-        file_path = os.path.join(os.path.expanduser("~"), "Desktop") 
-        file_path = os.path.join(file_path, calendar.get_calendar_name())
-        #force ics file type
-        file_path += ".ics" 
+       # Set default path to user Desktop
+        desktop_path = os.path.join(os.path.expanduser("~"), "Desktop")
 
+        calendar_name = calendar.get_calendar_name()
+        
+        # Sanitize calendar name
+        calendar_name = ''.join(c for c in calendar_name if c.isalnum() or c in (' ', '_', '-'))
+
+        file_path = os.path.join(desktop_path, f"{calendar_name}.ics")
+        
+        # Ensure the directory exists
+        directory = os.path.dirname(file_path)
+        if not os.path.exists(directory):
+            os.makedirs(directory) 
+        
+        # Initialize ICS calendar object
         ics_calendar = ICS_Calendar()
 
-        #add each event and task to file, must save a task as an event with same start and end time
+        # Add each event and task to the ICS calendar
         for event in calendar.retrieve_events():
-            print(event)
             ics_event = ICS_Event()
             ics_event.uid = str(event.get_id())
             ics_event.name = event.get_name()
             ics_event.begin = event.get_first_time()
             ics_event.end = event.get_second_time()
-
+            ics_event.description = event.get_description()
             ics_calendar.events.add(ics_event)
 
         for task in calendar.retrieve_tasks():
@@ -170,9 +182,10 @@ class Operator:
             ics_event.name = task.get_name()
             ics_event.begin = task.get_first_time()
             ics_event.end = ics_event.begin
-
+            ics_event.description = task.get_description() 
             ics_calendar.events.add(ics_event)
 
+        # Write the ICS file to the specified file path
         with open(file_path, 'w') as f:
             f.writelines(ics_calendar.serialize_iter())
 

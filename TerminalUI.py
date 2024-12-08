@@ -49,36 +49,40 @@ class TerminalUI():
 
     def select_option():
         while True:
-            input_selection = int(input("Enter Selection Number: "
-                                    +"\n1. Logout\n2. Upload Calendar to Profile"
-                                    +"\n3. Show Profile's Calendars\n4. Delete Profile"
-                                    + "\n5. Exit\n"))
-            match input_selection:
-                case 1:
-                    return False
-                case 2:
+            try:
+                input_selection = int(input("Enter Selection Number: "
+                                        +"\n1. Logout\n2. Upload Calendar to Profile"
+                                        +"\n3. Show Profile's Calendars\n4. Delete Profile"
+                                        + "\n5. Exit\n"))
+                match input_selection:
+                    case 1:
+                        return False
+                    case 2:
 
-                    TerminalUI.upload_calendar()
-                case 3:
-                    TerminalUI.show_calendar_list()
-                case 4:
-                    input_char = input("Are You sure?(y/n): ")
-                    input_char = input_char.lower()
-                    if input_char == "n":
-                        print("Canceled Delete")
-                    elif input_char == "y":
-                        bool_delete = InputController.delete_profile()
-                        if bool_delete == False:
-                            print("Failed to delete")
+                        TerminalUI.upload_calendar()
+                    case 3:
+                        TerminalUI.show_calendar_list()
+                    case 4:
+                        input_char = input("Are You sure?(y/n): ")
+                        input_char = input_char.lower()
+                        if input_char == "n":
+                            print("Canceled Delete")
+                        elif input_char == "y":
+                            bool_delete = InputController.delete_profile()
+                            if bool_delete == False:
+                                print("Failed to delete")
+                            else:
+                                print("Delete successful")
                         else:
-                            print("Delete successful")
-                    else:
-                        print("Invalid Input")
-                    
-                case 5:
-                    sys.exit()
-                case _:
-                    print("Invalid Selection")
+                            print("Invalid Input")
+                        
+                    case 5:
+                        sys.exit()
+                    case _:
+                        print("Invalid Selection")
+            except ValueError:
+                print("Invalid Input")
+                continue
             
     def login_statement():
         login_bool = False
@@ -107,7 +111,7 @@ class TerminalUI():
         if upload_calendar is True:
             print("Upload successful")
         else:
-            print("Failes to upload")
+            print("Failed to upload")
 
     def show_calendar_list():
         while True:
