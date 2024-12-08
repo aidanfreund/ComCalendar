@@ -16,7 +16,7 @@ import os
 
 class Operator:
 
-    factory:DatabaseFactory = FactoryProducer("Profile")
+    factory:DatabaseFactory = FactoryProducer("Profile").factory
     db_profile:DBProfile = factory.DB_profile
 
 

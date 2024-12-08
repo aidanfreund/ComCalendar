@@ -6,10 +6,10 @@ from DBConnection import MySQLConnection
 #abstract factory
 class DatabaseFactory(ABC):
 
-    def _create_db_connection(self):
+    def _create_db_connection():
         pass
 
-    def _create_profile_controller(self):
+    def _create_profile_controller():
         pass
 
 
@@ -25,7 +25,8 @@ class SQLFactory(DatabaseFactory):
 
 class FactoryProducer():
     def __init__(self, functionality):
+        self.factory = None
         if(functionality == "Profile"):
-            return SQLFactory()
+            self.factory = SQLFactory()
         else:
             print("Enter correct type of factory to create")

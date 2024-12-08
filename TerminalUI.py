@@ -31,7 +31,6 @@ class TerminalUI():
             print("Failed to login")
             return False
         return True
-        
 
     def create_account():
         username = input("Enter username or exit(e): ")
@@ -98,7 +97,11 @@ class TerminalUI():
     def upload_calendar():
         calendar_string = input("Enter calendar file: ")
         calendar_name = input('Enter calendar name: ')
-        InputController.upload_calendar(calendar_string,calendar_name)
+        upload_calendar = InputController.upload_calendar(calendar_string,calendar_name)
+        if upload_calendar is True:
+            print("Upload successful")
+        else:
+            print("Failed to upload")
 
     def show_calendar_list():
         calendars = InputController.get_profile().get_calendars()
