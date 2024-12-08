@@ -7,6 +7,7 @@ from Reminder import Reminder
 class Event(Happening):
     def __init__(self, event_id:int, name:str, first_time:datetime, second_time:datetime, desc:str):
         super().__init__(event_id, name, desc,first_time)
+
         self._second_time = second_time
         
     def get_second_time(self):
