@@ -79,7 +79,7 @@ class Operator:
 
       # Processes .ics file string and returns a boolean indicating its success
     @classmethod
-    def upload_calendar(cls, name:str, file_path:str, profile_obj:Profile):
+    def upload_calendar(cls, file_path:str,  name:str, profile_obj:Profile):
         """reads an ICS file to create a calendar obj.  provided a file path to read from, 
         a name for the calendar, and the profile obj to be added to.
         will return calendar object. assumes user is in UTC time zone 
@@ -138,25 +138,18 @@ class Operator:
         else:
             return False
             
-    # downloads desired calendar to desired path
-    # Returns .ics file string 
+    #downloads desired calendar to the desktop with the name of the calendar as an ICS file
+    #Returns the file string
     @classmethod
-    def download_calendar(cls, calendar:Calendar, file_path:str):
-        """Simply takes a calendar and a file path  to write to, and writes the file in ics format
-        if no path is provided it will save to the desktop with the calendar name"""
-        
-        #ensure the directory path exists
-        dir_path = os.path.dirname(file_path)
-        if not os.path.exists(dir_path):
-            os.makedirs(dir_path)
-        
+    def download_calendar(cls, calendar:Calendar):
+        """Simply takes a calendar, and writes the file in ics format, 
+        it will save to the desktop with the calendar name"""
+
         #set default path to user desktop
-        if file_path == "":
-            file_path = os.path.join(os.path.expanduser("~"), "Desktop") 
-            file_path = os.path.join(file_path, calendar.get_calendar_name())    
+        file_path = os.path.join(os.path.expanduser("~"), "Desktop") 
+        file_path = os.path.join(file_path, calendar.get_calendar_name())
         #force ics file type
-        if not file_path.endswith(".ics"): 
-            file_path += ".ics" 
+        file_path += ".ics" 
 
         ics_calendar = ICS_Calendar()
 
@@ -173,7 +166,7 @@ class Operator:
 
         for task in calendar.retrieve_tasks():
             ics_event = ICS_Event()
-            ics_event.uid = str(task.get_id())  
+            ics_event.uid = str(task.get_id())
             ics_event.name = task.get_name()
             ics_event.begin = task.get_first_time()
             ics_event.end = ics_event.begin
@@ -284,7 +277,7 @@ class Operator:
         #add in db
         id = cls.db_profile.add_reminder(time, happ_obj)
         #add in machine
-        return happ_obj.edit_reminder(id, time)
+        return happ_obj.create_reminder(id, time)
 
      # Filters calendar by events, returns a filtered calendar obj
     @classmethod
@@ -300,12 +293,12 @@ class Operator:
      # Filters calendar by tasks, returns a filtered calendar obj
     @classmethod
     def filter_calendar_by_tasks(cls, calendar_obj: Calendar):
-        events = calendar_obj.retrieve_tasks()
-        future_events = []
-        for event in events:
-            if event.get_first_time() > datetime.now():
-                future_events.append(event)
-        return future_events
+        tasks = calendar_obj.retrieve_tasks()
+        future_tasks = []
+        for task in tasks:
+            if task.get_first_time() > datetime.now():
+                future_tasks.append(task)
+        return future_tasks
      
      # Filters calendar by dates, returning a new filtered calendar obj
     @classmethod
@@ -349,8 +342,8 @@ class Operator:
         #delete from db
         db = cls.db_profile.delete_reminder(reminder_obj)
         #delete from machine
-        mach = happ_obj.remove_reminder(reminder_obj.get_id())
-        return (db and mach)
+        happ_obj.set_reminder(None)
+        return db 
 
     # Edits a reminder object, returns true if successful
     @classmethod
@@ -385,7 +378,7 @@ class Operator:
                     event.set_reminder(cls.db_profile.read_reminder(event))
                 tasks = cls.db_profile.read_tasks(cal)
                 for task in tasks:
-                    task.set_reminder(cls.db_profile.read_reminder(event))
+                    task.set_reminder(cls.db_profile.read_reminder(task))
                 profile.create_new_calendar(cal.get_calendar_id(), cal.get_calendar_name(), events, tasks)
 
             return profile

@@ -46,7 +46,7 @@ class RequestValidator:
 
     @staticmethod
     def validate_add_task(name, description, due_date):
-        isinstance(name,str) and isinstance(due_date,datetime) and isinstance(description,str)
+        return isinstance(name,str) and isinstance(due_date,datetime) and isinstance(description,str)
 
     @staticmethod
     def validate_remove_task(happ_obj):

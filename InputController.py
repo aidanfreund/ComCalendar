@@ -120,14 +120,24 @@ class InputController:
      # Filters calendar by events, returns a string of filtered events
     @classmethod
     def filter_calendar_by_events(cls):
-        return Operator.filter_calendar_by_events(cls.active_calendar)
-
+        event_array = Operator.filter_calendar_by_events(cls.active_calendar)
+        result_string = ""
+        i = 0
+        for event in event_array:
+            result_string += f"\n{i+1}.Event: {event.get_name()} Start Time: {event.get_first_time()} End Time: {event.get_second_time()} Description: {event.get_description()}"
+            i += 1
+        return result_string
 
     # Filters calendar by tasks, returns a string of filtered events
     @classmethod
     def filter_calendar_by_tasks(cls):
-        return Operator.filter_calendar_by_tasks(cls.active_calendar)
-    
+        task_array = Operator.filter_calendar_by_tasks(cls.active_calendar)
+        result_string = ""
+        i = 0
+        for task in task_array:
+            result_string += f"\n{i+1}.Task: {task.get_name()} Time: {task.get_first_time()} Description: {task.get_description()} Completion Status: {task.get_completed()}"
+            i += 1
+        return result_string
      # Filters calendar by dates, returning a string of filtered events
     @classmethod
     def filter_calendar_by_dates(cls, start_date, end_date):

@@ -34,7 +34,7 @@ class DBProfile(ABC):
     def change_task(self, task):
         pass
 
-    def add_task(self, task, calendar):
+    def add_task(self, description,time,name, calendar):
         pass
     
     def read_events(self,calendar):
@@ -332,11 +332,9 @@ class MySQLProfile(DBProfile):
                 cursor.execute(sql_statement,(event.get_id(),))
 
                 if cursor.rowcount > 0:
-                    print("Event deleted")
                     connection.commit()
                     return True
                 else:
-                    print("No event found to delete")
                     connection.rollback()
                     return False
         except Exception as e:

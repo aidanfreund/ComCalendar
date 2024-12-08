@@ -204,7 +204,7 @@ class TerminalUI():
     def calendar_options():
         while True:
             calendar = InputController.get_calendar()
-            print(calendar.get_calendar_name())
+            print("Calendar Name: " + calendar.get_calendar_name())
             TerminalUI.print_calendar()
 
             try:
@@ -237,7 +237,7 @@ class TerminalUI():
                     case 4: #view all
                         if len(calendar.retrieve_events()) > 0:        
                             print(InputController.filter_calendar_by_events())
-                        if len(calendar.get_task()) > 0:
+                        if len(calendar.retrieve_tasks()) > 0:
                             print(InputController.filter_calendar_by_tasks())
                         if len(calendar.retrieve_events()) == 0 and len(calendar.retrieve_tasks()) == 0:
                             print("No events or tasks to show")
@@ -251,7 +251,7 @@ class TerminalUI():
                                 print("Invalid Format")
                                 continue
                         while True:
-                            second_time_input = input("Enter start date in the format (YYYY-MM-DD HH:MM) : ")
+                            second_time_input = input("Enter end date in the format (YYYY-MM-DD HH:MM) : ")
                             try:
                                 second_time = datetime.datetime.strptime(second_time_input,"%Y-%m-%d %H:%M")
                                 break
@@ -320,7 +320,7 @@ class TerminalUI():
                         else:
                             print("Invalid Input")
                     case 9: #copy calendar
-                        copy_bool = InputController.copy_calendar(calendar.get_calendar_id())
+                        copy_bool = InputController.copy_calendar()
                         if copy_bool is True:
                             print("Copy successful")
                         else:
@@ -351,11 +351,12 @@ class TerminalUI():
             print()  
 
     def view_events():
+        calendar = InputController.get_calendar()
         print(InputController.filter_calendar_by_events())
         while True:
             try:
                 option_input = int(input("Select an Event number or 0 to go back: "))
-                if option_input > 0 and option_input < len(calendar.retrieve_events()):
+                if option_input > 0 and option_input <= len(calendar.retrieve_events()):
                     InputController.set_happening(calendar.retrieve_events()[option_input - 1])
                     TerminalUI.event_options()
                     return
@@ -368,12 +369,12 @@ class TerminalUI():
                 continue
 
     def view_tasks():
+        calendar = InputController.get_calendar()
         print(InputController.filter_calendar_by_tasks())
         while True:
-
             try:
-                option_input = int(input("Select an Event number or 0 to go back"))
-                if option_input > 0 and option_input < len(calendar.retrieve_events()):
+                option_input = int(input("Select an Task number or 0 to go back: "))
+                if option_input > 0 and option_input <= len(calendar.retrieve_events()):
                     InputController.set_happening(calendar.retrieve_tasks()[option_input - 1])
                     TerminalUI.task_options()
                     return
@@ -622,7 +623,7 @@ class TerminalUI():
                                 + "\n3. Back\n"))
                 match input_option:
                     case 1:
-                        delete_reminder_bool = InputController.delete_reminder()
+                        delete_reminder_bool = InputController.remove_reminder()
                         if delete_reminder_bool is True:
                             print("Reminder Deleted Successfully")
                             return

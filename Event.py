@@ -51,15 +51,6 @@ class Event(Happening):
         else:
             return False
     
-    #Removes Reminder Object
-    def remove_reminder(self, reminder_id):
-        for id in self._reminder:
-            if self.reminder_id == self._reminder[id]:
-                self._reminder.remove(id)
-                return True
-                
-        return False
-    
     #Creates a new Reminder
     def create_reminder(self, reminder_id,time:datetime):
         if reminder_id < 0:
