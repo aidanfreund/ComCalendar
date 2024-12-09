@@ -39,6 +39,6 @@ def test_edit_event_with_wrong_type():
 
 def test_edit_event_with_wrong_happening_type():
     InputController.add_task("testTask","A description",datetime.datetime(2024, 12, 12, 10,15))
-    InputController.set_happening(Calendar(InputController.get_calendar()).retrieve_tasks()[0])
+    InputController.set_happening(InputController.get_calendar().retrieve_tasks()[0])
     assert InputController.edit_event(None, datetime.datetime(2024, 10, 8, 8,15),datetime.datetime(2024, 11, 12, 10,15), "A new descriptiona&*)!@#") is False
 

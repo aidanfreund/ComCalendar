@@ -2,14 +2,14 @@
 from InputController import InputController
 import pytest
 
-def test_login_two_none_values():
-    assert InputController.login(None,None) == False
+def test_login_two_empty_values():
+    assert InputController.login("","") == False
 
-def test_login_username_none_value():
-    assert InputController.login(None,"abcd") == False
+def test_login_username_empty_value():
+    assert InputController.login("","abcd") == False
 
-def test_login_password_none_value():
-    assert InputController.login("aaa",None) == False
+def test_login_password_empty_value():
+    assert InputController.login("aaa","") == False
 
 def test_login_two_strings_not_saved_profile():
     assert InputController.login("Not","Profile") == False

@@ -17,6 +17,8 @@ class RequestValidator:
 
     @staticmethod
     def validate_edit_event(name, start_time, end_time, description, happ_obj):
+        if name is None or description is None or end_time is None or start_time is None or happ_obj is None:
+            return False
         passed = RequestValidator.validate_add_event(name,start_time,end_time,description)
         
         if not isinstance(happ_obj,Event):
@@ -54,6 +56,8 @@ class RequestValidator:
 
     @staticmethod
     def validate_edit_task(name, description, due_date, is_completed, happ_obj):
+        if name is None or description is None or due_date is None or is_completed is None or happ_obj is None:
+            return False
         return RequestValidator.validate_add_task(name,description,due_date) and isinstance(is_completed,bool) and isinstance(happ_obj,Task)
 
     @staticmethod
@@ -62,7 +66,7 @@ class RequestValidator:
 
     @staticmethod
     def validate_create_profile(username, password):
-        return re.search("^[a-zA-Z1-9]*$",username) is not None and re.search("^[a-zA-Z1-9]*$",password) is not None and username != "" and password != ""
+        return re.search("^[a-zA-Z0-9]*$",username) is not None and re.search("^[a-zA-Z0-9]*$",password) is not None and username != "" and password != ""
 
     @staticmethod
     def __validate_description(desc):

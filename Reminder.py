@@ -17,6 +17,6 @@ class Reminder():
         return self._time
     
     def set_time(self, time:datetime):
-        self.date = time.datetime
+        self.date = time
         return True
   
