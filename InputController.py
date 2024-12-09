@@ -106,13 +106,11 @@ class InputController:
     def aggregate_calendar(cls, calendar1_id, calendar2_id, name):
 
         cal_list = cls.active_profile.get_calendars()
-
         calendar_obj1 = cal_list[calendar1_id]
         calendar_obj2 = cal_list[calendar2_id]
 
-        if calendar_obj1 or calendar_obj2 is None:
+        if calendar_obj1 is None or calendar_obj2 is None:
             return "Failed to find calendars"
-            
         return Operator.aggregate_calendar(name, calendar_obj1, calendar_obj2,cls.active_profile)
       
 

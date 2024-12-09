@@ -306,24 +306,65 @@ class Operator:
     @classmethod
     def aggregate_calendar(cls,name:str, calendar1:Calendar, calendar2:Calendar, profile_obj:Profile):
         
-        if len(profile_obj.get_calendars())<6:
-
-            #create new blank calendar in db
-            id = cls.db_profile.add_calendar(name, profile_obj)
-
-            #create full calendar on machine
-            events = calendar1.retrieve_events() + calendar2.retrieve_events()
-            tasks = calendar1.retrieve_tasks() + calendar2.retrieve_tasks()
-            agg_calendar = Calendar(id, name, events, tasks)
-
-            cal_created = profile_obj.create_new_calendar(id, name, events, tasks)
-            if cal_created:
-                #update calendar in db
-                cls.db_profile.change_calendar(agg_calendar, profile_obj)
-            return cal_created
-        else:
+        if len(profile_obj.get_calendars()) >= 6:
             print("Profile may only have 6 calendars, delete one and try again")
             return False
+
+        # Create blank calendar in DB and on machine
+        new_cal_id = cls.db_profile.add_calendar(name, profile_obj)
+        if new_cal_id == -1:
+            return False
+
+        # Merge events and tasks from both calendars
+        events = calendar1.retrieve_events() + calendar2.retrieve_events()
+        tasks = calendar1.retrieve_tasks() + calendar2.retrieve_tasks()
+
+        # Add empty calendar to profile
+        new_calendar_success = profile_obj.create_new_calendar(new_cal_id, name, [], [])
+
+        if not new_calendar_success:
+            return False
+        # Get the calendar object for the new calendar
+        new_cal = None
+        for cal in profile_obj.get_calendars():
+            if cal.get_calendar_id() == new_cal_id:
+                new_cal = cal
+                break
+
+        if not new_cal:
+            return False
+
+        # Add events to the new calendar
+        for event in events:
+            event_id = cls.db_profile.add_event(event.get_description(), event.get_first_time(), event.get_second_time(), event.get_name(), new_cal)
+            if event_id == -1 or not new_cal.add_event(event_id, event.get_name(), event.get_first_time(), event.get_second_time(), event.get_description()):
+                new_calendar_success = False
+                break
+
+            if event.get_reminder() is not None:
+                reminder = event.get_reminder()
+                rem_id = cls.db_profile.add_reminder(reminder.get_time(), event)
+                event.set_reminder(Reminder(rem_id, reminder.get_time()))
+        # Add tasks to the new calendar
+        for task in tasks:
+            task_id = cls.db_profile.add_task(task.get_description(), task.get_first_time(), task.get_name(), new_cal)
+            if task_id == -1 or not new_cal.add_task(task_id, task.get_first_time(), task.get_name(), task.get_description()):
+                new_calendar_success = False
+                break
+
+            if task.get_reminder() is not None:
+                reminder = task.get_reminder()
+                rem_id = cls.db_profile.add_reminder(reminder.get_time(), task)
+                task.set_reminder(Reminder(rem_id, reminder.get_time()))
+        if new_calendar_success:
+            # Delete the old calendars
+            cls.db_profile.delete_calendar(calendar1)
+            cls.db_profile.delete_calendar(calendar2)
+            profile_obj.delete_calendar(calendar1)
+            profile_obj.delete_calendar(calendar2)
+            return True
+
+        return False
 
     # Adds reminder to happening obj, returns true if successful
     @classmethod

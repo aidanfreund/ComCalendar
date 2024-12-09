@@ -157,20 +157,11 @@ class TerminalUI():
                                     print("Incorrect number selection of calendar")
                                 else:
                                     new_calendar_name = input("Enter name for new Calendar: ")
-                                    calendar_output = InputController.aggregate_calendar((calendar_one - 1),(calendar_two - 1), new_calendar_name)
-                                    if type(calendar_output) is Calendar:
-                                        print("New Calendar Events: ")
-                                        for event in calendar_output.retrieve_events():
-                                            print(f"Event name: {event.get_name()}, Description: {event.get_description()}")
-                                            print(f"start time: {event.get_first_time()} , end time: {event.get_second_time()}")
-                                            print()
-                                        print("New calendar Tasks: ")
-                                        for task in calendar_output.retrieve_tasks():
-                                            print(f"Task name: {event.get_name()}, Description: {task.get_description()}")
-                                            print(f"Time: {task.get_first_time()} , Completion status: {task.get_completed}")
-                                            print()
+                                    aggregate_output_bool = InputController.aggregate_calendar(calendar_one - 1,calendar_two - 1, new_calendar_name)
+                                    if aggregate_output_bool is True:
+                                        print("Combine Successful")
                                     else:
-                                        print("Failed to aggregate calendars")
+                                        print("Failed to combine calendars")
                             except ValueError:
                                 print("Invalid Input")
                     case 4:
