@@ -197,19 +197,53 @@ class Operator:
         #check amount of calendars assosciated with profile, ensure its less than 6(the max)
         if len(profile_obj.get_calendars())<6:
             name = calendar_obj.get_calendar_name()+" copy"
-            #create in db
-            id = cls.db_profile.add_calendar(name, profile_obj)
+            #create blank cal in db
+            cal_id = cls.db_profile.add_calendar(name, profile_obj)
             #create on machine
-
             events = calendar_obj.retrieve_events()
             tasks = calendar_obj.retrieve_tasks()
-            copy_calendar = Calendar(id, name, events, tasks)
+            copy_success = profile_obj.create_new_calendar(cal_id, name, [], [])
 
-            cal_created = profile_obj.create_new_calendar(id, name, events, tasks)
-            if cal_created:
-                #update calendar in db
-                cls.db_profile.change_calendar(copy_calendar)
-            return cal_created
+            if copy_success and cal_id is not -1:
+                #get calendar to operate on (needed to ensure id consistancy)
+                new_cal:Calendar
+
+                cal:Calendar
+                for cal in profile_obj.get_calendars():
+                    if cal.get_calendar_id() == cal_id:
+                        new_cal = cal
+
+                
+                #create deep copy
+                event:Event
+                for event in events: 
+                    event_id = cls.db_profile.add_event(event.get_description(), event.get_first_time(), event.get_second_time(), event.get_name(), new_cal)
+                    success = new_cal.add_event(event_id, event.get_name(),event.get_first_time(), event.get_second_time(), event.get_description())
+                    if success and event_id is not -1:
+                        if event.get_reminder() != None:
+                            new_event:Event
+                            event_itr:Event
+                            for event_itr in new_cal.retrieve_events():
+                                if event_itr.get_id() == event_id:
+                                    new_event = event
+                            rem_id = cls.db_profile.add_reminder(event.get_reminder().get_time(),new_event)
+                            new_event.set_reminder(Reminder(rem_id,event.get_reminder().get_time()))
+                            #will we have to fetch the whole list to access event obj? 
+                task:Task
+                for task in tasks:
+                    task_id = cls.db_profile.add_task(task.get_description(), task.get_first_time(), task.get_name(), new_cal)
+                    success = new_cal.add_task(task_id,task.get_first_time(), task.get_name(), task.get_description())
+                    if success and task_id is not -1:
+                        if task.get_reminder() != None:
+                            new_task:Task
+                            task_itr:Task
+                            for task_itr in new_cal.retrieve_tasks():
+                                if task_itr.get_id() == task_id:
+                                    new_task = task
+                            rem_id = cls.db_profile.add_reminder(task.get_reminder().get_time(),new_task)
+                            new_task.set_reminder(Reminder(rem_id,task.get_reminder().get_time()))
+
+            return copy_success
         else:
             print("Profile may only have 6 calendars, delete one and try again")
             return False
