@@ -514,7 +514,7 @@ class Operator:
     @classmethod
     def create_profile(cls, username: str, password: str):
         if not cls.db_profile.check_username_unique(username):
-            return False
+            return None
         profile_id = cls.db_profile.add_profile(username, password)
         if profile_id == -1:
             return None

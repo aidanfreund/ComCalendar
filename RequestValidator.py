@@ -62,7 +62,7 @@ class RequestValidator:
 
     @staticmethod
     def validate_create_profile(username, password):
-        return re.search("^[a-zA-Z1-9]*$",username) is not None and re.search("^[a-zA-Z1-9]*$",password) is not None
+        return re.search("^[a-zA-Z1-9]*$",username) is not None and re.search("^[a-zA-Z1-9]*$",password) is not None and username != "" and password != ""
 
     @staticmethod
     def __validate_description(desc):
